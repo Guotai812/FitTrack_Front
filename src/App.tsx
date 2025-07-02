@@ -2,10 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useState } from "react";
 
 import TopLayout from "./pages/TopLayout";
+import HomePage from "./pages/Home";
 import ExercisesPage from "./pages/Exercises";
 import DietPage from "./pages/Diet";
 import HealthPage from "./pages/Health";
 import AuthModal from "./components/Auth";
+import SideLayout from "./pages/SideLayout";
+import UserHomePage from "./pages/User";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +22,6 @@ function App() {
   function handleShowSignup() {
     setIslogin(false);
     setShowModal(true);
-
   }
 
   const router = createBrowserRouter([
@@ -32,11 +34,19 @@ function App() {
         />
       ),
       children: [
+        { path: "", element: <HomePage /> },
         { path: "/exercises", element: <ExercisesPage /> },
         { path: "/diet", element: <DietPage /> },
         { path: "/health", element: <HealthPage /> },
       ],
     },
+    {
+      path: "/side",
+      element: <SideLayout />,
+      children: [
+        { path: "", element: <UserHomePage /> },
+      ],
+    }
   ]);
 
   return (

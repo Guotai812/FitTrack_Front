@@ -1,3 +1,3 @@
 export default function DietPage() {
-    return <p>asd</p>
+    return <p>d</p>
 }

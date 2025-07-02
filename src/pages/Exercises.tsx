@@ -1,3 +1,3 @@
 export default function ExercisesPage() {
-    return <p>asd</p>
+    return <p>e</p>
 }
