@@ -2,10 +2,18 @@ import { Outlet } from "react-router-dom";
 
 import TopNavigation from "../components/TopNavigation";
 
-export default function TopLayout() {
+type TopLayoutProps = {
+  onShowLogin: () => void;
+  onShowSignup: () => void;
+};
+
+export default function TopLayout({
+  onShowLogin,
+  onShowSignup,
+}: TopLayoutProps) {
   return (
     <>
-      <TopNavigation />
+      <TopNavigation onShowLogin={onShowLogin} onShowSignup={onShowSignup} />
       <Outlet />
     </>
   );
