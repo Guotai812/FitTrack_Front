@@ -20,26 +20,27 @@ export default function AuthModal({
     inputs: {
       userName: {
         value: "",
-        isvalid: false,
+        isValid: false,
         isBlur: false,
       },
       email: {
         value: "",
-        isvalid: false,
+        isValid: false,
         isBlur: false,
       },
       password: {
         value: "",
-        isvalid: false,
+        isValid: false,
         isBlur: false,
       },
       confirmPassword: {
         value: "",
-        isvalid: false,
+        isValid: false,
         isBlur: false,
       },
     },
-    isFormValid: false,
+    isSignup: false,
+    isLogin: false,
   });
 
   function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,32 +56,45 @@ export default function AuthModal({
       },
     }));
   }
-
   function validateField(name: InputName, value: string) {
     let isValid = true;
-    if (name === "email" && value.trim() === "") {
+    if (name === "email" && value.trim() === "") isValid = false;
+    if (name === "password" && value.length < 6) isValid = false;
+    if (name === "userName" && value.trim() === "") isValid = false;
+    if (name === "confirmPassword" && value !== form.inputs.password.value)
       isValid = false;
-    }
-    if (name === "password" && value.length < 6) {
-      isValid = false;
-    }
-    if (name === "userName" && value.trim() === "") {
-      isValid = false;
-    }
-    if (name === "confirmPassword" && value !== form.inputs.password.value) {
-      isValid = false;
-    }
-    setForm((prev) => ({
-      ...prev,
-      inputs: {
+
+    setForm((prev) => {
+      const updatedInputs = {
         ...prev.inputs,
         [name]: {
           ...prev.inputs[name],
-          isvalid: isValid,
+          isValid: isValid,
           isBlur: true,
         },
-      },
-    }));
+      };
+
+      if (name === "password") {
+        const confirmValue = updatedInputs.confirmPassword.value;
+        updatedInputs.confirmPassword = {
+          ...updatedInputs.confirmPassword,
+          isValid: confirmValue === value,
+        };
+      }
+      const isSignup = Object.values(updatedInputs).every(
+        (input) => input.isValid
+      );
+
+      const isLogin =
+        updatedInputs.email.isValid && updatedInputs.password.isValid;
+
+      return {
+        ...prev,
+        inputs: updatedInputs,
+        isSignup: isSignup,
+        isLogin: isLogin,
+      };
+    });
   }
 
   function focusHandler(name: InputName) {
@@ -110,14 +124,14 @@ export default function AuthModal({
               name="email"
               type="email"
               placeholder="Email"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               value={form.inputs.email.value}
               onChange={inputHandler}
               onBlur={(e) => validateField("email", e.target.value)}
               onFocus={() => focusHandler("email")}
             />
-            {!form.inputs.email.isvalid && form.inputs.email.isBlur && (
+            {!form.inputs.email.isValid && form.inputs.email.isBlur && (
               <p className="text-red-500 text-sm">Email is empty</p>
             )}
           </div>
@@ -127,16 +141,16 @@ export default function AuthModal({
               name="password"
               type="password"
               placeholder="Password"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               value={form.inputs.password.value}
               onChange={inputHandler}
               onBlur={(e) => validateField("password", e.target.value)}
               onFocus={() => focusHandler("password")}
             />
-            {!form.inputs.password.isvalid && form.inputs.password.isBlur && (
+            {!form.inputs.password.isValid && form.inputs.password.isBlur && (
               <p className="text-red-500 text-sm">
-                Length must be equal ore greater than 6
+                Length must be equal or greater than 6
               </p>
             )}
           </div>
@@ -151,7 +165,12 @@ export default function AuthModal({
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-green-300 text-black px-4 py-1 rounded hover:text-white transition duration-300"
+                disabled={form.isLogin}
+                className={`px-4 py-1 rounded transition duration-300 ${
+                  form.isLogin
+                    ? "bg-green-300 text-black hover:text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Login
               </button>
@@ -175,19 +194,19 @@ export default function AuthModal({
       >
         <h2 className="text-xl mb-4">Signup</h2>
         <form className="flex flex-col gap-7">
-          <div>
+          <div className="h-10">
             <input
               name="userName"
               type="text"
               placeholder="Username"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               value={form.inputs.userName.value}
               onChange={inputHandler}
               onBlur={(e) => validateField("userName", e.target.value)}
               onFocus={() => focusHandler("userName")}
             />
-            {!form.inputs.userName.isvalid && form.inputs.userName.isBlur && (
+            {!form.inputs.userName.isValid && form.inputs.userName.isBlur && (
               <p className="text-red-500 text-sm">username is empty</p>
             )}
           </div>
@@ -197,14 +216,14 @@ export default function AuthModal({
               name="email"
               type="email"
               placeholder="Email"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               value={form.inputs.email.value}
               onChange={inputHandler}
               onBlur={(e) => validateField("email", e.target.value)}
               onFocus={() => focusHandler("email")}
             />
-            {!form.inputs.email.isvalid && form.inputs.email.isBlur && (
+            {!form.inputs.email.isValid && form.inputs.email.isBlur && (
               <p className="text-red-500 text-sm">Email is empty</p>
             )}
           </div>
@@ -214,14 +233,14 @@ export default function AuthModal({
               name="password"
               type="password"
               placeholder="Password"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               value={form.inputs.password.value}
               onChange={inputHandler}
               onBlur={(e) => validateField("password", e.target.value)}
               onFocus={() => focusHandler("password")}
             />
-            {!form.inputs.password.isvalid && form.inputs.password.isBlur && (
+            {!form.inputs.password.isValid && form.inputs.password.isBlur && (
               <p className="text-red-500 text-sm">
                 length must be equal or greated than 6
               </p>
@@ -232,13 +251,13 @@ export default function AuthModal({
               name="confirmPassword"
               type="password"
               placeholder="Confirm Password"
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded w-full"
               required
               onChange={inputHandler}
               onBlur={(e) => validateField("confirmPassword", e.target.value)}
               onFocus={() => focusHandler("confirmPassword")}
             />
-            {!form.inputs.confirmPassword.isvalid &&
+            {!form.inputs.confirmPassword.isValid &&
               form.inputs.confirmPassword.isBlur && (
                 <p className="text-red-500 text-sm">not the same</p>
               )}
@@ -255,10 +274,16 @@ export default function AuthModal({
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-green-300 text-black px-4 py-1 rounded hover:text-white transition duration-300"
+                disabled={!form.isSignup}
+                className={`px-4 py-1 rounded transition duration-300 ${
+                  form.isSignup
+                    ? "bg-green-300 text-black hover:text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Signup
               </button>
+
               <button
                 type="button"
                 onClick={onCancelModal}
