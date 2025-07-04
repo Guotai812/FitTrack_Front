@@ -11,28 +11,10 @@ import SideLayout from "./pages/SideLayout";
 import UserHomePage from "./pages/User";
 
 function App() {
-  const [showModal, setShowModal] = useState(false);
-  const [isLogin, setIslogin] = useState(true);
-
-  function handleShowLogin() {
-    setIslogin(true);
-    setShowModal(true);
-  }
-
-  function handleShowSignup() {
-    setIslogin(false);
-    setShowModal(true);
-  }
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <TopLayout
-          onShowLogin={handleShowLogin}
-          onShowSignup={handleShowSignup}
-        />
-      ),
+      element: <TopLayout />,
       children: [
         { path: "", element: <HomePage /> },
         { path: "/exercises", element: <ExercisesPage /> },
@@ -41,24 +23,14 @@ function App() {
       ],
     },
     {
-      path: "/side",
+      path: "/:uid",
       element: <SideLayout />,
-      children: [
-        { path: "", element: <UserHomePage /> },
-      ],
-    }
+      children: [{ path: "", element: <UserHomePage /> }],
+    },
   ]);
 
   return (
     <>
-      {showModal && (
-        <AuthModal
-          onCancelModal={() => setShowModal(false)}
-          isLogin={isLogin}
-          onShowLogin={handleShowLogin}
-          onShowSignup={handleShowSignup}
-        />
-      )}
       <RouterProvider router={router} />
     </>
   );

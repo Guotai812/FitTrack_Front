@@ -1,5 +1,7 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 type AuthModalProps = {
   onCancelModal: () => void;
@@ -16,6 +18,10 @@ export default function AuthModal({
   onShowLogin,
   onShowSignup,
 }: AuthModalProps) {
+  const target = document.getElementById("auth");
+  if (!target) return null;
+
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     inputs: {
       userName: {
@@ -42,7 +48,6 @@ export default function AuthModal({
     isSignup: false,
     isLogin: false,
   });
-
   function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -107,8 +112,31 @@ export default function AuthModal({
     }));
   }
 
-  const target = document.getElementById("auth");
-  if (!target) return null;
+  async function submitHandler(
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    e.preventDefault();
+    const email = form.inputs.email.value;
+    const password = form.inputs.password.value;
+
+    try {
+      const response = await fetch(`${backendUrl}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: password }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+      console.log("Login successful");
+      localStorage.setItem("token", data.token);
+      navigate(`/${data.userId}`)
+    } catch (error) {
+      console.error("Login error:", error);
+      alert((error as Error).message);
+    }
+  }
 
   let content;
   if (isLogin) {
@@ -118,7 +146,7 @@ export default function AuthModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl mb-4">Login</h2>
-        <form className="flex flex-col gap-7">
+        <form className="flex flex-col gap-7" onSubmit={submitHandler}>
           <div className="h-10">
             <input
               name="email"
@@ -165,7 +193,7 @@ export default function AuthModal({
             <div className="flex gap-2">
               <button
                 type="submit"
-                disabled={form.isLogin}
+                disabled={!form.isLogin}
                 className={`px-4 py-1 rounded transition duration-300 ${
                   form.isLogin
                     ? "bg-green-300 text-black hover:text-white"
