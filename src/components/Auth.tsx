@@ -116,7 +116,7 @@ export default function AuthModal({
     }));
   }
 
-  async function submitHandler(
+  async function loginHandler(
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     e.preventDefault();
@@ -152,6 +152,42 @@ export default function AuthModal({
     }
   }
 
+  async function signupHanlder(
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    e.preventDefault();
+    const userName = form.inputs.userName.value;
+    const email = form.inputs.email.value;
+    const password = form.inputs.password.value;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${backendUrl}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Signup Failed");
+      }
+      localStorage.setItem("token", data.token);
+      setIsLoading(false);
+      navigate(`/${data.userId}`);
+      console.log("sign up successful");
+    } catch (error) {
+      const msg =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+          ? error
+          : "An unexpected error occurred";
+      setError(msg);
+      setIsLoading(false);
+      console.error("Login error:", error);
+      alert(error);
+    }
+  }
   let content;
   if (isLogin) {
     content = (
@@ -160,7 +196,7 @@ export default function AuthModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl mb-4">Login</h2>
-        <form className="flex flex-col gap-7" onSubmit={submitHandler}>
+        <form className="flex flex-col gap-7" onSubmit={loginHandler}>
           <div className="h-10">
             <input
               name="email"
@@ -200,6 +236,7 @@ export default function AuthModal({
             <button
               type="button"
               className="text-blue-500 hover:underline"
+              disabled={isLoading}
               onClick={onShowSignup}
             >
               Sign up
@@ -231,6 +268,7 @@ export default function AuthModal({
               <button
                 type="button"
                 onClick={onCancelModal}
+                disabled={isLoading}
                 className="bg-gray-300 px-4 py-1 rounded hover:bg-red-500"
               >
                 Cancel
@@ -247,7 +285,7 @@ export default function AuthModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl mb-4">Signup</h2>
-        <form className="flex flex-col gap-7">
+        <form className="flex flex-col gap-7" onSubmit={signupHanlder}>
           <div className="h-10">
             <input
               name="userName"
@@ -322,25 +360,38 @@ export default function AuthModal({
               type="button"
               className="text-blue-500 hover:underline"
               onClick={onShowLogin}
+              disabled={isLoading}
             >
               Login
             </button>
             <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={!form.isSignup}
-                className={`px-4 py-1 rounded transition duration-300 ${
-                  form.isSignup
-                    ? "bg-green-300 text-black hover:text-white"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Signup
-              </button>
+              {!isLoading && (
+                <button
+                  type="submit"
+                  disabled={!form.isSignup}
+                  className={`px-4 py-1 rounded transition duration-300 ${
+                    form.isSignup
+                      ? "bg-green-300 text-black hover:text-white"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  Signup
+                </button>
+              )}
 
+              {isLoading && (
+                <button
+                  type="submit"
+                  disabled
+                  className="px-4 py-1 rounded bg-gray-300 text-gray-500 cursor-not-allowed "
+                >
+                  Signup...
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onCancelModal}
+                disabled={isLoading}
                 className="bg-gray-300 px-4 py-1 rounded hover:bg-red-500"
               >
                 Cancel
