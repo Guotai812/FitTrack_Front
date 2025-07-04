@@ -22,6 +22,9 @@ export default function AuthModal({
   if (!target) return null;
 
   const navigate = useNavigate();
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
     inputs: {
       userName: {
@@ -60,6 +63,7 @@ export default function AuthModal({
         },
       },
     }));
+    validateField(name as InputName, value);
   }
   function validateField(name: InputName, value: string) {
     let isValid = true;
@@ -120,6 +124,7 @@ export default function AuthModal({
     const password = form.inputs.password.value;
 
     try {
+      setIsLoading(true);
       const response = await fetch(`${backendUrl}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,12 +134,21 @@ export default function AuthModal({
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
+      setIsLoading(false);
       console.log("Login successful");
       localStorage.setItem("token", data.token);
-      navigate(`/${data.userId}`)
+      navigate(`/${data.userId}`);
     } catch (error) {
+      const msg =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+          ? error
+          : "An unexpected error occurred";
+      setError(msg);
+      setIsLoading(false);
       console.error("Login error:", error);
-      alert((error as Error).message);
+      alert(error);
     }
   }
 
@@ -191,17 +205,29 @@ export default function AuthModal({
               Sign up
             </button>
             <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={!form.isLogin}
-                className={`px-4 py-1 rounded transition duration-300 ${
-                  form.isLogin
-                    ? "bg-green-300 text-black hover:text-white"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Login
-              </button>
+              {!isLoading && (
+                <button
+                  type="submit"
+                  disabled={!form.isLogin}
+                  className={`px-4 py-1 rounded transition duration-300 ${
+                    form.isLogin
+                      ? "bg-green-300 text-black hover:text-white"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  Login
+                </button>
+              )}
+              {isLoading && (
+                <button
+                  type="submit"
+                  disabled
+                  className="px-4 py-1 rounded bg-gray-300 text-gray-500 cursor-not-allowed"
+                >
+                  Login...
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={onCancelModal}
