@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { useEffect } from "react";
 
 import TopLayout from "./pages/TopLayout";
 import HomePage from "./pages/Home";
@@ -8,6 +7,7 @@ import DietPage from "./pages/Diet";
 import HealthPage from "./pages/Health";
 import SideLayout from "./pages/SideLayout";
 import UserHomePage from "./pages/User";
+import NotFoundPage from "./pages/NotFound";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +25,10 @@ function App() {
       path: "/:uid",
       element: <SideLayout />,
       children: [{ path: "home", element: <UserHomePage /> }],
+    },
+    {
+      path: "*",
+      element: <NotFoundPage />,
     },
   ]);
 
