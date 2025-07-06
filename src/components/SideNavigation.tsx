@@ -5,16 +5,18 @@ import { useEffect } from "react";
 export default function SideNavigation() {
   const navigate = useNavigate();
   const { uid } = useParams();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const exp = localStorage.getItem("exp");
+    const expiryMs = Number(exp) * 1000;
 
-  let userName = "guest";
-  const token = localStorage.getItem("token");
-  const exp = localStorage.getItem("exp");
-  const expiryMs = Number(exp) * 1000;
-  if (!token || Date.now() >= expiryMs) {
-    useEffect(() => {
+    if (!token || Date.now() >= expiryMs) {
       navigate("/");
-    });
-  } else {
+    }
+  }, [navigate]);
+  const token = localStorage.getItem("token");
+  let userName = "guest";
+  if (token) {
     const decoded: any = jwtDecode(token);
     userName = decoded.userName;
   }
