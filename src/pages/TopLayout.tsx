@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import AuthModal from "../components/Auth";
@@ -7,6 +7,22 @@ import TopNavigation from "../components/TopNavigation";
 
 export default function TopLayout() {
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const exp = localStorage.getItem("exp");
+    const expTime = Number(exp) * 1000;
+    if (token) {
+      console.log("token valid");
+      if (Date.now() >= expTime) {
+        localStorage.removeItem("token");
+        console.log("token expired");
+      } else {
+        const decoded: any = jwtDecode(token);
+        navigate(`/${decoded.userId}`);
+      }
+    }
+  }, []);
+
   const [showModal, setShowModal] = useState(false);
   const [isLogin, setIslogin] = useState(true);
 

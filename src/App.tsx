@@ -1,12 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { useState } from "react";
+import { useEffect } from "react";
 
 import TopLayout from "./pages/TopLayout";
 import HomePage from "./pages/Home";
 import ExercisesPage from "./pages/Exercises";
 import DietPage from "./pages/Diet";
 import HealthPage from "./pages/Health";
-import AuthModal from "./components/Auth";
 import SideLayout from "./pages/SideLayout";
 import UserHomePage from "./pages/User";
 
@@ -25,7 +24,7 @@ function App() {
     {
       path: "/:uid",
       element: <SideLayout />,
-      children: [{ path: "", element: <UserHomePage /> }],
+      children: [{ path: "home", element: <UserHomePage /> }],
     },
   ]);
 

@@ -1,4 +1,5 @@
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,10 @@ type AuthModalProps = {
 };
 
 type InputName = "userName" | "email" | "password" | "confirmPassword";
+
+interface JWTPayload {
+  exp: number;
+}
 
 export default function AuthModal({
   onCancelModal,
@@ -136,7 +141,9 @@ export default function AuthModal({
       }
       setIsLoading(false);
       console.log("Login successful");
+      const { exp } = jwtDecode<JWTPayload>(data.token);
       localStorage.setItem("token", data.token);
+      localStorage.setItem("exp", exp.toString());
       navigate(`/${data.userId}`);
     } catch (error) {
       const msg =
@@ -171,10 +178,12 @@ export default function AuthModal({
       if (!response.ok) {
         throw new Error(data.message || "Signup Failed");
       }
+      console.log("sign up successful");
       localStorage.setItem("token", data.token);
+      const { exp } = jwtDecode<JWTPayload>(data.token);
+      localStorage.setItem("exp", exp.toString());
       setIsLoading(false);
       navigate(`/${data.userId}`);
-      console.log("sign up successful");
     } catch (error) {
       const msg =
         error instanceof Error
