@@ -2,11 +2,10 @@ import { Link } from "react-router-dom";
 import { Dumbbell } from "lucide-react";
 
 type TopNavigationProps = {
-  onShowLogin: () => void;
-  onShowSignup: () => void;
+  onDisplayModal: () => void;
 };
 
-export default function TopNavigation({ onShowLogin, onShowSignup }: TopNavigationProps) {
+export default function TopNavigation({ onDisplayModal }: TopNavigationProps) {
   return (
     <nav className="relative bg-green-300 text-black shadow-md h-16 flex items-center px-6">
       <Link to="/" className="text-2xl font-bold pl-2">
@@ -26,10 +25,10 @@ export default function TopNavigation({ onShowLogin, onShowSignup }: TopNavigati
       </div>
 
       <div className="ml-auto flex gap-4">
-        <button onClick={onShowLogin} className="hover:text-white">
+        <button className="hover:text-white" onClick={onDisplayModal}>
           Login
         </button>
-        <button onClick={onShowSignup} className="hover:text-white">
+        <button className="hover:text-white" onClick={onDisplayModal}>
           Sign Up
         </button>
       </div>

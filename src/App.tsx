@@ -1,13 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import TopLayout from "./pages/TopLayout";
-import HomePage from "./pages/Home";
-import ExercisesPage from "./pages/Exercises";
-import DietPage from "./pages/Diet";
-import HealthPage from "./pages/Health";
-import SideLayout from "./pages/SideLayout";
-import UserHomePage from "./pages/User";
-import NotFoundPage from "./pages/NotFound";
+import TopLayout from "./pages/main/TopLayout";
+import HomePage from "./pages/main/Home";
+import ExercisesPage from "./pages/main/Exercises";
+import DietPage from "./pages/main/Diet";
+import HealthPage from "./pages/main/Health";
+import SideLayout from "./pages/user/SideLayout";
+import UserHomePage from "./pages/user/User";
+import NotFoundPage from "./pages/general/NotFound";
 
 function App() {
   const router = createBrowserRouter([
