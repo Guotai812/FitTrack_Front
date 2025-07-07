@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
+import { useForm } from "../hooks/useForm/useForm";
 
 type loginProps = {
   onCancelModal: () => void;
@@ -8,6 +11,28 @@ type loginProps = {
 };
 
 export default function Login({ onCancelModal, setIsLogin }: loginProps) {
+  // TODO: make validation as a seperate file
+  const isValidPassword = (value: string) => value.length >= 6;
+
+  const { formState, inputHandler } = useForm(
+    {
+      email: {
+        value: "",
+        isValid: false,
+      },
+      password: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
+  const [touched, setTouched] = useState<{ [id: string]: boolean }>({});
+
+  const handleBlur = (id: string) => () => {
+    setTouched((prev) => ({ ...prev, [id]: true }));
+  };
+
   return (
     <Form title="Login">
       <Input
@@ -15,14 +40,34 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         name="email"
         type="email"
         placeHolder="eg.Example@example.com"
-        errMsg="Could not be empty"
+        errMsg="Please enter valid email"
         required
+        value={formState.inputs.email.value}
+        isValid={formState.inputs.email.isValid}
+        isTouched={touched["email"]}
+        onBlur={handleBlur("email")}
+        onChange={(e) =>
+          inputHandler(
+            "email",
+            e.target.value,
+            /* simple validity check: contains “@” */
+            /\S+@\S+\.\S+/.test(e.target.value)
+          )
+        }
       />
       <Input
         label="Password"
         name="password"
         type="password"
         errMsg="At leat 6 characters"
+        isValid={formState.inputs.password.isValid}
+        isTouched={touched["password"]}
+        value={formState.inputs.password.value}
+        onBlur={handleBlur("password")}
+        onChange={(e) => {
+          const val = e.target.value;
+          inputHandler("password", val, isValidPassword(val));
+        }}
         required
       />
       <div className="flex justify-between items-center px-4 py-2">
@@ -37,7 +82,9 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
           <Button type="button" kind="cancel" onClick={onCancelModal}>
             Cancel
           </Button>
-          <Button kind="confirm">Login</Button>
+          <Button kind="confirm" disabled={!formState.isValid}>
+            Login
+          </Button>
         </div>
       </div>
     </Form>

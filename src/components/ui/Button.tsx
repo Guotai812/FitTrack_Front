@@ -9,17 +9,34 @@ export default function Button({
   children,
   kind,
   className = "",
+  disabled = false, // ① pull disabled out
   ...rest
 }: ButtonProps) {
+  // no hover in here
   const baseClass =
     kind === "confirm"
-      ? "bg-green-300 text-black hover:text-white w-20 h-10 rounded"
+      ? "bg-green-300 text-black w-20 h-10 rounded"
       : kind === "cancel"
-      ? "text-black hover:bg-red-500 rounded w-20 h-10"
+      ? "text-black rounded w-20 h-10"
       : "";
 
+  // only add this when not disabled
+  const hoverClass = !disabled
+    ? kind === "confirm"
+      ? "hover:text-white"
+      : kind === "cancel"
+      ? "hover:bg-red-500"
+      : ""
+    : "";
+
+  const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
+
   return (
-    <button className={`${baseClass} ${className}`} {...rest}>
+    <button
+      className={`${baseClass} ${hoverClass} ${disabledClass} ${className}`}
+      disabled={disabled}
+      {...rest}
+    >
       {children}
     </button>
   );
