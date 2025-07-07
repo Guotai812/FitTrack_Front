@@ -24,7 +24,7 @@ function App() {
     {
       path: "/:uid",
       element: <SideLayout />,
-      children: [{ path: "home", element: <UserHomePage /> }],
+      children: [{ path: "", element: <UserHomePage /> }],
     },
     {
       path: "*",
