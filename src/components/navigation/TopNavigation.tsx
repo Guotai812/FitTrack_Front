@@ -3,9 +3,23 @@ import { Dumbbell } from "lucide-react";
 
 type TopNavigationProps = {
   onDisplayModal: () => void;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function TopNavigation({ onDisplayModal }: TopNavigationProps) {
+export default function TopNavigation({
+  onDisplayModal,
+  setIsLogin,
+}: TopNavigationProps) {
+  function showLoginHandler() {
+    setIsLogin(true);
+    onDisplayModal();
+  }
+
+  function showSignupHandler() {
+    setIsLogin(false);
+    onDisplayModal();
+  }
+
   return (
     <nav className="relative bg-green-300 text-black shadow-md h-16 flex items-center px-6">
       <Link to="/" className="text-2xl font-bold pl-2">
@@ -25,10 +39,10 @@ export default function TopNavigation({ onDisplayModal }: TopNavigationProps) {
       </div>
 
       <div className="ml-auto flex gap-4">
-        <button className="hover:text-white" onClick={onDisplayModal}>
+        <button className="hover:text-white" onClick={showLoginHandler}>
           Login
         </button>
-        <button className="hover:text-white" onClick={onDisplayModal}>
+        <button className="hover:text-white" onClick={showSignupHandler}>
           Sign Up
         </button>
       </div>
