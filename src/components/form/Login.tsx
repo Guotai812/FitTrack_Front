@@ -1,4 +1,5 @@
 import { useState } from "react";
+import validator from "../util/validator";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";
@@ -11,9 +12,6 @@ type loginProps = {
 };
 
 export default function Login({ onCancelModal, setIsLogin }: loginProps) {
-  // TODO: make validation as a seperate file
-  const isValidPassword = (value: string) => value.length >= 6;
-
   const { formState, inputHandler } = useForm(
     {
       email: {
@@ -50,8 +48,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
           inputHandler(
             "email",
             e.target.value,
-            /* simple validity check: contains “@” */
-            /\S+@\S+\.\S+/.test(e.target.value)
+            validator("email", e.target.value)
           )
         }
       />
@@ -65,8 +62,11 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         value={formState.inputs.password.value}
         onBlur={handleBlur("password")}
         onChange={(e) => {
-          const val = e.target.value;
-          inputHandler("password", val, isValidPassword(val));
+          inputHandler(
+            "password",
+            e.target.value,
+            validator("password", e.target.value)
+          );
         }}
         required
       />
