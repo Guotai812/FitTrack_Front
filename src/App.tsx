@@ -15,7 +15,7 @@ function App() {
       path: "/",
       element: <TopLayout />,
       children: [
-        { path: "", element: <HomePage /> },
+        { index: true, element: <HomePage /> },
         { path: "/exercises", element: <ExercisesPage /> },
         { path: "/diet", element: <DietPage /> },
         { path: "/health", element: <HealthPage /> },
@@ -24,7 +24,7 @@ function App() {
     {
       path: "/:uid",
       element: <SideLayout />,
-      children: [{ path: "", element: <UserHomePage /> }],
+      children: [{ index: true, element: <UserHomePage /> }],
     },
     {
       path: "*",

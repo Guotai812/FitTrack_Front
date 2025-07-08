@@ -3,6 +3,7 @@ import type React from "react";
 type ButtonProps = {
   children: React.ReactNode;
   kind?: "confirm" | "cancel";
+  isLoading?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button({
@@ -10,18 +11,20 @@ export default function Button({
   kind,
   className = "",
   disabled = false, // ① pull disabled out
+  isLoading = false,
   ...rest
 }: ButtonProps) {
   // no hover in here
-  const baseClass =
-    kind === "confirm"
-      ? "bg-green-300 text-black w-20 h-10 rounded"
-      : kind === "cancel"
-      ? "text-black rounded w-20 h-10"
-      : "";
+  let baseClass = isLoading
+    ? "bg-gray-300 text-black w-20 h-10 rounded"
+    : kind === "confirm"
+    ? "bg-green-300 text-black w-20 h-10 rounded"
+    : kind === "cancel"
+    ? "text-black rounded w-20 h-10"
+    : "";
 
   // only add this when not disabled
-  const hoverClass = !disabled
+  let hoverClass = !disabled
     ? kind === "confirm"
       ? "hover:text-white"
       : kind === "cancel"
@@ -29,7 +32,7 @@ export default function Button({
       : ""
     : "";
 
-  const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
+  let disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
 
   return (
     <button

@@ -1,17 +1,16 @@
 import { Outlet } from "react-router-dom";
 
-import { useModal } from "../../components/hooks/useModal";
+import { useModal } from "../../share/hooks/useModal";
 
-import TopNavigation from "../../components/navigation/TopNavigation";
-import { Modal } from "../../components/ui/Modal";
-import Login from "../../components/form/Login";
-import Signup from "../../components/form/Signup";
+import TopNavigation from "../../share/components/navigation/TopNavigation";
+import { Modal } from "../../share/components/ui/Modal";
+import Login from "../../share/components/form/Login";
+import Signup from "../../share/components/form/Signup";
 import { useState } from "react";
 
 export default function TopLayout() {
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const [isLogin, setIsLogin] = useState(false);
-  
 
   return (
     <>

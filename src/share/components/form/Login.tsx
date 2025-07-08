@@ -1,11 +1,17 @@
-import { useState } from "react";
-import validator from "../util/validator";
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
+import validator from "../../util/validator";
+import { useForm } from "../../hooks/useForm/useForm";
+import useInput from "../../hooks/useInput";
+import useHttp from "../../hooks/useHttp";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
-import { useForm } from "../hooks/useForm/useForm";
-import useInput from "../hooks/useInput";
+import type React from "react";
+import { jwtDecode } from "jwt-decode";
+import { useModal } from "../../hooks/useModal";
+import ErrorModal from "../ui/ErrorModal";
 
 type loginProps = {
   onCancelModal: () => void;
@@ -13,6 +19,8 @@ type loginProps = {
 };
 
 export default function Login({ onCancelModal, setIsLogin }: loginProps) {
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const navigate = useNavigate();
   const { formState, inputHandler } = useForm(
     {
       email: {
@@ -28,8 +36,43 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
   );
   const { touched, blurHandler } = useInput();
 
+  const { error, isLoading, sendRequest } = useHttp<{
+    userId: string;
+    userName: string;
+    email: string;
+    token: string;
+  }>();
+
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const email = formState.inputs.email.value;
+    const password = formState.inputs.password.value;
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/users/login`,
+        method: "POST",
+        body: { email, password },
+      });
+      localStorage.setItem("token", responseData.token);
+      const decoded: any = jwtDecode(responseData.token);
+      navigate(`/${decoded.userId}`);
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+
+  if (error && show) {
+    return (
+      <ErrorModal
+        onCancel={modalCancelHandler}
+        title="Invalid Authentication"
+        msg={error}
+      />
+    );
+  }
+
   return (
-    <Form title="Login">
+    <Form title="Login" onSubmit={submitHandler}>
       <Input
         label="Email"
         name="email"
@@ -83,8 +126,14 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
           <Button type="button" kind="cancel" onClick={onCancelModal}>
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!formState.isValid}>
-            Login
+          <Button
+            type="submit"
+            kind="confirm"
+            isLoading={isLoading}
+            disabled={!formState.isValid || isLoading}
+          >
+            {isLoading && "Login..."}
+            {!isLoading && "Login"}
           </Button>
         </div>
       </div>
