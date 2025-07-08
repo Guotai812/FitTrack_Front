@@ -1,12 +1,17 @@
-const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useForm } from "../../hooks/useForm/useForm";
 import validator from "../../util/validator";
 import useInput from "../../hooks/useInput";
 import useHttp from "../../hooks/useHttp";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
+import { useModal } from "../../hooks/useModal";
+import ErrorModal from "../ui/ErrorModal";
 
 type signupProps = {
   onCancelModal: () => void;
@@ -14,6 +19,9 @@ type signupProps = {
 };
 
 export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { formState, inputHandler } = useForm(
     {
       userName: {
@@ -36,14 +44,46 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
     false
   );
   const { touched, blurHandler } = useInput();
+  const { error, isLoading, sendRequest } = useHttp();
+
+  async function signupHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const userName = formState.inputs.userName.value;
+    const email = formState.inputs.email.value;
+    const password = formState.inputs.password.value;
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/users/signup`,
+        method: "POST",
+        body: { userName, email, password },
+      });
+      auth.login(responseData.token, {
+        userId: responseData.userId,
+        name: responseData.userName,
+      });
+
+      navigate(`/${responseData.userId}`);
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+  if (error && show) {
+    return (
+      <ErrorModal
+        onCancel={modalCancelHandler}
+        title="Invalid Authentication"
+        msg={error}
+      />
+    );
+  }
 
   return (
-    <Form title="Signup">
+    <Form title="Signup" onSubmit={signupHandler}>
       <Input
         label="Username"
         name="username"
         type="text"
-        errMsg="Could not be empty"
+        errMsg="At least 2 charactes"
         isValid={formState.inputs.userName.isValid}
         isTouched={touched["userName"]}
         onBlur={() => blurHandler("userName")}
@@ -124,7 +164,11 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
           <Button type="button" kind="cancel" onClick={onCancelModal}>
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!formState.isValid}>
+          <Button
+            kind="confirm"
+            disabled={!formState.isValid || isLoading}
+            isLoading={isLoading}
+          >
             Signup
           </Button>
         </div>

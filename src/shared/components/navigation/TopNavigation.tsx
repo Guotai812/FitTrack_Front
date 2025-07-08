@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dumbbell } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+
+import Button from "../ui/Button";
 
 type TopNavigationProps = {
   onDisplayModal: () => void;
@@ -10,6 +13,9 @@ export default function TopNavigation({
   onDisplayModal,
   setIsLogin,
 }: TopNavigationProps) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
   function showLoginHandler() {
     setIsLogin(true);
     onDisplayModal();
@@ -39,12 +45,28 @@ export default function TopNavigation({
       </div>
 
       <div className="ml-auto flex gap-4">
-        <button className="hover:text-white" onClick={showLoginHandler}>
-          Login
-        </button>
-        <button className="hover:text-white" onClick={showSignupHandler}>
-          Sign Up
-        </button>
+        {auth.isAuthenticated ? (
+          <>
+            <Button
+              className="hover:text-white"
+              onClick={() => navigate(`${auth.user?.userId}`)}
+            >
+              Dashboard
+            </Button>
+            <Button className="hover:text-white" onClick={auth.logout}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button className="hover:text-white" onClick={showLoginHandler}>
+              Login
+            </Button>
+            <Button className="hover:text-white" onClick={showSignupHandler}>
+              Sign Up
+            </Button>
+          </>
+        )}
       </div>
     </nav>
   );

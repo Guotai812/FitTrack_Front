@@ -4,6 +4,7 @@ import { useForm } from "../../hooks/useForm/useForm";
 import useInput from "../../hooks/useInput";
 import useHttp from "../../hooks/useHttp";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";
@@ -19,6 +20,7 @@ type loginProps = {
 };
 
 export default function Login({ onCancelModal, setIsLogin }: loginProps) {
+  const auth = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const navigate = useNavigate();
   const { formState, inputHandler } = useForm(
@@ -53,9 +55,11 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         method: "POST",
         body: { email, password },
       });
-      localStorage.setItem("token", responseData.token);
-      const decoded: any = jwtDecode(responseData.token);
-      navigate(`/${decoded.userId}`);
+      auth.login(responseData.token, {
+        userId: responseData.userId,
+        name: responseData.userName,
+      });
+      navigate(`/${responseData.userId}`);
     } catch (err) {
       modalDisplayHandler();
     }

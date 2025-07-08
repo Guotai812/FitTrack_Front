@@ -13,7 +13,7 @@ export default function validator(
 
     case "userName":
       // not empty and at least 3 characters
-      return value.trim().length >= 3;
+      return value.trim().length >= 2;
 
     case "confirmPassword":
       // must match compareValue

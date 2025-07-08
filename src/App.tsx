@@ -8,6 +8,7 @@ import HealthPage from "./pages/main/Health";
 import SideLayout from "./pages/user/SideLayout";
 import UserHomePage from "./pages/user/User";
 import NotFoundPage from "./pages/general/NotFound";
+import { AuthProvider } from "./shared/context/AuthContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,7 +35,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </>
   );
 }
