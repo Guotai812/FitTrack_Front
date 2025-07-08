@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-import { useModal } from "../../share/hooks/useModal";
+import { useModal } from "../../shared/hooks/useModal";
 
-import TopNavigation from "../../share/components/navigation/TopNavigation";
-import { Modal } from "../../share/components/ui/Modal";
-import Login from "../../share/components/form/Login";
-import Signup from "../../share/components/form/Signup";
+import TopNavigation from "../../shared/components/navigation/TopNavigation";
+import { Modal } from "../../shared/components/ui/Modal";
+import Login from "../../shared/components/form/Login";
+import Signup from "../../shared/components/form/Signup";
 import { useState } from "react";
 
 export default function TopLayout() {
