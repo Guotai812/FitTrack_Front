@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
 import { useForm } from "../hooks/useForm/useForm";
+import useInput from "../hooks/useInput";
 
 type loginProps = {
   onCancelModal: () => void;
@@ -25,11 +26,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
     },
     false
   );
-  const [touched, setTouched] = useState<{ [id: string]: boolean }>({});
-
-  const handleBlur = (id: string) => () => {
-    setTouched((prev) => ({ ...prev, [id]: true }));
-  };
+  const { touched, blurHandler } = useInput();
 
   return (
     <Form title="Login">
@@ -43,7 +40,9 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         value={formState.inputs.email.value}
         isValid={formState.inputs.email.isValid}
         isTouched={touched["email"]}
-        onBlur={handleBlur("email")}
+        onBlur={() => {
+          blurHandler("email");
+        }}
         onChange={(e) =>
           inputHandler(
             "email",
@@ -60,7 +59,9 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         isValid={formState.inputs.password.isValid}
         isTouched={touched["password"]}
         value={formState.inputs.password.value}
-        onBlur={handleBlur("password")}
+        onBlur={() => {
+          blurHandler("password");
+        }}
         onChange={(e) => {
           inputHandler(
             "password",

@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
 import validator from "../util/validator";
+import useInput from "../hooks/useInput";
 
 type signupProps = {
   onCancelModal: () => void;
@@ -33,11 +34,8 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
     },
     false
   );
-  const [touched, setTouched] = useState<{ [id: string]: boolean }>({});
+  const { touched, blurHandler } = useInput();
 
-  const handleBlur = (id: string) => () => {
-    setTouched((prev) => ({ ...prev, [id]: true }));
-  };
   return (
     <Form title="Signup">
       <Input
@@ -47,7 +45,7 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
         errMsg="Could not be empty"
         isValid={formState.inputs.userName.isValid}
         isTouched={touched["userName"]}
-        onBlur={handleBlur("userName")}
+        onBlur={() => blurHandler("userName")}
         onChange={(e) => {
           inputHandler(
             "userName",
@@ -62,10 +60,10 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
         name="email"
         type="email"
         placeHolder="eg.Example@example.com"
-        errMsg="Could not be empty"
+        errMsg="Please enter valid email"
         isValid={formState.inputs.email.isValid}
         isTouched={touched["email"]}
-        onBlur={handleBlur("email")}
+        onBlur={() => blurHandler("email")}
         onChange={(e) => {
           inputHandler(
             "email",
@@ -82,7 +80,7 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
         errMsg="At leat 6 characters"
         isValid={formState.inputs.password.isValid}
         isTouched={touched["password"]}
-        onBlur={handleBlur("password")}
+        onBlur={() => blurHandler("password")}
         onChange={(e) => {
           inputHandler(
             "password",
@@ -99,7 +97,7 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
         errMsg="Please enter correct password"
         isValid={formState.inputs.confirmPassword.isValid}
         isTouched={touched["confirmPassword"]}
-        onBlur={handleBlur("confirmPassword")}
+        onBlur={() => blurHandler("confirmPassword")}
         onChange={(e) => {
           inputHandler(
             "confirmPassword",
@@ -125,7 +123,9 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
           <Button type="button" kind="cancel" onClick={onCancelModal}>
             Cancel
           </Button>
-          <Button kind="confirm">Login</Button>
+          <Button kind="confirm" disabled={!formState.isValid}>
+            Signup
+          </Button>
         </div>
       </div>
     </Form>
