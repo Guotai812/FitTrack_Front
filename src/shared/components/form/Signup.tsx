@@ -3,9 +3,8 @@ import { useForm } from "../../hooks/useForm/useForm";
 import validator from "../../util/validator";
 import useInput from "../../hooks/useInput";
 import useHttp from "../../hooks/useHttp";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";

@@ -4,13 +4,12 @@ import { useForm } from "../../hooks/useForm/useForm";
 import useInput from "../../hooks/useInput";
 import useHttp from "../../hooks/useHttp";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 
 import Button from "../ui/Button";
 import Form from "../ui/Form";
 import Input from "../ui/Input";
 import type React from "react";
-import { jwtDecode } from "jwt-decode";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 

@@ -1,6 +1,6 @@
 // types.ts
 export interface FormInput {
-  value: string;
+  value: string | number;
   isValid: boolean;
 }
 
@@ -13,7 +13,7 @@ type FormAction =
   | {
       type: "CHANGE";
       inputId: string;
-      value: string;
+      value: string | number;
       isValid: boolean;
     }
   | {

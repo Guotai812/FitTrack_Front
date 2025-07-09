@@ -14,7 +14,7 @@ export function useForm(
 
   // call this from your <Input> components
   const inputHandler = useCallback(
-    (id: string, value: string, isValid: boolean) => {
+    (id: string, value: string | number, isValid: boolean) => {
       dispatch({ type: "CHANGE", inputId: id, value, isValid });
     },
     []

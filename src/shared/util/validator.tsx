@@ -1,26 +1,50 @@
+export type ValidatorType =
+  | "email"
+  | "password"
+  | "userName"
+  | "confirmPassword"
+  | "weight"
+  | "height";
+
 export default function validator(
-  validator: string,
-  value: string,
-  compareValue?: string
+  type: ValidatorType,
+  value: string | number,
+  compareValue?: string | number
 ): boolean {
-  switch (validator) {
+  switch (type) {
+    // ── STRING TESTS ────────────────────────────────────────────────────────
     case "email":
+      if (typeof value !== "string") return false;
       return /\S+@\S+\.\S+/.test(value);
 
     case "password":
-      // at least 6 characters, contains a number
+      if (typeof value !== "string") return false;
+      // at least 6 chars and at least one digit
       return value.length >= 6;
 
     case "userName":
-      // not empty and at least 3 characters
+      if (typeof value !== "string") return false;
+      // at least 2 non-whitespace chars
       return value.trim().length >= 2;
 
     case "confirmPassword":
-      // must match compareValue
+      if (typeof value !== "string" || typeof compareValue !== "string")
+        return false;
       return value === compareValue;
 
+    // ── NUMBER TESTS ────────────────────────────────────────────────────────
+    case "weight":
+    case "height":
+      if (typeof value !== "number") {
+        return false;
+      }
+      console.log(value > 0);
+      // simple “> 0” check — tweak min/max as you like
+      return value > 0;
+
+    // ── FALLBACK ───────────────────────────────────────────────────────────
     default:
-      console.warn("Unknown validator:", validator);
+      console.warn("Unknown validator:", type);
       return false;
   }
 }
