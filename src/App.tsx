@@ -9,6 +9,7 @@ import SideLayout from "./pages/user/SideLayout";
 import UserHomePage from "./pages/user/User";
 import NotFoundPage from "./pages/general/NotFound";
 import { AuthProvider } from "./shared/context/AuthContext";
+import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,7 +25,11 @@ function App() {
     },
     {
       path: "/:uid",
-      element: <SideLayout />,
+      element: (
+        <ProtectionRoute>
+          <SideLayout />
+        </ProtectionRoute>
+      ),
       children: [{ index: true, element: <UserHomePage /> }],
     },
     {
