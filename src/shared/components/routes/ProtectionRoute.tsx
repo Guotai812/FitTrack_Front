@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import type { ReactNode } from "react";
 import { Navigate, useParams } from "react-router-dom";
@@ -34,13 +34,7 @@ export default function ProtectionRoute({ children }: ProtectionProps) {
     }
   }, [isExpiredOrBad, auth]);
 
-  // 3️⃣ Now render the right thing:
-  if (!token) {
-    // no token at all → send them to 404 (or login)
-    return <Navigate to="*" replace />;
-  }
-
-  if (isExpiredOrBad) {
+  if (!token || isExpiredOrBad) {
     // expired or malformed → we've already scheduled logout above
     return <Navigate to="/" replace />;
   }
