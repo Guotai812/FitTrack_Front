@@ -12,7 +12,7 @@ export type ValidatorType =
 
 export default function validator(
   type: ValidatorType,
-  value: string | number,
+  value: string | number | string[],
   compareValue?: string | number
 ): boolean {
   switch (type) {

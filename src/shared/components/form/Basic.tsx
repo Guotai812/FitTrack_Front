@@ -1,7 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useForm } from "../../hooks/useForm/useForm";
 import validator from "../../util/validator";
-import { useNavigate } from "react-router-dom";
 
 import Form from "../ui/Form";
 import Input from "../ui/Input";
@@ -19,7 +18,6 @@ type BasicInfoProps = {
 };
 
 export default function BasicInfo({ onCancel }: BasicInfoProps) {
-  const navigate = useNavigate();
   const auth = useAuth();
   const { formState, inputHandler } = useForm(
     {
