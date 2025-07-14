@@ -37,6 +37,10 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
         value: "",
         isValid: false,
       },
+      age: {
+        value: 0,
+        isValid: false,
+      },
       gender: {
         value: "",
         isValid: false,
@@ -62,6 +66,7 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
       type: formState.inputs.type.value,
       gender: formState.inputs.gender.value,
       goal: formState.inputs.goal.value,
+      age: formState.inputs.age.value,
     };
     try {
       await sendRequest({
@@ -114,6 +119,23 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
             "height",
             Number(e.target.value),
             validator("height", Number(e.target.value))
+          )
+        }
+      />
+      <Input
+        type="number"
+        label="Age"
+        name="age"
+        placeHolder="eg.20"
+        errMsg="should be greater 0"
+        isValid={formState.inputs.age.isValid}
+        isTouched={touched["age"]}
+        onBlur={() => blurHandler("age")}
+        onChange={(e) =>
+          inputHandler(
+            "age",
+            Number(e.target.value),
+            validator("age", Number(e.target.value))
           )
         }
       />

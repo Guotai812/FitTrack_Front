@@ -23,6 +23,7 @@ function App() {
         { path: "/health", element: <HealthPage /> },
       ],
     },
+
     {
       path: "/:uid",
       element: (
@@ -32,6 +33,7 @@ function App() {
       ),
       children: [{ index: true, element: <UserHomePage /> }],
     },
+
     {
       path: "*",
       element: <NotFoundPage />,

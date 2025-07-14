@@ -8,7 +8,8 @@ export type ValidatorType =
   | "gender"
   | "frequency"
   | "type"
-  | "goal";
+  | "goal"
+  | "age";
 
 export default function validator(
   type: ValidatorType,
@@ -46,6 +47,7 @@ export default function validator(
     // ── NUMBER TESTS ────────────────────────────────────────────────────────
     case "weight":
     case "height":
+    case "age":
       if (typeof value !== "number") {
         return false;
       }
