@@ -4,7 +4,11 @@ export type ValidatorType =
   | "userName"
   | "confirmPassword"
   | "weight"
-  | "height";
+  | "height"
+  | "gender"
+  | "frequency"
+  | "type"
+  | "goal";
 
 export default function validator(
   type: ValidatorType,
@@ -31,6 +35,13 @@ export default function validator(
       if (typeof value !== "string" || typeof compareValue !== "string")
         return false;
       return value === compareValue;
+
+    case "gender":
+    case "frequency":
+    case "type":
+    case "goal":
+      if (typeof value !== "string") return false;
+      return value !== "";
 
     // ── NUMBER TESTS ────────────────────────────────────────────────────────
     case "weight":

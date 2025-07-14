@@ -29,7 +29,7 @@ export default function SideLayout() {
       }
     }
     sendHelper();
-  }, []); // TODO: this dependency list will impact how the modal work
+  }, [auth]); // TODO: this dependency list will impact how the modal work
   return (
     <>
       {show && (
