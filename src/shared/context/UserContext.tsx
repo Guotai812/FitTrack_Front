@@ -1,15 +1,72 @@
-import type React from "react";
-import { useState } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
+import useHttp from "../hooks/useHttp";
+import { useAuth } from "./AuthContext";
 
-type UserProviderProps = {
-  children: React.ReactNode;
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
+type Info = {
+  kcal: number;
+  weight: number;
+  height: number;
+  birthdate: string;
+  goal: string;
+  frequency: string;
+  type: string;
 };
 
-export function UserProvider({ children }: UserProviderProps) {
-  const [info, setInfo] = useState({
+type UserContextType = {
+  info: Info;
+  updateInfo: (updated: Partial<Info>) => void;
+};
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  // tell useHttp what shape you'll get back
+  const { sendRequest, error } = useHttp<Info>();
+  const [info, setInfo] = useState<Info>({
     kcal: 0,
     weight: 0,
     height: 0,
-    age: 0,
+    birthdate: "",
+    goal: "",
+    frequency: "",
+    type: "",
   });
+
+  useEffect(() => {
+    if (!user?.userId) return;
+
+    const fetchInfo = async () => {
+      try {
+        const fetched = await sendRequest({
+          url: `${baseUrl}/basic/${user.userId}`,
+        });
+        // fetched is typed Info
+        setInfo(fetched);
+      } catch (err) {
+        console.error("Failed to load user info:", error || err);
+      }
+    };
+
+    fetchInfo();
+  }, [sendRequest, user?.userId, error]);
+
+  const updateInfo = (updated: Partial<Info>) =>
+    setInfo((prev) => ({ ...prev, ...updated }));
+
+  return (
+    <UserContext.Provider value={{ info, updateInfo }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export function useUser() {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
 }

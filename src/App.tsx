@@ -10,6 +10,7 @@ import UserHomePage from "./pages/user/User";
 import NotFoundPage from "./pages/general/NotFound";
 import { AuthProvider } from "./shared/context/AuthContext";
 import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
+import { UserProvider } from "./shared/context/UserContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -43,7 +44,9 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
       </AuthProvider>
     </>
   );
