@@ -1,5 +1,5 @@
 import SideContent from "../../shared/components/ui/SideContent";
-import CaloriesSection from "../../shared/components/userData/CaloriesIndicator";
+import CaloriesSection from "../../shared/components/userData/KcalIndicator";
 
 export default function UserHomePage() {
   return (
