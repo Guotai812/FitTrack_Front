@@ -60,11 +60,7 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
     modalCancelHandler: errorCancel,
     modalDisplayHandler: errorDisplay,
   } = useModal();
-  const {
-    show: resultShow,
-    modalCancelHandler: resultCancel,
-    modalDisplayHandler: resultDisplay,
-  } = useModal();
+  const { show: resultShow, modalDisplayHandler: resultDisplay } = useModal();
 
   async function sumbitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

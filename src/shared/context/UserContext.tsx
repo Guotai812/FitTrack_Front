@@ -12,6 +12,7 @@ type Info = {
   goal: string;
   frequency: string;
   type: string;
+  date: string;
 };
 
 type UserContextType = {
@@ -33,11 +34,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     goal: "",
     frequency: "",
     type: "",
+    date: "",
   });
 
   useEffect(() => {
     if (!user?.userId) return;
-
     const fetchInfo = async () => {
       try {
         const fetched = await sendRequest({
