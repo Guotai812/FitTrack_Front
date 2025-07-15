@@ -12,6 +12,7 @@ import type React from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
+import ResultModal from "../ui/ResultModal";
 
 type BasicInfoProps = {
   onCancel: () => void;
@@ -54,7 +55,16 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
   );
   const { touched, blurHandler } = useInput();
   const { error, isLoading, sendRequest } = useHttp<{ msg: string }>();
-  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const {
+    show: showError,
+    modalCancelHandler: errorCancel,
+    modalDisplayHandler: errorDisplay,
+  } = useModal();
+  const {
+    show: resultShow,
+    modalCancelHandler: resultCancel,
+    modalDisplayHandler: resultDisplay,
+  } = useModal();
 
   async function sumbitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -75,14 +85,22 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
         headers: { Authorization: `Bearer ${auth.token}` },
         body: data,
       });
-      onCancel();
+      resultDisplay();
     } catch (error) {
-      modalDisplayHandler();
+      errorDisplay();
     }
   }
-  if (error && show) {
+  if (error && showError) {
+    return <ErrorModal onCancel={errorCancel} title="Error" msg={error} />;
+  }
+
+  if (resultShow) {
     return (
-      <ErrorModal onCancel={modalCancelHandler} title="Error" msg={error} />
+      <ResultModal
+        onCancel={onCancel}
+        title="Congraulation!"
+        msg="Welcome aboard"
+      />
     );
   }
 
