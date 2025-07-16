@@ -10,6 +10,7 @@ type JWTPayload = {
 type User = {
   userId: string;
   name: string;
+  isCompleted: boolean;
 };
 
 type AuthContextType = {
@@ -17,6 +18,7 @@ type AuthContextType = {
   token: string | null;
   login: (token: string, user: User) => void;
   logout: () => void;
+  updateIsCompleted: () => void;
   isAuthenticated: boolean;
 };
 
@@ -66,11 +68,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem("user");
   };
 
+  const updateIsCompleted = () => {
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ ...user, isCompleted: true })
+    );
+    setUser((prev) => {
+      if (prev === null) {
+        return null;
+      }
+
+      return {
+        ...prev,
+        isCompleted: true,
+      };
+    });
+  };
+
   const value: AuthContextType = {
     user,
     token,
     login,
     logout,
+    updateIsCompleted,
     isAuthenticated: !!token,
   };
 

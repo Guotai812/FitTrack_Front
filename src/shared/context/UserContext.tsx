@@ -38,7 +38,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    if (!user?.userId) return;
+    if (!user?.userId || !user.isCompleted) return;
     const fetchInfo = async () => {
       try {
         const fetched = await sendRequest({
@@ -52,7 +52,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     };
 
     fetchInfo();
-  }, [sendRequest, user?.userId, error]);
+  }, [user?.userId, user?.isCompleted]);
 
   const updateInfo = (updated: Partial<Info>) =>
     setInfo((prev) => ({ ...prev, ...updated }));

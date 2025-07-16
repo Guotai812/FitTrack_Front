@@ -59,6 +59,7 @@ export default function Auth({ onCancelModal, setIsLogin }: signupProps) {
       auth.login(responseData.token, {
         userId: responseData.userId,
         name: responseData.userName,
+        isCompleted: responseData.isCompleted,
       });
 
       navigate(`/${responseData.userId}`);

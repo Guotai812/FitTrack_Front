@@ -81,6 +81,7 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
         headers: { Authorization: `Bearer ${auth.token}` },
         body: data,
       });
+      auth.updateIsCompleted();
       resultDisplay();
     } catch (error) {
       errorDisplay();

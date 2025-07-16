@@ -40,6 +40,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
   const { error, isLoading, sendRequest } = useHttp<{
     userId: string;
     userName: string;
+    isCompleted: boolean;
     email: string;
     token: string;
   }>();
@@ -57,6 +58,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
       auth.login(responseData.token, {
         userId: responseData.userId,
         name: responseData.userName,
+        isCompleted: responseData.isCompleted,
       });
       navigate(`/${responseData.userId}`);
     } catch (err) {
