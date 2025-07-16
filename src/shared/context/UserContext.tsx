@@ -44,7 +44,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const fetched = await sendRequest({
           url: `${baseUrl}/basic/${user.userId}`,
         });
-        // fetched is typed Info
         setInfo(fetched);
       } catch (err) {
         console.error("Failed to load user info:", error || err);

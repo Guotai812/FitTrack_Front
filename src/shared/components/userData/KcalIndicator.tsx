@@ -1,6 +1,6 @@
 import { useUser } from "../../context/UserContext";
 
-import SemiCircleProgress from "../ui/KcalBar";
+import SemiCircleProgress from "./KcalBar";
 
 export default function KcalSection() {
   const user = useUser();

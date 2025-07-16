@@ -6,10 +6,8 @@ type SideContentProps = {
 
 export default function SideContent({ children }: SideContentProps) {
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      <div className="grid grid-cols-2 grid-rows-2 flex-grow w-full border border-gray-300">
-        {children}
-      </div>
+    <div className="flex flex-col w-full h-screen">
+      <div className="grid grid-cols-2 grid-rows-2 h-full">{children}</div>
     </div>
   );
 }
