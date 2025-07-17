@@ -4,11 +4,25 @@ import React, { useEffect, useState, createContext, useContext } from "react";
 import useHttp from "../hooks/useHttp";
 import { useAuth } from "./AuthContext";
 
+interface FoodItem {
+  food: string;
+  weight: number; // in grams
+}
+
+interface Meal {
+  diet: FoodItem[];
+  extra: FoodItem[];
+}
+
+type MealKey = "breakfast" | "lunch" | "dinner";
+
+type Meals = Record<MealKey, Meal>;
+
 type Info = {
   kcal: number;
   weight: number;
   height: number;
-  diets: [];
+  diets: Meals;
   exercises: [];
   date: string;
 };
@@ -28,7 +42,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     kcal: 0,
     weight: 0,
     height: 0,
-    diets: [],
+    diets: {
+      breakfast: {
+        extra: [{ food: "", weight: 0 }],
+        diet: [{ food: "", weight: 0 }],
+      },
+      lunch: {
+        extra: [{ food: "", weight: 0 }],
+        diet: [{ food: "", weight: 0 }],
+      },
+      dinner: {
+        extra: [{ food: "", weight: 0 }],
+        diet: [{ food: "", weight: 0 }],
+      },
+    },
     exercises: [],
     date: "",
   });

@@ -1,4 +1,6 @@
 import React from "react";
+import { useUser } from "../../context/UserContext";
+import { usePool } from "../../context/PoolConetext";
 
 // —— Types ——
 interface FoodItem {
@@ -15,42 +17,39 @@ type MealKey = "breakfast" | "lunch" | "dinner";
 type Meals = Record<MealKey, Meal>;
 
 interface Nutrition {
+  creator: string;
+  name: string;
+  image: string;
   kcal: number;
   carbon: number;
   protein: number;
   fat: number;
 }
 
-// —— nutrition lookup per 100g ——
-const POOL: Record<string, Nutrition> = {
-  rice: { kcal: 300, carbon: 70, protein: 6, fat: 3 },
-  meat: { kcal: 250, carbon: 5, protein: 20, fat: 3 },
-  // …other foods
-};
-
-// —— Dummy data ——
-const DUMMY: Meals = {
-  breakfast: {
-    extra: [{ food: "rice", weight: 200 }],
-    diet: [{ food: "rice", weight: 100 }],
-  },
-  lunch: { extra: [], diet: [{ food: "meat", weight: 150 }] },
-  dinner: { extra: [], diet: [] },
-};
-
 const MEAL_KEYS: MealKey[] = ["breakfast", "lunch", "dinner"];
 
 export const MealList: React.FC = () => {
-  // rotate so first non-empty is at front
+  const { pool } = usePool();
+  const { info } = useUser();
+
+  // only keep real entries (non-empty food and weight>0)
+  const filterReal = (items: FoodItem[]) =>
+    items.filter(({ food, weight }) => food.trim() !== "" && weight > 0);
+
+  const hasReal = (items: FoodItem[]) => filterReal(items).length > 0;
+
+  // rotate so first meal with any real items is front
   const firstIndex = MEAL_KEYS.findIndex(
-    (k) => DUMMY[k].diet.length + DUMMY[k].extra.length > 0
+    (k) => hasReal(info.diets[k].diet) || hasReal(info.diets[k].extra)
   );
   const ordered =
     firstIndex === -1
       ? MEAL_KEYS
       : [...MEAL_KEYS.slice(firstIndex), ...MEAL_KEYS.slice(0, firstIndex)];
+
+  // pick only meals that have any real items
   const nonEmpty = ordered.filter(
-    (k) => DUMMY[k].diet.length + DUMMY[k].extra.length > 0
+    (k) => hasReal(info.diets[k].diet) || hasReal(info.diets[k].extra)
   );
 
   if (nonEmpty.length === 0) {
@@ -61,17 +60,19 @@ export const MealList: React.FC = () => {
     );
   }
 
-  // calc any macro per item
+  // helper to compute a macro value for one item
   const calc = (item: FoodItem, key: keyof Nutrition) =>
-    Math.round((item.weight * (POOL[item.food]?.[key] ?? 0)) / 100);
+    Math.round((item.weight * Number(pool[item.food]?.[key] ?? 0)) / 100);
 
   return (
     <div className="space-y-8">
       {nonEmpty.map((mealKey) => {
-        const { diet, extra } = DUMMY[mealKey];
-        const all = [...diet, ...extra];
+        const { diet, extra } = info.diets[mealKey];
+        const realDiet = filterReal(diet);
+        const realExtra = filterReal(extra);
+        const all = [...realDiet, ...realExtra];
 
-        // meal totals
+        // totals across diet + extra
         const mealTotals = (
           ["kcal", "carbon", "protein", "fat"] as (keyof Nutrition)[]
         ).reduce(
@@ -86,7 +87,6 @@ export const MealList: React.FC = () => {
 
         return (
           <section key={mealKey}>
-            {/* Meal header with totals */}
             <h2 className="text-2xl font-semibold mb-4">
               {label} — {mealTotals.kcal} kcal&nbsp;
               <span className="text-sm text-gray-600">
@@ -95,37 +95,38 @@ export const MealList: React.FC = () => {
               </span>
             </h2>
 
-            {/* Diet items */}
-            {diet.map((item, i) => (
-              <div
-                key={`diet-${i}`}
-                className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-medium">{item.food}</p>
-                  <p className="text-sm text-gray-500">{item.weight} g</p>
+            {/* only render diet if there are real diet items */}
+            {realDiet.length > 0 &&
+              realDiet.map((item, i) => (
+                <div
+                  key={`diet-${i}`}
+                  className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-medium">{pool[item.food].name}</p>
+                    <p className="text-sm text-gray-500">{item.weight} g</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm">{calc(item, "kcal")} kcal</p>
+                    <p className="text-xs text-gray-600">
+                      C{calc(item, "carbon")} g • P{calc(item, "protein")} g • F
+                      {calc(item, "fat")} g
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm">{calc(item, "kcal")} kcal</p>
-                  <p className="text-xs text-gray-600">
-                    C{calc(item, "carbon")} g • P{calc(item, "protein")} g • F
-                    {calc(item, "fat")} g
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
 
-            {/* Snacks */}
-            {extra.length > 0 && (
+            {/* only render snack if there are real extra items */}
+            {realExtra.length > 0 && (
               <>
                 <h3 className="text-lg font-medium mb-2">Snack</h3>
-                {extra.map((item, i) => (
+                {realExtra.map((item, i) => (
                   <div
                     key={`snack-${i}`}
                     className="bg-yellow-50 shadow-sm rounded-lg p-4 mb-3 flex justify-between items-center"
                   >
                     <div>
-                      <p className="font-medium">{item.food}</p>
+                      <p className="font-medium">{pool[item.food].name}</p>
                       <p className="text-sm text-gray-500">{item.weight} g</p>
                     </div>
                     <div className="text-right">

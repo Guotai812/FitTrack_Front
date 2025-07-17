@@ -15,7 +15,7 @@ interface Food {
   fat: number;
 }
 
-type Pool = Record<string, Food> | null;
+type Pool = Record<string, Food>;
 
 type ContextType = {
   pool: Pool;
@@ -24,9 +24,9 @@ type ContextType = {
 const PoolContext = createContext<ContextType>({ pool: {} });
 
 export function PoolProvider({ children }: { children: React.ReactNode }) {
-  const [pool, setFoodData] = useState<Pool | null>({});
+  const [pool, setFoodData] = useState<Pool>({});
   const { token, user } = useAuth();
-  const { sendRequest } = useHttp<Pool | null>();
+  const { sendRequest } = useHttp<Pool>();
 
   useEffect(() => {
     if (!user?.userId || !token) return;
@@ -40,7 +40,7 @@ export function PoolProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {}
     }
     sendRequestHelper();
-  }, [user?.userId, token, sendRequest]);
+  }, [user?.userId, token]);
 
   return (
     <PoolContext.Provider value={{ pool }}>{children}</PoolContext.Provider>
