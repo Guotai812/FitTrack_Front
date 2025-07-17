@@ -21,7 +21,7 @@ type UserContextType = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   // tell useHttp what shape you'll get back
   const { sendRequest, error } = useHttp<Info>();
   const [info, setInfo] = useState<Info>({
@@ -40,6 +40,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       try {
         const fetched = await sendRequest({
           url: `${baseUrl}/basic/${user.userId}`,
+          headers: { Authorization: `Bearer ${token}` },
         });
         setInfo(fetched);
       } catch (err) {
