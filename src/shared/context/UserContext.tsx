@@ -8,10 +8,8 @@ type Info = {
   kcal: number;
   weight: number;
   height: number;
-  birthdate: string;
-  goal: string;
-  frequency: string;
-  type: string;
+  diets: [];
+  exercises: [];
   date: string;
 };
 
@@ -30,16 +28,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     kcal: 0,
     weight: 0,
     height: 0,
-    birthdate: "",
-    goal: "",
-    frequency: "",
-    type: "",
+    diets: [],
+    exercises: [],
     date: "",
   });
 
   useEffect(() => {
     if (!user?.userId || !user.isCompleted) return;
     const fetchInfo = async () => {
+      console.log(2);
       try {
         const fetched = await sendRequest({
           url: `${baseUrl}/basic/${user.userId}`,
