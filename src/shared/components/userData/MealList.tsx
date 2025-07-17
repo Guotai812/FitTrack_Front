@@ -41,10 +41,6 @@ const DUMMY: Meals = {
 const MEAL_KEYS: MealKey[] = ["breakfast", "lunch", "dinner"];
 
 export const MealList: React.FC = () => {
-    
-
-
-
   // rotate so first non-empty is at front
   const firstIndex = MEAL_KEYS.findIndex(
     (k) => DUMMY[k].diet.length + DUMMY[k].extra.length > 0

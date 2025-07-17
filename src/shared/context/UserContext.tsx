@@ -1,8 +1,8 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
+
 import React, { useEffect, useState, createContext, useContext } from "react";
 import useHttp from "../hooks/useHttp";
 import { useAuth } from "./AuthContext";
-
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
 type Info = {
   kcal: number;
@@ -50,6 +50,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     fetchInfo();
   }, [user?.userId, user?.isCompleted]);
+
+  // TODO: add update weight...
 
   const updateInfo = (updated: Partial<Info>) =>
     setInfo((prev) => ({ ...prev, ...updated }));

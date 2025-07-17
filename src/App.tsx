@@ -11,6 +11,7 @@ import NotFoundPage from "./pages/general/NotFound";
 import { AuthProvider } from "./shared/context/AuthContext";
 import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
 import { UserProvider } from "./shared/context/UserContext";
+import { PoolProvider } from "./shared/context/PoolConetext";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,7 +46,9 @@ function App() {
     <>
       <AuthProvider>
         <UserProvider>
-          <RouterProvider router={router} />
+          <PoolProvider>
+            <RouterProvider router={router} />
+          </PoolProvider>
         </UserProvider>
       </AuthProvider>
     </>
