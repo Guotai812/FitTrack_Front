@@ -12,12 +12,14 @@ import { AuthProvider } from "./shared/context/AuthContext";
 import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
 import { UserProvider } from "./shared/context/UserContext";
 import { PoolProvider } from "./shared/context/PoolConetext";
+import ErrorPage from "./pages/general/Error";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <TopLayout />,
+      errorElement: <ErrorPage />,
       children: [
         { index: true, element: <HomePage /> },
         { path: "/exercises", element: <ExercisesPage /> },
@@ -28,6 +30,7 @@ function App() {
 
     {
       path: "/:uid",
+      errorElement: <ErrorPage />,
       element: (
         <ProtectionRoute>
           <SideLayout />
