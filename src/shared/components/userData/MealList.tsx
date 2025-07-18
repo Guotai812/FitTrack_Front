@@ -8,13 +8,7 @@ interface FoodItem {
   weight: number; // in grams
 }
 
-interface Meal {
-  diet: FoodItem[];
-  extra: FoodItem[];
-}
-
 type MealKey = "breakfast" | "lunch" | "dinner";
-type Meals = Record<MealKey, Meal>;
 
 interface Nutrition {
   creator: string;
@@ -102,9 +96,16 @@ export const MealList: React.FC = () => {
                   key={`diet-${i}`}
                   className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center"
                 >
-                  <div>
-                    <p className="font-medium">{pool[item.food].name}</p>
-                    <p className="text-sm text-gray-500">{item.weight} g</p>
+                  <div className="flex items-center">
+                    <img
+                      src={pool[item.food].image}
+                      alt={pool[item.food].name}
+                      className="w-12 h-12 rounded-full object-cover mr-4"
+                    />
+                    <div>
+                      <p className="font-medium">{pool[item.food].name}</p>
+                      <p className="text-sm text-gray-500">{item.weight} g</p>
+                    </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm">{calc(item, "kcal")} kcal</p>
@@ -125,9 +126,16 @@ export const MealList: React.FC = () => {
                     key={`snack-${i}`}
                     className="bg-yellow-50 shadow-sm rounded-lg p-4 mb-3 flex justify-between items-center"
                   >
-                    <div>
-                      <p className="font-medium">{pool[item.food].name}</p>
-                      <p className="text-sm text-gray-500">{item.weight} g</p>
+                    <div className="flex items-center">
+                      <img
+                        src={pool[item.food].image}
+                        alt={pool[item.food].name}
+                        className="w-12 h-12 rounded-full object-cover mr-4"
+                      />
+                      <div>
+                        <p className="font-medium">{pool[item.food].name}</p>
+                        <p className="text-sm text-gray-500">{item.weight} g</p>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm">{calc(item, "kcal")} kcal</p>
