@@ -36,12 +36,15 @@ export default function DietSection() {
   return (
     <div className="border p-4 flex flex-col overflow-y-auto h-full">
       <div className="flex justify-between mb-2">
-        <h2 className="text-lg font-semibold">
-          Total: {kcal}Kcal
-          <span className="text-xs text-gray-500">
-            ({`C ${carbon}g • P ${protein}g • F ${fat}g`})
-          </span>
-        </h2>
+        {kcal !== 0 && (
+          <h2 className="text-lg font-semibold">
+            Total: {kcal}Kcal
+            <span className="text-xs text-gray-500">
+              ({`C ${carbon}g • P ${protein}g • F ${fat}g`})
+            </span>
+          </h2>
+        )}
+
         <Button kind="confirm">Manage</Button>
       </div>
       <MealList />
