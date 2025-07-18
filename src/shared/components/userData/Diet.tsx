@@ -1,5 +1,8 @@
+import { useDiet } from "../../context/DietManageContext";
 import { usePool } from "../../context/PoolConetext";
 import { useUser } from "../../context/UserContext";
+import { useModal } from "../../hooks/useModal";
+import DietForm from "../form/diet/Diet";
 import Button from "../ui/Button";
 import { MealList } from "./MealList";
 
@@ -17,9 +20,10 @@ function getTotalsPerFood(diets: Meals): Record<string, number> {
 }
 
 export default function DietSection() {
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const diet = useDiet();
   const { info } = useUser();
   const { pool } = usePool();
-
   const totalsPerMeal: Record<string, number> = getTotalsPerFood(info.diets);
 
   let kcal = 0;
@@ -33,21 +37,30 @@ export default function DietSection() {
     fat += (pool[mealName].fat * totalWeight) / 100;
   }
 
-  return (
-    <div className="border p-4 flex flex-col overflow-y-auto h-full">
-      <div className="flex justify-between mb-2">
-        {kcal !== 0 && (
-          <h2 className="text-lg font-semibold">
-            Total: {kcal}Kcal
-            <span className="text-xs text-gray-500">
-              ({`C ${carbon}g • P ${protein}g • F ${fat}g`})
-            </span>
-          </h2>
-        )}
+  function openManageHanlder() {
+    modalDisplayHandler();
+    diet.setState("manage");
+  }
 
-        <Button kind="confirm">Manage</Button>
+  return (
+    <>
+      {show && <DietForm onCancel={modalCancelHandler} />}
+      <div className="border p-4 flex flex-col overflow-y-auto h-full">
+        <div className="flex justify-between mb-2">
+          {kcal !== 0 && (
+            <h2 className="text-lg font-semibold">
+              Total: {kcal}Kcal
+              <span className="text-xs text-gray-500">
+                ({`C ${carbon}g • P ${protein}g • F ${fat}g`})
+              </span>
+            </h2>
+          )}
+          <Button kind="confirm" onClick={openManageHanlder}>
+            Manage
+          </Button>
+        </div>
+        <MealList />
       </div>
-      <MealList />
-    </div>
+    </>
   );
 }
