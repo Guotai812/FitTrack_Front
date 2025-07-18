@@ -48,9 +48,11 @@ export const MealList: React.FC = () => {
 
   if (nonEmpty.length === 0) {
     return (
-      <p className="italic text-center text-gray-500">
-        Please click Manage to add your diet
-      </p>
+      <div className="h-full flex flex-col justify-center items-center">
+        <p className="italic text-center text-gray-500">
+          Please click Manage to add your diet
+        </p>
+      </div>
     );
   }
 
