@@ -50,7 +50,7 @@ export const MealList: React.FC = () => {
     return (
       <div className="h-full flex flex-col justify-center items-center">
         <p className="italic text-center text-gray-500">
-          Please click Manage to add your diet
+          Please click Manage/Add to add your diet
         </p>
       </div>
     );

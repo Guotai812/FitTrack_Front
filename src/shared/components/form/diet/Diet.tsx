@@ -34,7 +34,11 @@ export default function DietForm({ onCancel }: DietFormProps) {
     <Modal
       onCancel={onCancel}
       pad={diet.state === "pool" ? 0 : undefined}
-      size={diet.state === "pool" ? "w-[60%] h-[50%]" : undefined}
+      size={
+        diet.state === "pool" || diet.state === "manage"
+          ? "w-[60%] h-[50%]"
+          : undefined
+      }
     >
       {content}
     </Modal>

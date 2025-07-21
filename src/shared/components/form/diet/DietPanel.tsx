@@ -10,14 +10,16 @@ export default function DietPanel({ onCancel }: DietPanelProps) {
   const diet = useDiet();
   return (
     <>
-      <MealList />
-      <div className="flex justify-end gap-4 mt-2">
-        <Button kind="cancel" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button kind="confirm" onClick={() => diet.setState("pool")}>
-          Add
-        </Button>
+      <div className="flex flex-col justify-between h-full">
+        <MealList />
+        <div className="flex justify-end gap-4 mt-2">
+          <Button kind="cancel" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button kind="confirm" onClick={() => diet.setState("pool")}>
+            Add
+          </Button>
+        </div>
       </div>
     </>
   );
