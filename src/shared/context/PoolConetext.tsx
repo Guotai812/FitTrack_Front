@@ -6,6 +6,7 @@ import useHttp from "../hooks/useHttp";
 import React, { useContext, useEffect, useState } from "react";
 
 interface Food {
+  _id: string;
   creator: string;
   name: string;
   image: string;
@@ -13,6 +14,7 @@ interface Food {
   carbon: number;
   protein: number;
   fat: number;
+  type: string;
 }
 
 type Pool = Record<string, Food>;
