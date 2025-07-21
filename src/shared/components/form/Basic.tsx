@@ -116,7 +116,7 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
           inputHandler(
             "weight",
             Number(e.target.value),
-            validator("weight", Number(e.target.value))
+            validator("weight", e.target.value)
           )
         }
       />
@@ -133,7 +133,7 @@ export default function BasicInfo({ onCancel }: BasicInfoProps) {
           inputHandler(
             "height",
             Number(e.target.value),
-            validator("height", Number(e.target.value))
+            validator("height", e.target.value)
           )
         }
       />

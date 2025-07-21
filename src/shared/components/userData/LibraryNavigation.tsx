@@ -1,8 +1,24 @@
 import { useCategory } from "../../context/CategoryContext";
+import { useDiet } from "../../context/DietManageContext";
 import Button from "../ui/Button";
+
+type Category =
+  | "all"
+  | "staple"
+  | "dairy"
+  | "protein"
+  | "vege"
+  | "nut"
+  | "oil"
+  | "others";
 
 export default function LibraryNavigation() {
   const { category, setCategory } = useCategory();
+  const { setState } = useDiet();
+  function categoryHandler(category: Category) {
+    setState("pool");
+    setCategory(category);
+  }
   return (
     <aside className="bg-green-300 h-full w-1/5 flex justify-center items-center">
       <nav>
@@ -10,7 +26,7 @@ export default function LibraryNavigation() {
           <li>
             <Button
               className="hover:text-white"
-              onClick={() => setCategory("all")}
+              onClick={() => categoryHandler("all")}
             >
               All
             </Button>
@@ -20,7 +36,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "staple" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("staple")}
+              onClick={() => categoryHandler("staple")}
             >
               Staple food
             </Button>
@@ -30,7 +46,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "dairy" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("dairy")}
+              onClick={() => categoryHandler("dairy")}
             >
               Dairy
             </Button>
@@ -40,7 +56,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "protein" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("protein")}
+              onClick={() => categoryHandler("protein")}
             >
               Protein
             </Button>
@@ -50,7 +66,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "vege" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("vege")}
+              onClick={() => categoryHandler("vege")}
             >
               Vegetable
             </Button>
@@ -60,7 +76,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "oil" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("oil")}
+              onClick={() => categoryHandler("oil")}
             >
               Oil
             </Button>
@@ -70,7 +86,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "nut" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("nut")}
+              onClick={() => categoryHandler("nut")}
             >
               Nut
             </Button>
@@ -80,7 +96,7 @@ export default function LibraryNavigation() {
               className={`hover:text-white ${
                 category === "others" ? "text-white" : ""
               }`}
-              onClick={() => setCategory("others")}
+              onClick={() => categoryHandler("others")}
             >
               Other
             </Button>

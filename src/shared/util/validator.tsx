@@ -48,12 +48,25 @@ export default function validator(
     // ── NUMBER TESTS ────────────────────────────────────────────────────────
     case "weight":
     case "height":
-      if (typeof value !== "number") {
+      // 1) it must be a string (we need the raw text to detect leading zeros)
+      if (typeof value !== "string") {
         return false;
       }
-      console.log(value > 0);
-      // simple “> 0” check — tweak min/max as you like
-      return value > 0;
+
+      const raw = value.trim();
+
+      // 2) reject bad formats and ANY leading-zero integer
+      //    - (?!0\d) disallows "02", "0123", "001.5"
+      //    - \d+         matches "1", "42", "1234"
+      //    - \d*\.\d+    matches ".5", "0.75", "1.23"
+      const re = /^(?!0\d)(?:\d+|\d*\.\d+)$/;
+      if (!re.test(raw)) {
+        return false;
+      }
+
+      // 3) finally coerce and check that it’s > 0
+      const num = parseFloat(raw);
+      return num > 0;
 
     // ── FALLBACK ───────────────────────────────────────────────────────────
     default:

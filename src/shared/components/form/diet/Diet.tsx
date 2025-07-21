@@ -20,22 +20,21 @@ export default function DietForm({ onCancel }: DietFormProps) {
     case "delete":
       break;
     case "pool":
+    case "add":
       content = (
         <CategoryContextProvider>
           <FoodLibrary />
         </CategoryContextProvider>
       );
       break;
-    case "add":
-      break;
   }
 
   return (
     <Modal
       onCancel={onCancel}
-      pad={diet.state === "pool" ? 0 : undefined}
+      pad={diet.state === "pool" || diet.state === "add" ? 0 : undefined}
       size={
-        diet.state === "pool" || diet.state === "manage"
+        diet.state === "pool" || diet.state === "manage" || diet.state === "add"
           ? "w-[60%] h-[50%]"
           : undefined
       }
