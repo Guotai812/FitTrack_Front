@@ -5,6 +5,8 @@ import { useFood } from "../../../context/FoodContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useForm } from "../../../hooks/useForm/useForm";
 import { useAuth } from "../../../context/AuthContext";
+import { useModal } from "../../../hooks/useModal";
+import { useUser } from "../../../context/UserContext";
 import useHttp from "../../../hooks/useHttp";
 import useInput from "../../../hooks/useInput";
 import validator from "../../../util/validator";
@@ -13,9 +15,9 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import ErrorModal from "../../ui/ErrorModal";
-import { useModal } from "../../../hooks/useModal";
 
 export default function FoodList() {
+  const { info } = useUser();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp();
@@ -43,7 +45,8 @@ export default function FoodList() {
         url: `${baseUrl}/basic/${user?.userId}/addDiet`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: { id: clickedFood?._id, weight: formState.inputs.weight.value },
+        // TODO add a meal context to record which meal did user choose.
+        body: { id: clickedFood?.name, weight: formState.inputs.weight.value },
       });
     } catch (err) {
       modalDisplayHandler();
@@ -59,6 +62,8 @@ export default function FoodList() {
   return (
     <Form isStyled={false} className="w-4/5" onSubmit={submitHandler}>
       <input type="hidden" name="name" defaultValue={clickedFood?.name} />
+      {/* TODO: add a hidden input here to record which meal user want to record */}
+      <input type="hidden" name="meal" defaultValue={clickedFood?.name} />
       <div className="h-full p-6 flex flex-col justify-end ">
         <div className="h-full">
           <div className="mb-15">

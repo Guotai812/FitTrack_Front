@@ -29,7 +29,7 @@ type Info = {
 
 type UserContextType = {
   info: Info;
-  updateInfo: (updated: Partial<Info>) => void;
+  updateDiet: (meal: MealKey, kcal: number) => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -79,12 +79,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user?.userId, user?.isCompleted]);
 
   // TODO: add update weight...
-
-  const updateInfo = (updated: Partial<Info>) =>
-    setInfo((prev) => ({ ...prev, ...updated }));
+  function updateDiet(meal: MealKey, kcal: number) {}
 
   return (
-    <UserContext.Provider value={{ info, updateInfo }}>
+    <UserContext.Provider value={{ info, updateDiet }}>
       {children}
     </UserContext.Provider>
   );
