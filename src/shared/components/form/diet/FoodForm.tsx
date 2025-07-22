@@ -1,12 +1,13 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
+import { useEffect } from "react";
 import { useDiet } from "../../../context/DietManageContext";
 import { useFood } from "../../../context/FoodContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useForm } from "../../../hooks/useForm/useForm";
 import { useAuth } from "../../../context/AuthContext";
 import { useModal } from "../../../hooks/useModal";
-import { useUser } from "../../../context/UserContext";
+import { useMeal } from "../../../context/MealContext";
 import useHttp from "../../../hooks/useHttp";
 import useInput from "../../../hooks/useInput";
 import validator from "../../../util/validator";
@@ -15,9 +16,10 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import ErrorModal from "../../ui/ErrorModal";
+import Ratio from "../../ui/Ratio";
 
 export default function FoodList() {
-  const { info } = useUser();
+  const { meal } = useMeal();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp();
@@ -25,6 +27,10 @@ export default function FoodList() {
     {
       weight: {
         value: 100,
+        isValid: true,
+      },
+      meal: {
+        value: "",
         isValid: true,
       },
     },
@@ -45,8 +51,12 @@ export default function FoodList() {
         url: `${baseUrl}/basic/${user?.userId}/addDiet`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        // TODO add a meal context to record which meal did user choose.
-        body: { id: clickedFood?.name, weight: formState.inputs.weight.value },
+        body: {
+          name: clickedFood?.name,
+          weight: formState.inputs.weight.value,
+          meal,
+          isMain: formState.inputs.meal.value === "main",
+        },
       });
     } catch (err) {
       modalDisplayHandler();
@@ -62,9 +72,8 @@ export default function FoodList() {
   return (
     <Form isStyled={false} className="w-4/5" onSubmit={submitHandler}>
       <input type="hidden" name="name" defaultValue={clickedFood?.name} />
-      {/* TODO: add a hidden input here to record which meal user want to record */}
       <input type="hidden" name="meal" defaultValue={clickedFood?.name} />
-      <div className="h-full p-6 flex flex-col justify-end ">
+      <div className="h-full p-6 flex flex-col justify-between ">
         <div className="h-full">
           <div className="mb-15">
             <img
@@ -86,7 +95,25 @@ export default function FoodList() {
             </p>
           </div>
 
-          <div className="mt-20 flex items-center justify-center">
+          <div className="flex items-center justify-center text-xl gap-5 mt-10">
+            <Ratio
+              name="meal"
+              value="main"
+              defaultChecked
+              onChange={(e) => inputHandler("meal", e.target.value, true)}
+            >
+              Main
+            </Ratio>
+            <Ratio
+              name="meal"
+              value="extra"
+              onChange={(e) => inputHandler("meal", e.target.value, true)}
+            >
+              Extra
+            </Ratio>
+          </div>
+
+          <div className="mt-10 flex items-center justify-center">
             <Input
               type="number"
               name="weight"
