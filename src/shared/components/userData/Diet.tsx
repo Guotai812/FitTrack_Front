@@ -7,11 +7,11 @@ import Button from "../ui/Button";
 import { MealList } from "./MealList";
 
 type FoodItem = { food: string; weight: number };
-type Meal = { diet: FoodItem[]; extra: FoodItem[] };
+type Meal = { main: FoodItem[]; extra: FoodItem[] };
 type Meals = Record<"breakfast" | "lunch" | "dinner", Meal>;
 function getTotalsPerFood(diets: Meals): Record<string, number> {
   return Object.values(diets) // Meal[]
-    .flatMap(({ diet, extra }) => [...diet, ...extra]) // FoodItem[]
+    .flatMap(({ main, extra }) => [...main, ...extra]) // FoodItem[]
     .filter(({ food, weight }) => food && weight > 0)
     .reduce<Record<string, number>>((acc, { food, weight }) => {
       acc[food] = (acc[food] || 0) + weight;
@@ -31,10 +31,12 @@ export default function DietSection() {
   let protein = 0;
   let fat = 0;
   for (const [mealName, totalWeight] of Object.entries(totalsPerMeal)) {
-    kcal += (pool[mealName].kcal * totalWeight) / 100;
-    carbon += (pool[mealName].carbon * totalWeight) / 100;
-    protein += (pool[mealName].protein * totalWeight) / 100;
-    fat += (pool[mealName].fat * totalWeight) / 100;
+    kcal += Math.round(((pool[mealName].kcal * totalWeight) / 100) * 10) / 10;
+    carbon +=
+      Math.round(((pool[mealName].carbon * totalWeight) / 100) * 10) / 10;
+    protein +=
+      Math.round(((pool[mealName].protein * totalWeight) / 100) * 10) / 10;
+    fat += Math.round(((pool[mealName].fat * totalWeight) / 100) * 10) / 10;
   }
 
   function openManageHanlder() {

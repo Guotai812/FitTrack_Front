@@ -10,7 +10,7 @@ interface FoodItem {
 }
 
 interface Meal {
-  diet: FoodItem[];
+  main: FoodItem[];
   extra: FoodItem[];
 }
 
@@ -29,14 +29,13 @@ type Info = {
 
 type UserContextType = {
   info: Info;
-  updateDiet: (meal: MealKey, kcal: number) => void;
+  updateInfo: (updated: Info) => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { user, token } = useAuth();
-  // tell useHttp what shape you'll get back
   const { sendRequest, error } = useHttp<Info>();
   const [info, setInfo] = useState<Info>({
     kcal: 0,
@@ -45,15 +44,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     diets: {
       breakfast: {
         extra: [{ food: "", weight: 0 }],
-        diet: [{ food: "", weight: 0 }],
+        main: [{ food: "", weight: 0 }],
       },
       lunch: {
         extra: [{ food: "", weight: 0 }],
-        diet: [{ food: "", weight: 0 }],
+        main: [{ food: "", weight: 0 }],
       },
       dinner: {
         extra: [{ food: "", weight: 0 }],
-        diet: [{ food: "", weight: 0 }],
+        main: [{ food: "", weight: 0 }],
       },
     },
     exercises: [],
@@ -70,19 +69,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         setInfo(fetched);
-      } catch (err) {
-        console.error("Failed to load user info:", error || err);
-      }
+      } catch (err) {}
     };
-
     fetchInfo();
   }, [user?.userId, user?.isCompleted]);
 
-  // TODO: add update weight...
-  function updateDiet(meal: MealKey, kcal: number) {}
+  function updateInfo(updated: Info) {
+    setInfo(updated);
+  }
 
   return (
-    <UserContext.Provider value={{ info, updateDiet }}>
+    <UserContext.Provider value={{ info, updateInfo }}>
       {children}
     </UserContext.Provider>
   );

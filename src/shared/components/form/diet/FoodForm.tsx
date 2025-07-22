@@ -1,6 +1,5 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import { useEffect } from "react";
 import { useDiet } from "../../../context/DietManageContext";
 import { useFood } from "../../../context/FoodContext";
 import { usePool } from "../../../context/PoolConetext";
@@ -17,8 +16,10 @@ import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import ErrorModal from "../../ui/ErrorModal";
 import Ratio from "../../ui/Ratio";
+import { useUser } from "../../../context/UserContext";
 
 export default function FoodList() {
+  const { updateInfo } = useUser();
   const { meal } = useMeal();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
@@ -30,7 +31,7 @@ export default function FoodList() {
         isValid: true,
       },
       meal: {
-        value: "",
+        value: "main",
         isValid: true,
       },
     },
@@ -47,17 +48,19 @@ export default function FoodList() {
   async function submitHandler(e: React.FocusEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await sendRequest({
+      const updated = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/addDiet`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: {
-          name: clickedFood?.name,
+          name: foodId,
           weight: formState.inputs.weight.value,
+          kcal: Math.round(weight * Number(clickedFood?.kcal)),
           meal,
           isMain: formState.inputs.meal.value === "main",
         },
       });
+      updateInfo(updated);
     } catch (err) {
       modalDisplayHandler();
     }
