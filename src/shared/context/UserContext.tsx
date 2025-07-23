@@ -20,9 +20,10 @@ type Meals = Record<MealKey, Meal>;
 
 type Info = {
   kcal: number;
+  currentKcal: number;
   weight: number;
   height: number;
-  diets: Meals;
+  diets: Meals | {};
   exercises: [];
   date: string;
 };
@@ -36,25 +37,13 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { user, token } = useAuth();
-  const { sendRequest, error } = useHttp<Info>();
+  const { sendRequest } = useHttp<Info>();
   const [info, setInfo] = useState<Info>({
+    currentKcal: 0,
     kcal: 0,
     weight: 0,
     height: 0,
-    diets: {
-      breakfast: {
-        extra: [{ food: "", weight: 0 }],
-        main: [{ food: "", weight: 0 }],
-      },
-      lunch: {
-        extra: [{ food: "", weight: 0 }],
-        main: [{ food: "", weight: 0 }],
-      },
-      dinner: {
-        extra: [{ food: "", weight: 0 }],
-        main: [{ food: "", weight: 0 }],
-      },
-    },
+    diets: {},
     exercises: [],
     date: "",
   });
@@ -62,7 +51,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!user?.userId || !user.isCompleted) return;
     const fetchInfo = async () => {
-      console.log(2);
       try {
         const fetched = await sendRequest({
           url: `${baseUrl}/basic/${user.userId}`,
