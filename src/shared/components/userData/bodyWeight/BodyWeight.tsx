@@ -1,6 +1,6 @@
-import { useUser } from "../../context/UserContext";
-import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { useUser } from "../../../context/UserContext";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function BodyWeight() {
   const auth = useAuth();

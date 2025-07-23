@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useUser } from "../../context/UserContext";
-import { usePool } from "../../context/PoolConetext";
-import Button from "../ui/Button";
+
+import { useUser } from "../../../context/UserContext";
+import { usePool } from "../../../context/PoolConetext";
 
 // —— Types ——
 interface FoodItem {

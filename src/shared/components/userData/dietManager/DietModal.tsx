@@ -7,7 +7,7 @@ type DietFormProps = {
   onCancel: () => void;
 };
 
-export default function DietForm({ onCancel }: DietFormProps) {
+export default function DietModal({ onCancel }: DietFormProps) {
   const diet = useDiet();
   let content;
   switch (diet.state) {

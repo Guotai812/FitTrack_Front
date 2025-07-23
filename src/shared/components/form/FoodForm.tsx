@@ -1,24 +1,24 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import { useDiet } from "../../../context/DietManageContext";
-import { useFood } from "../../../context/FoodContext";
-import { usePool } from "../../../context/PoolConetext";
-import { useForm } from "../../../hooks/useForm/useForm";
-import { useAuth } from "../../../context/AuthContext";
-import { useModal } from "../../../hooks/useModal";
-import { useMeal } from "../../../context/MealContext";
-import useHttp from "../../../hooks/useHttp";
-import useInput from "../../../hooks/useInput";
-import validator from "../../../util/validator";
+import { useDiet } from "../../context/DietManageContext";
+import { useFood } from "../../context/FoodContext";
+import { usePool } from "../../context/PoolConetext";
+import { useForm } from "../../hooks/useForm/useForm";
+import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../hooks/useModal";
+import { useMeal } from "../../context/MealContext";
+import useHttp from "../../hooks/useHttp";
+import useInput from "../../hooks/useInput";
+import validator from "../../util/validator";
 
-import Button from "../../ui/Button";
-import Form from "../../ui/Form";
-import Input from "../../ui/Input";
-import ErrorModal from "../../ui/ErrorModal";
-import Ratio from "../../ui/Ratio";
-import { useUser } from "../../../context/UserContext";
+import Button from "../ui/Button";
+import Form from "../ui/Form";
+import Input from "../ui/Input";
+import ErrorModal from "../ui/ErrorModal";
+import Ratio from "../ui/Ratio";
+import { useUser } from "../../context/UserContext";
 
-export default function FoodList() {
+export default function FoodForm() {
   const { updateInfo } = useUser();
   const { meal } = useMeal();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();

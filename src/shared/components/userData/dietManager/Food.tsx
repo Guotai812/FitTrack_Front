@@ -1,9 +1,10 @@
-import LibraryNavigation from "../../userData/LibraryNavigation";
-import FoodList from "../../userData/FoodList";
 import { useDiet } from "../../../context/DietManageContext";
-import FoodForm from "./FoodForm";
+
 import { FoodContextProvider } from "../../../context/FoodContext";
 import { MealContextProvider } from "../../../context/MealContext";
+import LibraryNavigation from "./LibraryNavigation";
+import FoodList from "./FoodList";
+import FoodForm from "../../form/FoodForm";
 
 export default function FoodLibrary({ onCancel }: { onCancel: () => void }) {
   const { state } = useDiet();
