@@ -7,7 +7,7 @@ export default function FoodList({ onCancel }: { onCancel: () => void }) {
   const { meal, setMeal } = useMeal();
 
   return (
-    <div className="w-4/5 h-full p-6 flex flex-col justify-end">
+    <div className="w-5/6 h-full p-6 flex flex-col justify-end">
       <FoodGallery />
       <div className="flex justify-between">
         <div className="flex justify-end gap-4">

@@ -2,6 +2,7 @@ type ModalProps = {
   children: React.ReactNode;
   pad?: number;
   size?: string;
+  min?: string;
   onCancel: () => void;
 };
 
@@ -9,7 +10,8 @@ export function Modal({
   children,
   onCancel,
   pad = 6,
-  size = "w-[400px]",
+  size = "w-[20%]",
+  min = "400px",
 }: ModalProps) {
   return (
     <div
@@ -17,7 +19,7 @@ export function Modal({
       onClick={onCancel}
     >
       <div
-        className={`bg-white rounded p-${pad} ${size} shadow-xl min-w-[600px]`}
+        className={`bg-white rounded p-${pad} ${size} shadow-xl min-w-[${min}]`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

@@ -20,7 +20,7 @@ export default function LibraryNavigation() {
     setCategory(category);
   }
   return (
-    <aside className="bg-green-300 h-full w-1/5 flex justify-center items-center">
+    <aside className="bg-green-300 h-full w-1/6 flex justify-center items-center">
       <nav>
         <ol className="flex flex-col justify-between items-center gap-6">
           <li>

@@ -34,6 +34,7 @@ export default function DietForm({ onCancel }: DietFormProps) {
           ? "w-[40%] h-[50%]"
           : undefined
       }
+      min="700px"
     >
       {content}
     </Modal>

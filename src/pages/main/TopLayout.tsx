@@ -15,7 +15,7 @@ export default function TopLayout() {
   return (
     <>
       {show && (
-        <Modal onCancel={modalCancelHandler}>
+        <Modal onCancel={modalCancelHandler} >
           {isLogin && (
             <Login onCancelModal={modalCancelHandler} setIsLogin={setIsLogin} />
           )}
