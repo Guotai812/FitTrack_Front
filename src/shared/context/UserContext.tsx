@@ -3,6 +3,7 @@ const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import React, { useEffect, useState, createContext, useContext } from "react";
 import useHttp from "../hooks/useHttp";
 import { useAuth } from "./AuthContext";
+import { Weight } from "lucide-react";
 
 interface FoodItem {
   food: string;
@@ -23,7 +24,7 @@ type Info = {
   currentKcal: number;
   weight: number;
   height: number;
-  diets: Meals | {};
+  diets: Meals;
   exercises: [];
   date: string;
 };
@@ -43,7 +44,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     kcal: 0,
     weight: 0,
     height: 0,
-    diets: {},
+    diets: {
+      breakfast: {
+        main: [{ food: "", weight: 0 }],
+        extra: [{ food: "", weight: 0 }],
+      },
+      lunch: {
+        main: [{ food: "", weight: 0 }],
+        extra: [{ food: "", weight: 0 }],
+      },
+      dinner: {
+        main: [{ food: "", weight: 0 }],
+        extra: [{ food: "", weight: 0 }],
+      },
+    },
     exercises: [],
     date: "",
   });
