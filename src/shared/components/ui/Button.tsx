@@ -2,7 +2,7 @@ import type React from "react";
 
 type ButtonProps = {
   children: React.ReactNode;
-  kind?: "confirm" | "cancel";
+  kind?: "confirm" | "cancel" | "gray";
   isLoading?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -21,6 +21,8 @@ export default function Button({
     ? "bg-green-300 text-black w-20 h-10 rounded"
     : kind === "cancel"
     ? "text-black rounded w-20 h-10"
+    : kind === "gray"
+    ? "bg-gray-300 text-white rounded w-20 h-10"
     : "";
 
   // only add this when not disabled
@@ -29,6 +31,8 @@ export default function Button({
       ? "hover:text-white"
       : kind === "cancel"
       ? "hover:bg-red-500"
+      : kind === "gray"
+      ? "hover:bg-gray-400"
       : ""
     : "";
 
