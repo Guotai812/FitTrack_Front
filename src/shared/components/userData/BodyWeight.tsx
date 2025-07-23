@@ -31,7 +31,7 @@ export default function BodyWeight() {
 
       <div className="flex flex-col items-center justify-center gap-8 mt-8">
         {/* TODO: add a modal to update weight */}
-        <button className="bg-green-300 w-[40%] aspect-square rounded-full flex items-center justify-center text-center hover:shadow-2xl">
+        <button className="bg-green-300 w-[30%] aspect-square rounded-full flex items-center justify-center text-center hover:shadow-2xl">
           <p className="text-5xl">{user.info.weight}kg</p>
         </button>
         <div className="flex flex-col items-center">

@@ -61,6 +61,7 @@ export default function FoodList() {
         },
       });
       updateInfo(updated);
+      setState("pool");
     } catch (err) {
       modalDisplayHandler();
     }

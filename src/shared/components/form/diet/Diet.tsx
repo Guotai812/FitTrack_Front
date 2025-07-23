@@ -1,7 +1,6 @@
 import { CategoryContextProvider } from "../../../context/CategoryContext";
 import { useDiet } from "../../../context/DietManageContext";
 import { Modal } from "../../ui/Modal";
-import DietPanel from "./DietPanel";
 import FoodLibrary from "./Food";
 
 type DietFormProps = {
@@ -12,9 +11,6 @@ export default function DietForm({ onCancel }: DietFormProps) {
   const diet = useDiet();
   let content;
   switch (diet.state) {
-    case "manage":
-      content = <DietPanel onCancel={onCancel} />;
-      break;
     case "edit":
       break;
     case "delete":
@@ -23,7 +19,7 @@ export default function DietForm({ onCancel }: DietFormProps) {
     case "add":
       content = (
         <CategoryContextProvider>
-          <FoodLibrary />
+          <FoodLibrary onCancel={onCancel} />
         </CategoryContextProvider>
       );
       break;
@@ -35,7 +31,7 @@ export default function DietForm({ onCancel }: DietFormProps) {
       pad={diet.state === "pool" || diet.state === "add" ? 0 : undefined}
       size={
         diet.state === "pool" || diet.state === "manage" || diet.state === "add"
-          ? "w-[60%] h-[50%]"
+          ? "w-[40%] h-[50%]"
           : undefined
       }
     >

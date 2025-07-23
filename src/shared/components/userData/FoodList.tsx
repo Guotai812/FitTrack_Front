@@ -1,11 +1,9 @@
-import { useDiet } from "../../context/DietManageContext";
 import { useMeal } from "../../context/MealContext";
 
 import FoodGallery from "./FoodGallery";
 import Button from "../ui/Button";
 
-export default function FoodList() {
-  const { setState } = useDiet();
+export default function FoodList({ onCancel }: { onCancel: () => void }) {
   const { meal, setMeal } = useMeal();
 
   return (
@@ -44,8 +42,8 @@ export default function FoodList() {
             Dinner
           </Button>
         </div>
-        <Button kind="confirm" onClick={() => setState("manage")}>
-          Back
+        <Button kind="cancel" onClick={onCancel}>
+          Cancel
         </Button>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { MealList } from "./MealList";
 
 type FoodItem = { food: string; weight: number };
 type Meal = { main: FoodItem[]; extra: FoodItem[] };
-type Meals = Record<"breakfast" | "lunch" | "dinner", Meal>;
+type Meals = Record<"breakfast" | "lunch" | "dinner", Meal> | {};
 function getTotalsPerFood(diets: Meals): Record<string, number> {
   return Object.values(diets) // Meal[]
     .flatMap(({ main, extra }) => [...main, ...extra]) // FoodItem[]
@@ -41,7 +41,7 @@ export default function DietSection() {
 
   function openManageHanlder() {
     modalDisplayHandler();
-    diet.setState("manage");
+    diet.setState("pool");
   }
 
   return (
@@ -58,7 +58,7 @@ export default function DietSection() {
             </h2>
           )}
           <Button kind="confirm" onClick={openManageHanlder}>
-            Manage
+            Add
           </Button>
         </div>
         <MealList />

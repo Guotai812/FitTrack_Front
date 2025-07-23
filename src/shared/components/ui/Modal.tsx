@@ -13,11 +13,11 @@ export function Modal({
 }: ModalProps) {
   return (
     <div
-      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 "
       onClick={onCancel}
     >
       <div
-        className={`bg-white rounded p-${pad} ${size} shadow-xl `}
+        className={`bg-white rounded p-${pad} ${size} shadow-xl min-w-[600px]`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
