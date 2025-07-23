@@ -31,12 +31,17 @@ export default function DietSection() {
   let protein = 0;
   let fat = 0;
   for (const [mealName, totalWeight] of Object.entries(totalsPerMeal)) {
-    kcal += Math.round(((pool[mealName].kcal * totalWeight) / 100) * 10) / 10;
-    carbon +=
-      Math.round(((pool[mealName].carbon * totalWeight) / 100) * 10) / 10;
-    protein +=
-      Math.round(((pool[mealName].protein * totalWeight) / 100) * 10) / 10;
-    fat += Math.round(((pool[mealName].fat * totalWeight) / 100) * 10) / 10;
+    kcal =
+      Math.round((kcal + (pool[mealName].kcal * totalWeight) / 100) * 10) / 10;
+    carbon =
+      Math.round((carbon + (pool[mealName].carbon * totalWeight) / 100) * 10) /
+      10;
+    protein =
+      Math.round(
+        (protein + (pool[mealName].protein * totalWeight) / 100) * 10
+      ) / 10;
+    fat =
+      Math.round((fat + (pool[mealName].fat * totalWeight) / 100) * 10) / 10;
   }
 
   function openManageHanlder() {
