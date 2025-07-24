@@ -178,7 +178,7 @@ export const MealList: React.FC = () => {
                 {realExtra.length > 0 && (
                   <>
                     <h3 className="text-lg font-medium mb-2">Snack</h3>
-                    {realExtra.map((item, i) => (
+                    {realExtra.map((item) => (
                       <div
                         onClick={() =>
                           extraSelectFoodHandler(item.food, mealKey)

@@ -10,7 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import Form from "../ui/Form";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
-import React, { useEffect, useState, type FormHTMLAttributes } from "react";
+import React, { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
@@ -52,13 +52,14 @@ export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/editDiet`,
-        method: "POST",
+        method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
         body: {
           meal: edit?.meal,
           isMain: edit?.isMain,
           food: edit?.foodId,
           weight: formState.inputs.weight.value,
+          originalWeight: weight,
         },
       });
       updateInfo(responseData.updated);

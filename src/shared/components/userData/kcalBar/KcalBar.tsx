@@ -13,7 +13,8 @@ const SemiCircleProgress: React.FC<SemiCircleProgressProps> = ({
   const stroke = 50;
   const circumference = Math.PI * radius; // half-circle
   const remaining = Math.max(total - consumed, 0);
-  const progress = Math.min(remaining / total, 1);
+  const progressRaw = Math.min(remaining / total, 1);
+  const progress = Math.round(progressRaw * 10) / 10;
   const offset = circumference * (1 - progress);
 
   return (
