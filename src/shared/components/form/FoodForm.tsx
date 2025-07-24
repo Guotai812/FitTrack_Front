@@ -1,5 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
+import { useUser } from "../../context/UserContext";
 import { useDiet } from "../../context/DietManageContext";
 import { useFood } from "../../context/FoodContext";
 import { usePool } from "../../context/PoolConetext";
@@ -16,7 +17,6 @@ import Form from "../ui/Form";
 import Input from "../ui/Input";
 import ErrorModal from "../ui/ErrorModal";
 import Ratio from "../ui/Ratio";
-import { useUser } from "../../context/UserContext";
 
 export default function FoodForm() {
   const { updateInfo } = useUser();
@@ -142,7 +142,7 @@ export default function FoodForm() {
         </div>
 
         <div className="flex justify-end gap-4">
-          <Button kind="cancel" onClick={() => setState("pool")}>
+          <Button type="button" kind="cancel" onClick={() => setState("pool")}>
             Cancel
           </Button>
           <Button kind="confirm" disabled={!formState.isValid || isLoading}>

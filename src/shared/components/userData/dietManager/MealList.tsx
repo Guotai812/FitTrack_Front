@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-
 import { useUser } from "../../../context/UserContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useModal } from "../../../hooks/useModal";
-import ModificationModal from "./ModificationModal";
 import { useEdit } from "../../../context/EditContext";
+import { DeleteContextProvider } from "../../../context/DeleteContext";
+
+import ModificationModal from "./ModificationModal";
 // —— Types ——
 interface FoodItem {
   food: string;
@@ -90,7 +91,11 @@ export const MealList: React.FC = () => {
 
   return (
     <>
-      {show && <ModificationModal onCancel={modalCancelHandler} />}
+      {show && (
+        <DeleteContextProvider>
+          <ModificationModal onCancel={modalCancelHandler} />
+        </DeleteContextProvider>
+      )}
       <div className="space-y-8">
         {nonEmpty.map((mealKey) => {
           const { main = [], extra = [] } = info.diets[mealKey] ?? {};

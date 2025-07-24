@@ -1,4 +1,7 @@
+import { useDelete } from "../../../context/DeleteContext";
+
 import FoodEditForm from "../../form/FoodEditForm";
+import DeleteConfirm from "../../ui/DeleteConfirm";
 import { Modal } from "../../ui/Modal";
 
 type ModificationModalProps = {
@@ -8,9 +11,10 @@ type ModificationModalProps = {
 export default function ModificationModal({
   onCancel,
 }: ModificationModalProps) {
+  const { isDelete } = useDelete();
   return (
     <Modal onCancel={onCancel}>
-      <FoodEditForm onCancel={onCancel} />
+      {isDelete ? <DeleteConfirm /> : <FoodEditForm onCancel={onCancel} />}
     </Modal>
   );
 }

@@ -6,13 +6,14 @@ import useInput from "../../hooks/useInput";
 import { useForm } from "../../hooks/useForm/useForm";
 import validator from "../../util/validator";
 import { useAuth } from "../../context/AuthContext";
+import { useDelete } from "../../context/DeleteContext";
+import React, { useEffect, useState } from "react";
+import { useModal } from "../../hooks/useModal";
 
 import Form from "../ui/Form";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
-import React, { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp";
-import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 
 type FoodEditFormProps = {
@@ -20,6 +21,7 @@ type FoodEditFormProps = {
 };
 
 export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
+  const { setIsDelete } = useDelete();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp();
@@ -104,12 +106,13 @@ export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
           isValid={formState.inputs.weight.isValid}
         />
       </div>
+
       <div className="flex justify-between">
         <Button onClick={onCancel} kind="gray" type="button">
           Cancel
         </Button>
         <div className="flex gap-4">
-          <Button kind="cancel" type="button">
+          <Button kind="cancel" type="button" onClick={() => setIsDelete(true)}>
             Delete
           </Button>
           <Button
