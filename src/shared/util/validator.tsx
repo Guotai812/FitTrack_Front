@@ -1,15 +1,4 @@
-export type ValidatorType =
-  | "email"
-  | "password"
-  | "userName"
-  | "confirmPassword"
-  | "weight"
-  | "height"
-  | "gender"
-  | "frequency"
-  | "type"
-  | "goal"
-  | "birthdate";
+export type ValidatorType = string;
 
 export default function validator(
   type: ValidatorType,
