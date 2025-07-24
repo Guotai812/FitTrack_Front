@@ -3,7 +3,6 @@ const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import React, { useEffect, useState, createContext, useContext } from "react";
 import useHttp from "../hooks/useHttp";
 import { useAuth } from "./AuthContext";
-import { Weight } from "lucide-react";
 
 interface FoodItem {
   food: string;

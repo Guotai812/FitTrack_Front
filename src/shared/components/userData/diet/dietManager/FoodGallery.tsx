@@ -1,8 +1,8 @@
-import { useCategory } from "../../../context/CategoryContext";
-import { useDiet } from "../../../context/DietManageContext";
-import { useFood } from "../../../context/FoodContext";
-import { usePool } from "../../../context/PoolConetext";
-import Button from "../../ui/Button";
+import { useCategory } from "../../../../context/CategoryContext";
+import { useDiet } from "../../../../context/DietManageContext";
+import { useFood } from "../../../../context/FoodContext";
+import { usePool } from "../../../../context/PoolConetext";
+import Button from "../../../ui/Button";
 
 export default function FoodGallery() {
   const { setFoodId } = useFood();
@@ -46,7 +46,7 @@ export default function FoodGallery() {
   }
   return (
     <>
-      <div className="h-full overflow-auto">
+      <div className="h-full overflow-y-auto">
         <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
             <li key={item._id}>
