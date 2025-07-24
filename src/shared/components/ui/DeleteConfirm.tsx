@@ -1,5 +1,4 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { Weight } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useDelete } from "../../context/DeleteContext";
 import { useEdit } from "../../context/EditContext";

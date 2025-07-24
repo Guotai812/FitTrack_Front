@@ -57,7 +57,7 @@ const SemiCircleProgress: React.FC<SemiCircleProgressProps> = ({
         fontSize="16"
         fill="#333"
       >
-        {Math.max(total - consumed, 0)} kcal left
+        {total - consumed} kcal left
       </text>
     </svg>
   );
