@@ -14,7 +14,11 @@ export default function ModificationModal({
   const { isDelete } = useDelete();
   return (
     <Modal onCancel={onCancel}>
-      {isDelete ? <DeleteConfirm /> : <FoodEditForm onCancel={onCancel} />}
+      {isDelete ? (
+        <DeleteConfirm onCancel={onCancel} />
+      ) : (
+        <FoodEditForm onCancel={onCancel} />
+      )}
     </Modal>
   );
 }
