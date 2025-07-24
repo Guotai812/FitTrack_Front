@@ -1,8 +1,8 @@
-import { useCategory } from "../../../../context/CategoryContext";
-import { useDiet } from "../../../../context/DietManageContext";
-import { useFood } from "../../../../context/FoodContext";
-import { usePool } from "../../../../context/PoolConetext";
-import Button from "../../../ui/Button";
+import { useCategory } from "../../../context/CategoryContext";
+import { useDiet } from "../../../context/DietManageContext";
+import { useFood } from "../../../context/FoodContext";
+import { usePool } from "../../../context/PoolConetext";
+import Button from "../../ui/Button";
 
 export default function FoodGallery() {
   const { setFoodId } = useFood();

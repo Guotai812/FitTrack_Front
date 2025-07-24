@@ -1,6 +1,6 @@
-import Button from "../../../ui/Button";
+import Button from "../../ui/Button";
 import FoodGallery from "./FoodGallery";
-import { useMeal } from "../../../../context/MealContext";
+import { useMeal } from "../../../context/MealContext";
 
 export default function FoodList({ onCancel }: { onCancel: () => void }) {
   const { meal, setMeal } = useMeal();

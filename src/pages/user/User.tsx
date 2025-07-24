@@ -1,8 +1,8 @@
 import SideContent from "../../shared/components/ui/SideContent";
-import BodyWeight from "../../shared/components/userData/diet/bodyWeight/BodyWeight";
-import CaloriesSection from "../../shared/components/userData/diet/kcalBar/KcalIndicator";
+import BodyWeight from "../../shared/components/userData/bodyWeight/BodyWeight";
+import CaloriesSection from "../../shared/components/userData/kcalBar/KcalIndicator";
 
-import DietSection from "../../shared/components/userData/diet/dietManager/Diet";
+import DietSection from "../../shared/components/userData/dietManager/Diet";
 import { DietProvider } from "../../shared/context/DietManageContext";
 
 export default function UserHomePage() {

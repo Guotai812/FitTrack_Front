@@ -1,6 +1,6 @@
-import { CategoryContextProvider } from "../../../../context/CategoryContext";
-import { useDiet } from "../../../../context/DietManageContext";
-import { Modal } from "../../../ui/Modal";
+import { CategoryContextProvider } from "../../../context/CategoryContext";
+import { useDiet } from "../../../context/DietManageContext";
+import { Modal } from "../../ui/Modal";
 import FoodLibrary from "./Food";
 
 type DietFormProps = {
