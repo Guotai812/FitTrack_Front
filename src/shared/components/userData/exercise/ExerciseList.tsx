@@ -1,52 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../../../context/UserContext";
-
-// ——— Shared Exercise type
-type ExerciseItem = {
-  creator: string;
-  isPublic: boolean;
-  name: string;
-  image: string;
-  type: "aerobic" | "anaerobic";
-  met: number | null;
-  kcalPerHour: number | null;
-  defaultRom: number | null;
-  efficiency: number;
-  buffer: number;
-  kcalPerKgMeter: number | null;
-};
-
-// ——— Dummy pool data
-const DUMMY_POOL: Record<string, ExerciseItem> = {
-  t2: {
-    creator: "user1",
-    isPublic: true,
-    name: "benchPress",
-    image:
-      "https://guotai-fittrack.s3.ap-southeast-2.amazonaws.com/exercisePool/benchPress.jpeg",
-    type: "anaerobic",
-    met: null,
-    kcalPerHour: null,
-    defaultRom: 0.5,
-    efficiency: 0.2,
-    buffer: 1.15,
-    kcalPerKgMeter: (9.81 / 4184 / 0.2) * 1.15,
-  },
-  t1: {
-    creator: "user1",
-    isPublic: true,
-    name: "joggling",
-    image:
-      "https://guotai-fittrack.s3.ap-southeast-2.amazonaws.com/exercisePool/jogging.png",
-    type: "aerobic",
-    met: 7,
-    kcalPerHour: 7 * 70,
-    defaultRom: null,
-    efficiency: 0.2,
-    buffer: 1.15,
-    kcalPerKgMeter: null,
-  },
-};
+import { usePool } from "../../../context/PoolConetext";
 
 // ——— Display object shapes
 type AerobicDisplay = {
@@ -76,6 +30,7 @@ function formatDuration(totalMinutes: number): string {
 
 export default function ExerciseList() {
   const { info, isLoading } = useUser();
+  const { ePool } = usePool();
 
   // 1) Loading guard
   if (isLoading || !info.exercises) {
@@ -104,7 +59,7 @@ export default function ExerciseList() {
   // 4) Build display lists
   const aerobicItems: AerobicDisplay[] = aerobics
     .map((entry) => {
-      const ex = DUMMY_POOL[entry.eid];
+      const ex = ePool[entry.eid];
       if (!ex || ex.met == null) return null;
       const kcalPerMin = (ex.met * 3.5 * info.weight) / 200;
       const consumedKcal = Math.round(entry.duration * kcalPerMin * 10) / 10;
@@ -120,7 +75,7 @@ export default function ExerciseList() {
 
   const anaerobicItems: AnaerobicDisplay[] = anaerobics
     .map((entry) => {
-      const ex = DUMMY_POOL[entry.eid];
+      const ex = ePool[entry.eid];
       if (!ex) return null;
       const defaultRom = ex.defaultRom ?? 0;
       const kcalPerKgMeter = ex.kcalPerKgMeter ?? 0;

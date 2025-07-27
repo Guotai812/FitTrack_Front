@@ -1,11 +1,11 @@
-import { useDiet } from "../../../context/DietManageContext";
+import { useDiet } from "../../../context/diet/DietManageContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useUser } from "../../../context/UserContext";
 import { useModal } from "../../../hooks/useModal";
 import DietForm from "./DietModal";
 import Button from "../../ui/Button";
 import { MealList } from "./MealList";
-import { EditContextProvider } from "../../../context/EditContext";
+import { EditContextProvider } from "../../../context/diet/EditContext";
 type FoodItem = { food: string; weight: number };
 type Meal = { main: FoodItem[]; extra: FoodItem[] };
 type Meals = Record<"breakfast" | "lunch" | "dinner", Meal> | {};

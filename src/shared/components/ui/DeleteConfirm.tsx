@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useAuth } from "../../context/AuthContext";
-import { useDelete } from "../../context/DeleteContext";
-import { useEdit } from "../../context/EditContext";
+import { useDelete } from "../../context/diet/DeleteContext";
+import { useEdit } from "../../context/diet/EditContext";
 import { useUser } from "../../context/UserContext";
 import useHttp from "../../hooks/useHttp";
 import { useModal } from "../../hooks/useModal";

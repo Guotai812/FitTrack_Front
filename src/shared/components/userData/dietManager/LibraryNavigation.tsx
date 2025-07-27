@@ -1,5 +1,5 @@
-import { useCategory } from "../../../context/CategoryContext";
-import { useDiet } from "../../../context/DietManageContext";
+import { useCategory } from "../../../context/diet/CategoryContext";
+import { useDiet } from "../../../context/diet/DietManageContext";
 import Button from "../../ui/Button";
 
 type Category =

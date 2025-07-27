@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useUser } from "../../../context/UserContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useModal } from "../../../hooks/useModal";
-import { useEdit } from "../../../context/EditContext";
-import { DeleteContextProvider } from "../../../context/DeleteContext";
+import { useEdit } from "../../../context/diet/EditContext";
+import { DeleteContextProvider } from "../../../context/diet/DeleteContext";
 
 import ModificationModal from "./ModificationModal";
 // —— Types ——

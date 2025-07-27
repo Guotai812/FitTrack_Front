@@ -1,6 +1,6 @@
-import { useCategory } from "../../../context/CategoryContext";
-import { useDiet } from "../../../context/DietManageContext";
-import { useFood } from "../../../context/FoodContext";
+import { useCategory } from "../../../context/diet/CategoryContext";
+import { useDiet } from "../../../context/diet/DietManageContext";
+import { useFood } from "../../../context/diet/FoodContext";
 import { usePool } from "../../../context/PoolConetext";
 import Button from "../../ui/Button";
 

@@ -3,7 +3,7 @@ import BodyWeight from "../../shared/components/userData/bodyWeight/BodyWeight";
 import CaloriesSection from "../../shared/components/userData/kcalBar/KcalIndicator";
 import ExerciseSection from "../../shared/components/userData/exercise/ExerciseSection";
 import DietSection from "../../shared/components/userData/dietManager/Diet";
-import { DietProvider } from "../../shared/context/DietManageContext";
+import { DietProvider } from "../../shared/context/diet/DietManageContext";
 
 export default function UserHomePage() {
   return (

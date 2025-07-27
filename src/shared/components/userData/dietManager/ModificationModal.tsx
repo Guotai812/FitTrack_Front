@@ -1,4 +1,4 @@
-import { useDelete } from "../../../context/DeleteContext";
+import { useDelete } from "../../../context/diet/DeleteContext";
 
 import FoodEditForm from "../../form/FoodEditForm";
 import DeleteConfirm from "../../ui/DeleteConfirm";

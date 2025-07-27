@@ -24,6 +24,7 @@ interface Exercise {
   name: string;
   image: string;
   type: "aerobic" | "anaerobic";
+  subType: string;
   // cardio fields
   met: number | null;
   kcalPerHour: number | null;
@@ -33,6 +34,11 @@ interface Exercise {
   buffer: number;
   // pre-computed multiplier
   kcalPerKgMeter: number;
+}
+
+interface PoolResponse {
+  foods: Pool;
+  exercises: Epool;
 }
 
 type Pool = Record<string, Food>;
@@ -49,7 +55,7 @@ export function PoolProvider({ children }: { children: React.ReactNode }) {
   const [pool, setFoodData] = useState<Pool>({});
   const [ePool, setEPool] = useState<Epool>({});
   const { token, user } = useAuth();
-  const { sendRequest } = useHttp<Pool>();
+  const { sendRequest } = useHttp<PoolResponse>();
 
   useEffect(() => {
     if (!user?.userId || !token) return;

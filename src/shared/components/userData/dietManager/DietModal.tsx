@@ -1,5 +1,5 @@
-import { CategoryContextProvider } from "../../../context/CategoryContext";
-import { useDiet } from "../../../context/DietManageContext";
+import { CategoryContextProvider } from "../../../context/diet/CategoryContext";
+import { useDiet } from "../../../context/diet/DietManageContext";
 import { Modal } from "../../ui/Modal";
 import FoodLibrary from "./Food";
 

@@ -1,13 +1,13 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
 import { useUser } from "../../context/UserContext";
-import { useDiet } from "../../context/DietManageContext";
-import { useFood } from "../../context/FoodContext";
+import { useDiet } from "../../context/diet/DietManageContext";
+import { useFood } from "../../context/diet/FoodContext";
 import { usePool } from "../../context/PoolConetext";
 import { useForm } from "../../hooks/useForm/useForm";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../hooks/useModal";
-import { useMeal } from "../../context/MealContext";
+import { useMeal } from "../../context/diet/MealContext";
 import useHttp from "../../hooks/useHttp";
 import useInput from "../../hooks/useInput";
 import validator from "../../util/validator";
