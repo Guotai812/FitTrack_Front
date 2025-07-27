@@ -14,6 +14,26 @@ interface Meal {
   extra: FoodItem[];
 }
 
+interface AerobicItem {
+  eid: string;
+  duration: number;
+}
+
+interface SetItem {
+  weight: number;
+  reps: number;
+}
+
+interface AnaerobicItem {
+  eid: string;
+  sets: SetItem[];
+}
+
+interface Exercises {
+  aerobic: AerobicItem[];
+  anaerobic: AnaerobicItem[];
+}
+
 type MealKey = "breakfast" | "lunch" | "dinner";
 
 type Meals = Record<MealKey, Meal>;
@@ -24,12 +44,14 @@ type Info = {
   weight: number;
   height: number;
   diets: Meals;
-  exercises: [];
+  exercises: Exercises;
   date: string;
 };
 
 type UserContextType = {
   info: Info;
+  error: string | null;
+  isLoading: boolean;
   updateInfo: (updated: Info) => void;
 };
 
@@ -37,7 +59,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { user, token } = useAuth();
-  const { sendRequest } = useHttp<Info>();
+  const { error, isLoading, sendRequest } = useHttp<Info>();
   const [info, setInfo] = useState<Info>({
     currentKcal: 0,
     kcal: 0,
@@ -57,7 +79,33 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         extra: [{ food: "", weight: 0 }],
       },
     },
-    exercises: [],
+    exercises: {
+      aerobic: [
+        {
+          eid: "",
+          duration: 0,
+        },
+      ],
+      anaerobic: [
+        {
+          eid: "",
+          sets: [
+            {
+              weight: 0,
+              reps: 0,
+            },
+            {
+              weight: 0,
+              reps: 0,
+            },
+            {
+              weight: 0,
+              reps: 0,
+            },
+          ],
+        },
+      ],
+    },
     date: "",
   });
 
@@ -66,7 +114,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const fetchInfo = async () => {
       try {
         const fetched = await sendRequest({
-          url: `${baseUrl}/basic/${user.userId}`,
+          url: `${baseUrl}/basic/${user.userId}/getDailyBasic`,
           headers: { Authorization: `Bearer ${token}` },
         });
         setInfo(fetched);
@@ -80,7 +128,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <UserContext.Provider value={{ info, updateInfo }}>
+    <UserContext.Provider value={{ info, updateInfo, error, isLoading }}>
       {children}
     </UserContext.Provider>
   );

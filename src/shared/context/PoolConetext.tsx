@@ -17,16 +17,37 @@ interface Food {
   type: string;
 }
 
+interface Exercise {
+  _id: string;
+  creator: string;
+  isPublic: boolean;
+  name: string;
+  image: string;
+  type: "aerobic" | "anaerobic";
+  // cardio fields
+  met: number | null;
+  kcalPerHour: number | null;
+  // strength fields
+  defaultRom: number | null;
+  efficiency: number;
+  buffer: number;
+  // pre-computed multiplier
+  kcalPerKgMeter: number;
+}
+
 type Pool = Record<string, Food>;
+type Epool = Record<string, Exercise>;
 
 type ContextType = {
   pool: Pool;
+  ePool: Epool;
 };
 
-const PoolContext = createContext<ContextType>({ pool: {} });
+const PoolContext = createContext<ContextType>({ pool: {}, ePool: {} });
 
 export function PoolProvider({ children }: { children: React.ReactNode }) {
   const [pool, setFoodData] = useState<Pool>({});
+  const [ePool, setEPool] = useState<Epool>({});
   const { token, user } = useAuth();
   const { sendRequest } = useHttp<Pool>();
 
@@ -34,18 +55,21 @@ export function PoolProvider({ children }: { children: React.ReactNode }) {
     if (!user?.userId || !token) return;
     async function sendRequestHelper() {
       try {
-        const responseData = await sendRequest({
+        const { foods, exercises } = await sendRequest({
           url: `${baseUrl}/basic/${user?.userId}/getPool`,
           headers: { Authorization: `Bearer ${token}` },
         });
-        setFoodData(responseData);
+        setFoodData(foods);
+        setEPool(exercises);
       } catch (error) {}
     }
     sendRequestHelper();
   }, [user?.userId, token]);
 
   return (
-    <PoolContext.Provider value={{ pool }}>{children}</PoolContext.Provider>
+    <PoolContext.Provider value={{ pool, ePool }}>
+      {children}
+    </PoolContext.Provider>
   );
 }
 
