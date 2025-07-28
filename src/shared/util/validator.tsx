@@ -37,6 +37,7 @@ export default function validator(
     // ── NUMBER TESTS ────────────────────────────────────────────────────────
     case "weight":
     case "height":
+    case "duration":
       // 1) it must be a string (we need the raw text to detect leading zeros)
       if (typeof value !== "string") {
         return false;

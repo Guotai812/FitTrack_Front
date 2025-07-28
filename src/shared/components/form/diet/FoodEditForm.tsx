@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { usePool } from "../../../context/PoolConetext";
-import { useUser } from "../../../context/UserContext";
+import { useUser } from "../../../context/UserContext/UserContext";
 import { useEdit } from "../../../context/diet/EditContext";
 import useInput from "../../../hooks/useInput";
 import { useForm } from "../../../hooks/useForm/useForm";

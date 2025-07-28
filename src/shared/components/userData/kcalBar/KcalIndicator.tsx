@@ -1,4 +1,4 @@
-import { useUser } from "../../../context/UserContext";
+import { useUser } from "../../../context/UserContext/UserContext";
 
 import SemiCircleProgress from "./KcalBar";
 

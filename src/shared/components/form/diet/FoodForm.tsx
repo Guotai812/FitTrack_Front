@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import { useUser } from "../../../context/UserContext";
+import { useUser } from "../../../context/UserContext/UserContext";
 import { useDiet } from "../../../context/diet/DietManageContext";
 import { useFood } from "../../../context/diet/FoodContext";
 import { usePool } from "../../../context/PoolConetext";

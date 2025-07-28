@@ -1,53 +1,9 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
+import type { Info } from "./UserContextType";
 import React, { useEffect, useState, createContext, useContext } from "react";
-import useHttp from "../hooks/useHttp";
-import { useAuth } from "./AuthContext";
-
-interface FoodItem {
-  food: string;
-  weight: number; // in grams
-}
-
-interface Meal {
-  main: FoodItem[];
-  extra: FoodItem[];
-}
-
-interface AerobicItem {
-  eid: string;
-  duration: number;
-}
-
-interface SetItem {
-  weight: number;
-  reps: number;
-  sets: number;
-}
-
-interface AnaerobicItem {
-  eid: string;
-  sets: SetItem[];
-}
-
-interface Exercises {
-  aerobic: AerobicItem[];
-  anaerobic: AnaerobicItem[];
-}
-
-type MealKey = "breakfast" | "lunch" | "dinner";
-
-type Meals = Record<MealKey, Meal>;
-
-type Info = {
-  kcal: number;
-  currentKcal: number;
-  weight: number;
-  height: number;
-  diets: Meals;
-  exercises: Exercises;
-  date: string;
-};
+import useHttp from "../../hooks/useHttp";
+import { useAuth } from "../AuthContext";
 
 type UserContextType = {
   info: Info;

@@ -1,6 +1,6 @@
 import { useDiet } from "../../../context/diet/DietManageContext";
 import { usePool } from "../../../context/PoolConetext";
-import { useUser } from "../../../context/UserContext";
+import { useUser } from "../../../context/UserContext/UserContext";
 import { useModal } from "../../../hooks/useModal";
 import DietForm from "./DietModal";
 import Button from "../../ui/Button";

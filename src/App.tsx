@@ -10,7 +10,7 @@ import UserHomePage from "./pages/user/User";
 import NotFoundPage from "./pages/general/NotFound";
 import { AuthProvider } from "./shared/context/AuthContext";
 import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
-import { UserProvider } from "./shared/context/UserContext";
+import { UserProvider } from "./shared/context/UserContext/UserContext";
 import { PoolProvider } from "./shared/context/PoolConetext";
 import ErrorPage from "./pages/general/Error";
 
