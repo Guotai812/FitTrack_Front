@@ -6,6 +6,7 @@ import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 
 export default function ExerciseForm() {
+  // TODO: send request to fetch newest data, and set a state to record set
   const { id, setId } = useExercise();
   const { ePool } = usePool();
   const selectedExercise = ePool[id];
@@ -56,7 +57,7 @@ export default function ExerciseForm() {
               />
               <p>{selectedExercise.name}</p>
             </div>
-            
+
             <div className="text-center">
               <Input
                 type="number"

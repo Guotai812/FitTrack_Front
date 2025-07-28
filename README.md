@@ -1,69 +1,50 @@
-# React + TypeScript + Vite
+# FitTrack Front-End
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fitness tracking web application front-end built with React, Vite, and TypeScript. FitTrack helps users monitor their diet and exercise, calculate daily calorie intake and expenditure, and visualize progress over time.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Features](#features)
+- [Demo](#demo)
+- [Screenshots](#screenshots)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Scripts](#scripts)
+- [Environment Variables](#environment-variables)
+- [Technologies](#technologies)
+- [Linting](#linting)
+- [Contributing](#contributing)
+- [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **User Authentication**: Sign up, log in, and manage sessions using JSON Web Tokens (JWT).
+- **Food Tracking**: Browse a database of foods or add custom items, record consumption, and track nutritional values.
+- **Exercise Tracking**: Log aerobic (e.g., jogging) and anaerobic (e.g., strength) workouts, calculate calories burned based on MET and custom formulas.
+- **Dashboard**: View daily summary of calorie intake vs. expenditure and monitor trends.
+- **Responsive UI**: Built with Tailwind CSS and Framer Motion for smooth animations.
+- **Routing**: Client-side navigation powered by React Router DOM.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Demo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+A live demo will be available once the back-end API is running. Configure the `VITE_BACKEND_URL` in your `.env` file to point to the API endpoint.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Screenshots
+
+Include screenshots of the application UI here, such as the dashboard, meal entry, and exercise log:
+
+```markdown
+<!-- ![Dashboard](path/to/dashboard.png) -->
+<!-- ![Meal Entry](path/to/meal-entry.png) -->
+<!-- ![Exercise Log](path/to/exercise-log.png) -->
 ```
