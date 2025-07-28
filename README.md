@@ -37,11 +37,9 @@ A fitness tracking web application front-end built with React, Vite, and TypeScr
 
 Include screenshots of the application UI here, such as the dashboard, meal entry, and exercise log:
 
-```markdown
 ![Dashboard](/screenshots/dashboard.jpg)
 ![Meal Entry](/screenshots/mealList.jpg)
 ![Meal Form](/screenshots/addDietForm.jpg)
 ![Diet Showcase](/screenshots/dietList.jpg)
 ![Exercise Entry](/screenshots/exerciseList.jpg)
 ![Exercise Form](/screenshots/addExercise.jpg)
-```
