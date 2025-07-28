@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../ui/Button";
 import { useCategory } from "../../../context/exercise/CategoryContext";
+import { useExercise } from "../../../context/exercise/ExerciseContext";
+import { s } from "framer-motion/client";
 
 type TopCategory = "all" | "aerobic" | "anaerobic";
 type SubCategory = "chest" | "back" | "leg" | "other";
@@ -15,6 +17,7 @@ const subCategories: Record<
 };
 
 export default function SideNavigation() {
+  const { setId } = useExercise();
   const { category, setCategory } = useCategory();
   const [expanded, setExpanded] = useState<TopCategory | null>(null);
   const toggle = (cat: TopCategory) =>
@@ -23,6 +26,11 @@ export default function SideNavigation() {
   function categoryHandler(cat: TopCategory) {
     toggle(cat);
     setCategory({ top: cat, sub: null });
+    setId("");
+  }
+  function subCategoryHandler(sub: SubCategory) {
+    setId("");
+    setCategory((pre) => ({ ...pre, sub: sub }));
   }
 
   return (
@@ -56,9 +64,7 @@ export default function SideNavigation() {
                           className={`w-full text-center text-sm hover:text-white capitalize ${
                             category.sub === sub ? "text-white" : ""
                           }`}
-                          onClick={() =>
-                            setCategory((pre) => ({ ...pre, sub: sub }))
-                          }
+                          onClick={() => subCategoryHandler(sub)}
                         >
                           {sub}
                         </Button>

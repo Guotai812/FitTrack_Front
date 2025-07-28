@@ -22,6 +22,7 @@ interface AerobicItem {
 interface SetItem {
   weight: number;
   reps: number;
+  sets: number;
 }
 
 interface AnaerobicItem {
@@ -93,14 +94,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             {
               weight: 0,
               reps: 0,
-            },
-            {
-              weight: 0,
-              reps: 0,
-            },
-            {
-              weight: 0,
-              reps: 0,
+              sets: 0,
             },
           ],
         },

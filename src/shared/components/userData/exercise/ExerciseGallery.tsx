@@ -1,8 +1,14 @@
 import { useCategory } from "../../../context/exercise/CategoryContext";
+import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
 import Button from "../../ui/Button";
 
-export default function ExerciseGallery() {
+type ExerciseGalleryProps = {
+  onCancel: () => void;
+};
+
+export default function ExerciseGallery({ onCancel }: ExerciseGalleryProps) {
+  const { id, setId } = useExercise();
   const { category } = useCategory();
   const { ePool } = usePool();
 
@@ -42,7 +48,10 @@ export default function ExerciseGallery() {
         <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
             <li key={item._id}>
-              <Button className="flex flex-col items-center justify-center w-32 h-40 bg-white rounded-lg shadow hover:shadow-xl hover:bg-green-300 transition-shadow">
+              <Button
+                onClick={() => setId(item._id)}
+                className="flex flex-col items-center justify-center w-32 h-40 bg-white rounded-lg shadow hover:shadow-xl hover:bg-green-300 transition-shadow"
+              >
                 <img
                   src={item.image}
                   alt={item.name}
@@ -55,6 +64,11 @@ export default function ExerciseGallery() {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="flex justify-end">
+        <Button kind="cancel" onClick={onCancel}>
+          Cancel
+        </Button>
       </div>
     </div>
   );

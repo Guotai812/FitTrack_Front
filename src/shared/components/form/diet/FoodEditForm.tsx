@@ -1,20 +1,20 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { usePool } from "../../context/PoolConetext";
-import { useUser } from "../../context/UserContext";
-import { useEdit } from "../../context/diet/EditContext";
-import useInput from "../../hooks/useInput";
-import { useForm } from "../../hooks/useForm/useForm";
-import validator from "../../util/validator";
-import { useAuth } from "../../context/AuthContext";
-import { useDelete } from "../../context/diet/DeleteContext";
+import { usePool } from "../../../context/PoolConetext";
+import { useUser } from "../../../context/UserContext";
+import { useEdit } from "../../../context/diet/EditContext";
+import useInput from "../../../hooks/useInput";
+import { useForm } from "../../../hooks/useForm/useForm";
+import validator from "../../../util/validator";
+import { useAuth } from "../../../context/AuthContext";
+import { useDelete } from "../../../context/diet/DeleteContext";
 import React, { useEffect, useState } from "react";
-import { useModal } from "../../hooks/useModal";
+import { useModal } from "../../../hooks/useModal";
 
-import Form from "../ui/Form";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
-import useHttp from "../../hooks/useHttp";
-import ErrorModal from "../ui/ErrorModal";
+import Form from "../../ui/Form";
+import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import useHttp from "../../../hooks/useHttp";
+import ErrorModal from "../../ui/ErrorModal";
 
 type FoodEditFormProps = {
   onCancel: () => void;

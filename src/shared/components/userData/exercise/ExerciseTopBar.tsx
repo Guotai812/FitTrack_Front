@@ -1,6 +1,7 @@
 import { usePool } from "../../../context/PoolConetext";
 import { useUser } from "../../../context/UserContext";
 import { useModal } from "../../../hooks/useModal";
+import ExerciseContextProvider from "../../../context/exercise/ExerciseContext";
 
 import Button from "../../ui/Button";
 import ExercisePool from "./ExercisePool";
@@ -27,28 +28,33 @@ export default function ExerciseTopBar() {
     return total + item.duration * kcalPerMin;
   }, 0);
 
-  // 4) Calculate anaerobic kcal using nullish-coalesce
+  // 4) Calculate anaerobic kcal with new `sets` structure
   const anaerobicKcal = anaerobics.reduce((total, item) => {
     const ex = ePool[item.eid];
     if (!ex) return total;
 
-    // ensure numeric values
     const defaultRom = ex.defaultRom ?? 0;
     const kcalPerKgMeter = ex.kcalPerKgMeter ?? 0;
 
     const exerciseKcal = item.sets.reduce(
-      (sum, { weight, reps }) =>
-        sum + weight * reps * defaultRom * kcalPerKgMeter,
+      (sum, { weight, reps, sets: setCount }) =>
+        sum + weight * reps * setCount * defaultRom * kcalPerKgMeter,
       0
     );
+
     return total + exerciseKcal;
   }, 0);
 
-  // 5) Round to one decimal
+  // 5) Round total to one decimal
   const totalKcal = Math.round((aerobicKcal + anaerobicKcal) * 10) / 10;
+
   return (
     <>
-      {show && <ExercisePool onCancel={modalCancelHandler} />}
+      {show && (
+        <ExerciseContextProvider>
+          <ExercisePool onCancel={modalCancelHandler} />
+        </ExerciseContextProvider>
+      )}
       <div className="flex justify-between items-center mb-4">
         {totalKcal > 0 && (
           <h2 className="text-lg font-semibold">

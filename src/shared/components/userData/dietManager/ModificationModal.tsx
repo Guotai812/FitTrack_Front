@@ -1,6 +1,6 @@
 import { useDelete } from "../../../context/diet/DeleteContext";
 
-import FoodEditForm from "../../form/FoodEditForm";
+import FoodEditForm from "../../form/diet/FoodEditForm";
 import DeleteConfirm from "../../ui/DeleteConfirm";
 import { Modal } from "../../ui/Modal";
 

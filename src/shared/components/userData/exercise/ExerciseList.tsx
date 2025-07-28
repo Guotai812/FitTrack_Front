@@ -15,7 +15,7 @@ type AnaerobicDisplay = {
   eid: string;
   name: string;
   image: string;
-  volume: number; // weight×reps sum
+  volume: number; // total weight × reps × sets
   consumedKcal: number;
 };
 
@@ -79,15 +79,33 @@ export default function ExerciseList() {
       if (!ex) return null;
       const defaultRom = ex.defaultRom ?? 0;
       const kcalPerKgMeter = ex.kcalPerKgMeter ?? 0;
+
+      // --- DEBUG LOGGING: inspect each set's contribution ---
+      entry.sets.forEach(({ weight, reps, sets: setCount }) => {
+        const elementKcal =
+          weight * reps * setCount * defaultRom * kcalPerKgMeter;
+        console.log("Anaerobic calc:", {
+          weight,
+          reps,
+          setCount,
+          defaultRom,
+          kcalPerKgMeter,
+          elementKcal,
+        });
+      });
+
       const volume = entry.sets.reduce(
-        (sum, { weight, reps }) => sum + weight * reps,
+        (sum, { weight, reps, sets: setCount }) =>
+          sum + weight * reps * setCount,
         0
       );
+
       const rawKcal = entry.sets.reduce(
-        (sum, { weight, reps }) =>
-          sum + weight * reps * defaultRom * kcalPerKgMeter,
+        (sum, { weight, reps, sets: setCount }) =>
+          sum + weight * reps * setCount * defaultRom * kcalPerKgMeter,
         0
       );
+
       return {
         eid: entry.eid,
         name: ex.name,
