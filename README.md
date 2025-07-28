@@ -7,7 +7,6 @@ A fitness tracking web application front-end built with React, Vite, and TypeScr
 ## Table of Contents
 
 - [Features](#features)
-- [Demo](#demo)
 - [Screenshots](#screenshots)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -30,12 +29,7 @@ A fitness tracking web application front-end built with React, Vite, and TypeScr
 - **Dashboard**: View daily summary of calorie intake vs. expenditure and monitor trends.
 - **Responsive UI**: Built with Tailwind CSS and Framer Motion for smooth animations.
 - **Routing**: Client-side navigation powered by React Router DOM.
-
----
-
-## Demo
-
-A live demo will be available once the back-end API is running. Configure the `VITE_BACKEND_URL` in your `.env` file to point to the API endpoint.
+- **Error Handling**: Centerlized error handler by React Router DOM.
 
 ---
 
@@ -44,7 +38,10 @@ A live demo will be available once the back-end API is running. Configure the `V
 Include screenshots of the application UI here, such as the dashboard, meal entry, and exercise log:
 
 ```markdown
-<!-- ![Dashboard](path/to/dashboard.png) -->
-<!-- ![Meal Entry](path/to/meal-entry.png) -->
-<!-- ![Exercise Log](path/to/exercise-log.png) -->
+![Dashboard](/screenshots/dashboard.jpg)
+![Meal Entry](/screenshots/mealList.jpg)
+![Meal Form](/screenshots/addDietForm.jpg)
+![Diet Showcase](/screenshots/dietList.jpg)
+![Exercise Entry](/screenshots/exerciseList.jpg)
+![Exercise Form](/screenshots/addExercise.jpg)
 ```
