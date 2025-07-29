@@ -36,7 +36,7 @@ export default function SideNavigation() {
   return (
     <aside className="bg-green-300 h-full w-1/6 flex items-start justify-center pt-8">
       {/* shrink nav to 75% of sidebar so buttons sit in from the edges */}
-      <nav className="w-3/4">
+      <nav>
         <ol className="flex flex-col gap-4">
           {topLevel.map((cat) => (
             <li key={cat}>

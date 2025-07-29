@@ -43,7 +43,7 @@ export default function AerobicForm() {
         <ErrorModal onCancel={modalCancelHandler} title="Failed" msg={error} />
       )}
 
-      <div className="flex flex-col justify-between p-6">
+      <div className="flex flex-col justify-between p-6 overflow-auto">
         <div className="flex flex-col gap-4 jutify-center items-center">
           <img
             src={selectedExercise.image}
@@ -53,71 +53,75 @@ export default function AerobicForm() {
           <p>{selectedExercise.name}</p>
           <div>
             <Form className="flex flex-col justify-center items-center">
-              <p className="flex justify-center items-center gap-12">
-                <span>Weight</span>
-                <span>Reps</span>
-                <span>Sets</span>
-              </p>
-              <ol className="flex flex-col jutify-center items-center gap-4">
+              <ol className="flex flex-col jutify-center items-center gap-4 mr-[4%]">
                 {formState.sets.map((input, idx) => (
                   <li
                     key={idx}
                     className="flex justify-center items-center gap-2 h-10 ml-25"
                   >
-                    <Input
-                      width="[15%]"
-                      type="number"
-                      name="weight"
-                      value={input.weight.value}
-                      onChange={(e) =>
-                        inputHandler(
-                          idx,
-                          "weight",
-                          Number(e.target.value),
-                          validator("weight", e.target.value)
-                        )
-                      }
-                      isValid={input.weight.isValid}
-                      isTouched={touched[idx]["weight"]}
-                      onBlur={() => blurHandler(idx, "weight")}
-                      errMsg="Invalid"
-                    />
-                    <Input
-                      width="[15%]"
-                      type="number"
-                      name="reps"
-                      value={input.reps.value}
-                      onChange={(e) =>
-                        inputHandler(
-                          idx,
-                          "reps",
-                          Number(e.target.value),
-                          validator("reps", e.target.value)
-                        )
-                      }
-                      isValid={input.reps.isValid}
-                      isTouched={touched[idx]["reps"]}
-                      onBlur={() => blurHandler(idx, "reps")}
-                      errMsg="Invalid"
-                    />
-                    <Input
-                      width="[15%]"
-                      type="number"
-                      name="sets"
-                      value={input.sets.value}
-                      onChange={(e) =>
-                        inputHandler(
-                          idx,
-                          "sets",
-                          Number(e.target.value),
-                          validator("sets", e.target.value)
-                        )
-                      }
-                      isValid={input.sets.isValid}
-                      isTouched={touched[idx]["sets"]}
-                      onBlur={() => blurHandler(idx, "sets")}
-                      errMsg="Invalid"
-                    />
+                    <div className="flex flex-col justify-center items-center">
+                      {idx === 0 && <p>Weight</p>}
+                      <Input
+                        width="[25%]"
+                        type="number"
+                        name="weight"
+                        value={input.weight.value}
+                        onChange={(e) =>
+                          inputHandler(
+                            idx,
+                            "weight",
+                            Number(e.target.value),
+                            validator("weight", e.target.value)
+                          )
+                        }
+                        isValid={input.weight.isValid}
+                        isTouched={touched[idx]["weight"]}
+                        onBlur={() => blurHandler(idx, "weight")}
+                        errMsg="Invalid"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      {idx === 0 && <p>Reps</p>}
+                      <Input
+                        width="[25%]"
+                        type="number"
+                        name="reps"
+                        value={input.reps.value}
+                        onChange={(e) =>
+                          inputHandler(
+                            idx,
+                            "reps",
+                            Number(e.target.value),
+                            validator("reps", e.target.value)
+                          )
+                        }
+                        isValid={input.reps.isValid}
+                        isTouched={touched[idx]["reps"]}
+                        onBlur={() => blurHandler(idx, "reps")}
+                        errMsg="Invalid"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      {idx === 0 && <p>Sets</p>}
+                      <Input
+                        width="[25%]"
+                        type="number"
+                        name="sets"
+                        value={input.sets.value}
+                        onChange={(e) =>
+                          inputHandler(
+                            idx,
+                            "sets",
+                            Number(e.target.value),
+                            validator("sets", e.target.value)
+                          )
+                        }
+                        isValid={input.sets.isValid}
+                        isTouched={touched[idx]["sets"]}
+                        onBlur={() => blurHandler(idx, "sets")}
+                        errMsg="Invalid"
+                      />
+                    </div>
 
                     <Button
                       type="button"
