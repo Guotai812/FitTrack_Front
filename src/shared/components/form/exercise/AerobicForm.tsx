@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+import React from "react";
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useForm } from "../../../hooks/useForm/useForm";
@@ -25,36 +25,34 @@ export default function AerobicForm() {
   const { updateInfo } = useUser();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp<Response>();
+
   const { touched, blurHandler } = useInput();
   const { formState, inputHandler } = useForm(
-    {
-      duration: {
-        value: 30,
-        isValid: true,
-      },
-    },
+    { duration: { value: 30, isValid: true } },
     true
   );
+
   const { id, setId } = useExercise();
   const { ePool } = usePool();
   const selectedExercise = ePool[id];
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
-    const data = {
-      type: selectedExercise.type,
-      eId: id,
-      duration: formState.inputs.duration.value,
-    };
     try {
       const responseData = await sendRequest({
-        url: `${baseUrl}/basic/${user?.userId}/addExercise`,
+        url: `${import.meta.env.VITE_BACKEND_URL}/basic/${
+          user?.userId
+        }/addExercise`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: data,
+        body: {
+          type: selectedExercise.type,
+          eId: id,
+          duration: formState.inputs.duration.value,
+        },
       });
       updateInfo(responseData.updated);
-    } catch (err) {
+    } catch {
       modalDisplayHandler();
     }
   }
@@ -64,26 +62,31 @@ export default function AerobicForm() {
       {show && error && (
         <ErrorModal onCancel={modalCancelHandler} title="Failed" msg={error} />
       )}
+
       <Form className="w-5/6" onSubmit={submitHandler}>
         <div className="p-6 flex flex-col justify-between gap-10 h-full">
-          <div className="">
-            <div className="flex flex-col gap-5 jutify-center items-center h-full">
+          {/* Image + Name */}
+          <div>
+            <div className="flex flex-col gap-5 justify-center items-center mb-6">
               <img
                 src={selectedExercise.image}
                 alt={selectedExercise.name}
                 className="w-[20%]"
               />
-              <p>{selectedExercise.name}</p>
+              <p className="text-lg font-medium">{selectedExercise.name}</p>
             </div>
-            <div className="text-center flex items-center justify-center">
+
+            {/* Duration field */}
+            <div className="flex flex-col items-center">
+              {/* Your built-in label */}
               <Input
                 type="number"
-                label="Duration"
+                label="Duration(minute)"
                 name="duration"
                 width="w-[30%]"
                 value={formState.inputs.duration.value}
                 isValid={formState.inputs.duration.isValid}
-                isTouched={touched["duration"]}
+                isTouched={touched.duration}
                 onBlur={() => blurHandler("duration")}
                 errMsg="Invalid!"
                 onChange={(e) =>
@@ -93,11 +96,12 @@ export default function AerobicForm() {
                     validator("duration", e.target.value)
                   )
                 }
+                className="!mb-0" // remove any bottom margin so flex baseline works
               />
-              <span>minute</span>
             </div>
           </div>
 
+          {/* Actions */}
           <div className="flex justify-end gap-4">
             <Button onClick={() => setId("")} type="button" kind="cancel">
               Cancel
