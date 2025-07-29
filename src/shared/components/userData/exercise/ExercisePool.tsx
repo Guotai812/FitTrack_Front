@@ -15,7 +15,7 @@ export default function ExercisePool({ onCancel }: ExercisePoolProps) {
   const { id } = useExercise();
   return (
     <CategoryContextProvider>
-      <Modal onCancel={onCancel} pad={0} size="w-[40%] h-[50%]" min="700px">
+      <Modal onCancel={onCancel} pad={0} size="w-[40%] h-[60%]" min="700px">
         <div className="flex justify-between h-full">
           <SideNavigation />
           {id.trim() === "" ? (

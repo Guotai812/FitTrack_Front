@@ -1,34 +1,144 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
+import type { Info } from "../../../context/UserContext/UserContextType";
+import { useAnaForm } from "../../../hooks/useAnaForm";
+import { useModal } from "../../../hooks/useModal";
+import validator from "../../../util/validator";
+import useHttp from "../../../hooks/useHttp";
+import useAnaInput from "../../../hooks/useAnaInput";
 
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
+import ErrorModal from "../../ui/ErrorModal";
 
-export default function AnaerobicForm() {
+type Response = {
+  msg: string;
+  updated: Info;
+};
+
+export default function AerobicForm() {
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const { error, isLoading, sendRequest } = useHttp<Response>();
+  const { formState, inputHandler, addSetHandler, removeSetHandler } =
+    useAnaForm(
+      [
+        {
+          weight: { value: 20, isValid: true },
+          reps: { value: 8, isValid: true },
+          sets: { value: 4, isValid: true },
+        },
+      ],
+      true
+    );
+  const { touched, blurHandler } = useAnaInput(formState.sets);
   const { id, setId } = useExercise();
   const { ePool } = usePool();
   const selectedExercise = ePool[id];
 
   return (
-    <Form className="w-5/6">
-      <div className="p-6 flex flex-col justify-between gap-10 h-full">
-        <div className="">
-          <div className="flex flex-col gap-5 jutify-center items-center h-full">
-            <img
-              src={selectedExercise.image}
-              alt={selectedExercise.name}
-              className="w-[20%]"
-            />
-            <p>{selectedExercise.name}</p>
-          </div>
-          <div className="text-center">
-            <Input
-              type="number"
-              label="Duration"
-              name={selectedExercise.name}
-              width="w-[30%]"
-            />
+    <>
+      {show && error && (
+        <ErrorModal onCancel={modalCancelHandler} title="Failed" msg={error} />
+      )}
+
+      <div className="flex flex-col justify-between p-6">
+        <div className="flex flex-col gap-4 jutify-center items-center">
+          <img
+            src={selectedExercise.image}
+            alt={selectedExercise.name}
+            className="w-[20%]"
+          />
+          <p>{selectedExercise.name}</p>
+          <div>
+            <Form className="flex flex-col justify-center items-center">
+              <p className="flex justify-center items-center gap-12">
+                <span>Weight</span>
+                <span>Reps</span>
+                <span>Sets</span>
+              </p>
+              <ol className="flex flex-col jutify-center items-center gap-4">
+                {formState.sets.map((input, idx) => (
+                  <li
+                    key={idx}
+                    className="flex justify-center items-center gap-2 h-10 ml-25"
+                  >
+                    <Input
+                      width="[15%]"
+                      type="number"
+                      name="weight"
+                      value={input.weight.value}
+                      onChange={(e) =>
+                        inputHandler(
+                          idx,
+                          "weight",
+                          Number(e.target.value),
+                          validator("weight", e.target.value)
+                        )
+                      }
+                      isValid={input.weight.isValid}
+                      isTouched={touched[idx]["weight"]}
+                      onBlur={() => blurHandler(idx, "weight")}
+                      errMsg="Invalid"
+                    />
+                    <Input
+                      width="[15%]"
+                      type="number"
+                      name="reps"
+                      value={input.reps.value}
+                      onChange={(e) =>
+                        inputHandler(
+                          idx,
+                          "reps",
+                          Number(e.target.value),
+                          validator("reps", e.target.value)
+                        )
+                      }
+                      isValid={input.reps.isValid}
+                      isTouched={touched[idx]["reps"]}
+                      onBlur={() => blurHandler(idx, "reps")}
+                      errMsg="Invalid"
+                    />
+                    <Input
+                      width="[15%]"
+                      type="number"
+                      name="sets"
+                      value={input.sets.value}
+                      onChange={(e) =>
+                        inputHandler(
+                          idx,
+                          "sets",
+                          Number(e.target.value),
+                          validator("sets", e.target.value)
+                        )
+                      }
+                      isValid={input.sets.isValid}
+                      isTouched={touched[idx]["sets"]}
+                      onBlur={() => blurHandler(idx, "sets")}
+                      errMsg="Invalid"
+                    />
+
+                    <Button
+                      type="button"
+                      kind="cancel"
+                      disabled={idx === 0}
+                      onClick={() => removeSetHandler(idx)}
+                    >
+                      Remove
+                    </Button>
+                  </li>
+                ))}
+              </ol>
+              <Button
+                type="button"
+                kind="confirm"
+                className="mt-6"
+                onClick={addSetHandler}
+              >
+                New Set
+              </Button>
+            </Form>
           </div>
         </div>
 
@@ -36,9 +146,11 @@ export default function AnaerobicForm() {
           <Button onClick={() => setId("")} type="button" kind="cancel">
             Cancel
           </Button>
-          <Button kind="confirm">Confirm</Button>
+          <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+            Confirm
+          </Button>
         </div>
       </div>
-    </Form>
+    </>
   );
 }

@@ -22,11 +22,10 @@ export default function Input({
   width,
   ...rest
 }: InputProps) {
-  const inputStyle = width
-    ? `w-${width} border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500`
-    : "w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
+  const inputStyle =
+    "w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
   return (
-    <div className="h-10">
+    <div className={`h-10 w-${width}`}>
       {label && (
         <label htmlFor={name} className="text-sm font-medium text-gray-700">
           {label}

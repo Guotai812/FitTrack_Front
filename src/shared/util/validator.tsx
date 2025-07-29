@@ -38,6 +38,8 @@ export default function validator(
     case "weight":
     case "height":
     case "duration":
+    case "reps":
+    case "sets":
       // 1) it must be a string (we need the raw text to detect leading zeros)
       if (typeof value !== "string") {
         return false;
