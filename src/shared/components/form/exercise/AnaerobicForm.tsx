@@ -1,11 +1,11 @@
+import type { Info } from "../../../context/UserContext/UserContextType";
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
-import type { Info } from "../../../context/UserContext/UserContextType";
 import { useAnaForm } from "../../../hooks/useAnaForm";
 import { useModal } from "../../../hooks/useModal";
 import validator from "../../../util/validator";
 import useHttp from "../../../hooks/useHttp";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import useAnaInput from "../../../hooks/useAnaInput";
 
@@ -13,6 +13,7 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import ErrorModal from "../../ui/ErrorModal";
+import { useUser } from "../../../context/UserContext/UserContext";
 
 type Response = {
   msg: string;
@@ -33,6 +34,7 @@ type GetReponse = {
 };
 
 export default function AerobicForm() {
+  const { updateInfo } = useUser();
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { error, isLoading, sendRequest } = useHttp<Response>();
@@ -76,7 +78,9 @@ export default function AerobicForm() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const latestValue = responseData.data[0][1] as Data[];
+      const latestValue = responseData.data[
+        responseData.data.length - 1
+      ][1] as Data[];
 
       latestValue.forEach((_, idx) => {
         if (idx > 0) {
@@ -94,8 +98,36 @@ export default function AerobicForm() {
     }
   }
 
-  // TODO: useEffect to get the latest data of selected exercise, otherwise use the default data
-  
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const volume = (formState.sets ?? []).reduce(
+      (sum, set) => sum + set.weight.value * set.reps.value * set.sets.value,
+      0
+    );
+    const kgMeter = volume * (selectedExercise.defaultRom ?? 0.5);
+    const kaclRaw = kgMeter * selectedExercise.kcalPerKgMeter;
+    const kcal = Math.round(kaclRaw * 10) / 10;
+    const sets = formState.sets.map((s) => ({
+      weight: s.weight.value,
+      reps: s.reps.value,
+      sets: s.sets.value,
+    }));
+    try {
+      const responseData = await sendRequest({
+        url: `${import.meta.env.VITE_BACKEND_URL}/basic/${
+          user?.userId
+        }/${id}/addExercise`,
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: { type: selectedExercise.type, kcal, sets },
+      });
+      updateInfo(responseData.updated);
+      setId("");
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+
   return (
     <>
       {show && (error || getError) && (
@@ -106,16 +138,18 @@ export default function AerobicForm() {
         />
       )}
 
-      <div className="flex flex-col justify-between p-6 overflow-auto">
-        <div className="flex flex-col gap-4 jutify-center items-center">
+      <div className="flex flex-col justify-between p-6 overflow-auto h-full">
+        <div className="flex flex-col gap-4 jutify-center items-center h-2/5">
           <img
             src={selectedExercise.image}
             alt={selectedExercise.name}
             className="w-[20%]"
           />
           <p>{selectedExercise.name}</p>
-          <div>
-            <Form className="flex flex-col justify-center items-center">
+        </div>
+        <Form onSubmit={submitHandler} className="h-3/5">
+          <div className="h-full flex flex-col justify-between">
+            <div>
               <ol className="flex flex-col jutify-center items-center gap-4 mr-[4%]">
                 {formState.sets.map((input, idx) => (
                   <li
@@ -197,30 +231,30 @@ export default function AerobicForm() {
                   </li>
                 ))}
               </ol>
-
-              <Button
-                type="button"
-                kind="confirm"
-                className="mt-6"
-                onClick={addSetHandler}
-              >
-                New Set
+              <div className="text-center">
+                <Button
+                  type="button"
+                  kind="confirm"
+                  className="mt-6"
+                  onClick={addSetHandler}
+                >
+                  New Set
+                </Button>
+              </div>
+            </div>
+            <div className="flex justify-end gap-4">
+              <Button onClick={() => setId("")} type="button" kind="cancel">
+                Cancel
               </Button>
-            </Form>
+              <Button
+                kind="confirm"
+                disabled={!formState.isValid || isLoading || getIsLoading}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
-        </div>
-
-        <div className="flex justify-end gap-4">
-          <Button onClick={() => setId("")} type="button" kind="cancel">
-            Cancel
-          </Button>
-          <Button
-            kind="confirm"
-            disabled={!formState.isValid || isLoading || getIsLoading}
-          >
-            Confirm
-          </Button>
-        </div>
+        </Form>
       </div>
     </>
   );
