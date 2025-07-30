@@ -1,4 +1,3 @@
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
 import type { Info } from "../../../context/UserContext/UserContextType";
@@ -6,6 +5,8 @@ import { useAnaForm } from "../../../hooks/useAnaForm";
 import { useModal } from "../../../hooks/useModal";
 import validator from "../../../util/validator";
 import useHttp from "../../../hooks/useHttp";
+import { useEffect, useRef } from "react";
+import { useAuth } from "../../../context/AuthContext";
 import useAnaInput from "../../../hooks/useAnaInput";
 
 import Form from "../../ui/Form";
@@ -18,9 +19,28 @@ type Response = {
   updated: Info;
 };
 
+type Data = {
+  weight: number;
+  reps: number;
+  sets: number;
+};
+
+type Entry = [string, Data[]];
+
+type GetReponse = {
+  msg: string;
+  data: Entry[];
+};
+
 export default function AerobicForm() {
+  const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { error, isLoading, sendRequest } = useHttp<Response>();
+  const {
+    error: getError,
+    isLoading: getIsLoading,
+    sendRequest: sendGetRequest,
+  } = useHttp<GetReponse>();
   const { formState, inputHandler, addSetHandler, removeSetHandler } =
     useAnaForm(
       [
@@ -37,10 +57,52 @@ export default function AerobicForm() {
   const { ePool } = usePool();
   const selectedExercise = ePool[id];
 
+  const effectRan = useRef(false);
+
+  // guard the getHis run once
+  useEffect(() => {
+    if (!effectRan.current) {
+      getHistory();
+      effectRan.current = true;
+    }
+  }, []);
+
+  async function getHistory() {
+    try {
+      const responseData = await sendGetRequest({
+        url: `${import.meta.env.VITE_BACKEND_URL}/users/${user?.userId}/${id}/${
+          selectedExercise.type
+        }/getExerciseHis`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const latestValue = responseData.data[0][1] as Data[];
+
+      latestValue.forEach((_, idx) => {
+        if (idx > 0) {
+          addSetHandler();
+        }
+      });
+
+      latestValue.forEach((val, idx) => {
+        inputHandler(idx, "weight", val.weight, true);
+        inputHandler(idx, "reps", val.reps, true);
+        inputHandler(idx, "sets", val.sets, true);
+      });
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+  // TODO: useEffect to get the latest data of selected exercise, otherwise use the default data
+
   return (
     <>
-      {show && error && (
-        <ErrorModal onCancel={modalCancelHandler} title="Failed" msg={error} />
+      {show && (error || getError) && (
+        <ErrorModal
+          onCancel={modalCancelHandler}
+          title="Failed"
+          msg={error === null ? getError : error}
+        />
       )}
 
       <div className="flex flex-col justify-between p-6 overflow-auto">
@@ -150,7 +212,10 @@ export default function AerobicForm() {
           <Button onClick={() => setId("")} type="button" kind="cancel">
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+          <Button
+            kind="confirm"
+            disabled={!formState.isValid || isLoading || getIsLoading}
+          >
             Confirm
           </Button>
         </div>

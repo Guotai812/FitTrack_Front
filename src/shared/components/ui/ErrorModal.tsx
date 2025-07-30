@@ -3,7 +3,7 @@ import { Modal } from "./Modal";
 
 type ErrorModal = {
   title: string;
-  msg: string;
+  msg: string | null;
   onCancel: () => void;
 };
 

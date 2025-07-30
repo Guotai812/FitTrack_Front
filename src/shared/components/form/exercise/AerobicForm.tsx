@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useForm } from "../../../hooks/useForm/useForm";
@@ -20,21 +20,56 @@ type Response = {
   updated: Info;
 };
 
+type DataPoint = [string, number];
+type DataSeries = DataPoint[];
+
+type ResponseG = {
+  msg: string;
+  data: DataSeries;
+};
+
 export default function AerobicForm() {
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { updateInfo } = useUser();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp<Response>();
+  const {
+    error: getError,
+    isLoading: getIsLoading,
+    sendRequest: sendGetRequest,
+  } = useHttp<ResponseG>();
 
   const { touched, blurHandler } = useInput();
+
+  const { id, setId } = useExercise();
+  const { ePool } = usePool();
+  const selectedExercise = ePool[id];
   const { formState, inputHandler } = useForm(
     { duration: { value: 30, isValid: true } },
     true
   );
 
-  const { id, setId } = useExercise();
-  const { ePool } = usePool();
-  const selectedExercise = ePool[id];
+  useEffect(() => {
+    async function getHistory() {
+      try {
+        const responseData = await sendGetRequest({
+          url: `${import.meta.env.VITE_BACKEND_URL}/users/${
+            user?.userId
+          }/${id}/${selectedExercise.type}/getExerciseHis`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const history = responseData.data as DataPoint[];
+        const latestValue =
+          history.length === 0 || history[0].length < 2 ? 30 : history[0][1];
+
+        inputHandler("duration", latestValue, true);
+      } catch (err) {
+        modalDisplayHandler();
+      }
+    }
+    getHistory();
+  }, [id, token, user?.userId, inputHandler]);
 
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
@@ -59,8 +94,12 @@ export default function AerobicForm() {
 
   return (
     <>
-      {show && error && (
-        <ErrorModal onCancel={modalCancelHandler} title="Failed" msg={error} />
+      {show && (error || getError) && (
+        <ErrorModal
+          onCancel={modalCancelHandler}
+          title="Failed"
+          msg={error === null ? getError : error}
+        />
       )}
 
       <Form className="w-5/6" onSubmit={submitHandler}>
@@ -106,7 +145,10 @@ export default function AerobicForm() {
             <Button onClick={() => setId("")} type="button" kind="cancel">
               Cancel
             </Button>
-            <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+            <Button
+              kind="confirm"
+              disabled={!formState.isValid || isLoading || getIsLoading}
+            >
               Confirm
             </Button>
           </div>
