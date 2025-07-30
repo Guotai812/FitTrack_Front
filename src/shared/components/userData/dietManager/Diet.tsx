@@ -24,7 +24,9 @@ export default function DietSection() {
   const diet = useDiet();
   const { info } = useUser();
   const { pool } = usePool();
-  const totalsPerMeal: Record<string, number> = getTotalsPerFood(info.diets);
+  const totalsPerMeal: Record<string, number> = getTotalsPerFood(
+    info.diets || []
+  );
 
   let kcal = 0;
   let carbon = 0;

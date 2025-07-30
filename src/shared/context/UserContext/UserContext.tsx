@@ -74,7 +74,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user?.userId, user?.isCompleted]);
 
   function updateInfo(updated: Info) {
-    setInfo(updated);
+    setInfo((pre) => ({ ...pre, ...updated }));
   }
 
   return (

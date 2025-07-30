@@ -25,8 +25,8 @@ interface AnaerobicItem {
 }
 
 interface Exercises {
-  aerobic: AerobicItem[];
-  anaerobic: AnaerobicItem[];
+  aerobic: AerobicItem[] | null;
+  anaerobic: AnaerobicItem[] | null;
 }
 
 type MealKey = "breakfast" | "lunch" | "dinner";

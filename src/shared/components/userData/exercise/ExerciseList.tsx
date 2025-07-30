@@ -3,6 +3,7 @@ import useConsumed from "../../../hooks/useConsumed";
 
 type SectionKey = "aerobic" | "anaerobic";
 
+
 // ——— Helper to format minutes as "XhYm"
 function formatDuration(totalMinutes: number): string {
   const hours = Math.floor(totalMinutes / 60);
@@ -11,6 +12,7 @@ function formatDuration(totalMinutes: number): string {
 }
 
 export default function ExerciseList() {
+  
   const { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal } =
     useConsumed();
 
@@ -47,9 +49,9 @@ export default function ExerciseList() {
               open.aerobic ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
             }`}
           >
-            {aerobicItems.map((it) => (
+            {aerobicItems.map((it, idx) => (
               <div
-                key={it.eid}
+                key={idx}
                 className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
               >
                 <div className="flex items-center">
@@ -90,9 +92,9 @@ export default function ExerciseList() {
                 : "max-h-0 opacity-0"
             }`}
           >
-            {anaerobicItems.map((it) => (
+            {anaerobicItems.map((it, idx) => (
               <div
-                key={it.eid}
+                key={idx}
                 className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
               >
                 <div className="flex items-center">

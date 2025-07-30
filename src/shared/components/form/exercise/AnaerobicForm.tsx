@@ -93,8 +93,9 @@ export default function AerobicForm() {
       modalDisplayHandler();
     }
   }
-  // TODO: useEffect to get the latest data of selected exercise, otherwise use the default data
 
+  // TODO: useEffect to get the latest data of selected exercise, otherwise use the default data
+  
   return (
     <>
       {show && (error || getError) && (
@@ -196,6 +197,7 @@ export default function AerobicForm() {
                   </li>
                 ))}
               </ol>
+
               <Button
                 type="button"
                 kind="confirm"
