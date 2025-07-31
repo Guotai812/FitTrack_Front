@@ -4,6 +4,7 @@ import { usePool } from "../context/PoolConetext";
 // ——— Display object shapes
 type AerobicDisplay = {
   eid: string;
+  rid: string;
   name: string;
   image: string;
   duration: number; // in minutes
@@ -12,6 +13,7 @@ type AerobicDisplay = {
 
 type AnaerobicDisplay = {
   eid: string;
+  rid: string;
   name: string;
   image: string;
   volume: number; // total weight × reps × sets
@@ -56,6 +58,8 @@ export default function useConsumed() {
       const kcalPerMin = (ex.met * 3.5 * info.weight) / 200;
       const consumedKcal = Math.round(entry.duration * kcalPerMin * 10) / 10;
       return {
+        rid: entry.rid,
+        // done
         eid: entry.eid,
         name: ex.name,
         image: ex.image,
@@ -73,10 +77,6 @@ export default function useConsumed() {
       const kcalPerKgMeter = ex.kcalPerKgMeter ?? 0;
 
       // --- DEBUG LOGGING: inspect each set's contribution ---
-      entry.sets.forEach(({ weight, reps, sets: setCount }) => {
-        const elementKcal =
-          weight * reps * setCount * defaultRom * kcalPerKgMeter;
-      });
 
       const volume = entry.sets.reduce(
         (sum, { weight, reps, sets: setCount }) =>
@@ -91,6 +91,8 @@ export default function useConsumed() {
       );
 
       return {
+        // done: add rId
+        rid: entry.rid,
         eid: entry.eid,
         name: ex.name,
         image: ex.image,

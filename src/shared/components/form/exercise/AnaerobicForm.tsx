@@ -119,6 +119,7 @@ export default function AerobicForm() {
         }/${id}/addExercise`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
+        // TODO: use uuid to create rid;
         body: { type: selectedExercise.type, kcal, sets },
       });
       updateInfo(responseData.updated);

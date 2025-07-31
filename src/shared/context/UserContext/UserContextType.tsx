@@ -10,6 +10,8 @@ interface Meal {
 
 export interface AerobicItem {
   eid: string;
+  // done: add referenceId
+  rid: string;
   duration: number;
 }
 
@@ -21,6 +23,8 @@ interface SetItem {
 
 export interface AnaerobicItem {
   eid: string;
+  // done: add referenceId
+  rid: string;
   sets: SetItem[];
 }
 

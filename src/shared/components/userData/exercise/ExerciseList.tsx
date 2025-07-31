@@ -1,8 +1,7 @@
 import { useState } from "react";
 import useConsumed from "../../../hooks/useConsumed";
 import { useModal } from "../../../hooks/useModal";
-import { useIdx } from "../../../context/exercise/IdxContext";
-
+import { useItem } from "../../../context/exercise/ItemContext";
 import ExerciseEditForm from "../../form/exercise/ExerciseEditForm";
 
 type SectionKey = "aerobic" | "anaerobic";
@@ -15,7 +14,7 @@ function formatDuration(totalMinutes: number): string {
 }
 
 export default function ExerciseList() {
-  const { setIdx } = useIdx();
+  const { setItem } = useItem();
   const { show, modalDisplayHandler, modalCancelHandler } = useModal();
   const { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal } =
     useConsumed();
@@ -36,8 +35,9 @@ export default function ExerciseList() {
     );
   }
 
-  function recordIdx(idx: number, type: "aerobic" | "anaerobic") {
-    setIdx({ idx, type });
+  // done: change recordIdx to recordRId(rId: string, type: "")
+  function recordIdx(idx: number, rid: string, type: "aerobic" | "anaerobic") {
+    setItem({ rid, type, idx });
     modalDisplayHandler();
   }
 
@@ -64,7 +64,8 @@ export default function ExerciseList() {
             >
               {aerobicItems.map((it, idx) => (
                 <div
-                  onClick={() => recordIdx(idx, "aerobic")}
+                  // done: change recordIdx to recordRid(rId, "aerobic")
+                  onClick={() => recordIdx(idx, it.rid, "aerobic")}
                   key={idx}
                   className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
                 >
@@ -110,7 +111,8 @@ export default function ExerciseList() {
             >
               {anaerobicItems.map((it, idx) => (
                 <div
-                  onClick={() => recordIdx(idx, "anaerobic")}
+                  // done: change recordIdx to recordRid(rId, "aerobic")
+                  onClick={() => recordIdx(idx, it.rid, "anaerobic")}
                   key={idx}
                   className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
                 >

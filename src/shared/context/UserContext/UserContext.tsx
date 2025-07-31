@@ -40,12 +40,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       aerobic: [
         {
           eid: "",
+          // done: add rId
+          rid: "",
           duration: 0,
         },
       ],
       anaerobic: [
         {
           eid: "",
+          // done: add rId
+          rid: "",
           sets: [
             {
               weight: 0,

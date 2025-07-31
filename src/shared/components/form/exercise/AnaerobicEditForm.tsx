@@ -10,7 +10,6 @@ type AnaerobicEditFormProps = {
 
 export default function AnaerobicEditForm({
   selectedExercise,
-  userExercise,
   onCancel,
 }: AnaerobicEditFormProps) {
   return (
