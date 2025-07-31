@@ -1,3 +1,4 @@
+import { IdxContextProvider } from "../../../context/exercise/IdxContext";
 import ExerciseList from "./ExerciseList";
 import ExerciseTopBar from "./ExerciseTopBar";
 
@@ -6,7 +7,9 @@ export default function ExerciseSection() {
     <div className="bg-white border border-gray-400 p-4">
       <div className="flex flex-col overflow-y-auto h-full">
         <ExerciseTopBar />
-        <ExerciseList />
+        <IdxContextProvider>
+          <ExerciseList />
+        </IdxContextProvider>
       </div>
     </div>
   );

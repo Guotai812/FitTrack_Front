@@ -76,14 +76,6 @@ export default function useConsumed() {
       entry.sets.forEach(({ weight, reps, sets: setCount }) => {
         const elementKcal =
           weight * reps * setCount * defaultRom * kcalPerKgMeter;
-        console.log("Anaerobic calc:", {
-          weight,
-          reps,
-          setCount,
-          defaultRom,
-          kcalPerKgMeter,
-          elementKcal,
-        });
       });
 
       const volume = entry.sets.reduce(

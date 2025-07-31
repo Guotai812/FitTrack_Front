@@ -17,7 +17,7 @@ interface Food {
   type: string;
 }
 
-interface Exercise {
+export interface Exercise {
   _id: string;
   creator: string;
   isPublic: boolean;

@@ -8,7 +8,7 @@ interface Meal {
   extra: FoodItem[];
 }
 
-interface AerobicItem {
+export interface AerobicItem {
   eid: string;
   duration: number;
 }
@@ -19,7 +19,7 @@ interface SetItem {
   sets: number;
 }
 
-interface AnaerobicItem {
+export interface AnaerobicItem {
   eid: string;
   sets: SetItem[];
 }

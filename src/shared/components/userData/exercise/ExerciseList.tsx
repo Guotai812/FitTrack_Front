@@ -1,8 +1,11 @@
 import { useState } from "react";
 import useConsumed from "../../../hooks/useConsumed";
+import { useModal } from "../../../hooks/useModal";
+import { useIdx } from "../../../context/exercise/IdxContext";
+
+import ExerciseEditForm from "../../form/exercise/ExerciseEditForm";
 
 type SectionKey = "aerobic" | "anaerobic";
-
 
 // ——— Helper to format minutes as "XhYm"
 function formatDuration(totalMinutes: number): string {
@@ -12,7 +15,8 @@ function formatDuration(totalMinutes: number): string {
 }
 
 export default function ExerciseList() {
-  
+  const { setIdx } = useIdx();
+  const { show, modalDisplayHandler, modalCancelHandler } = useModal();
   const { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal } =
     useConsumed();
 
@@ -32,90 +36,104 @@ export default function ExerciseList() {
     );
   }
 
+  function recordIdx(idx: number, type: "aerobic" | "anaerobic") {
+    setIdx({ idx, type });
+    modalDisplayHandler();
+  }
+
   // 7) Render
   return (
-    <div className="space-y-8">
-      {/* Aerobic Section */}
-      {aerobicItems.length > 0 && (
-        <section>
-          <h2
-            className="text-2xl font-semibold mb-2 cursor-pointer select-none"
-            onClick={() => setOpen((o) => ({ ...o, aerobic: !o.aerobic }))}
-          >
-            Aerobic — {aerobicTotal.toFixed(1)} Kcal
-          </h2>
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              open.aerobic ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-          >
-            {aerobicItems.map((it, idx) => (
-              <div
-                key={idx}
-                className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
-              >
-                <div className="flex items-center">
-                  <img
-                    src={it.image}
-                    alt={it.name}
-                    className="w-12 h-12 rounded-full object-cover mr-4"
-                  />
-                  <p className="font-medium">{it.name}</p>
+    <>
+      {show && <ExerciseEditForm onCancel={modalCancelHandler} />}
+      <div className="space-y-8">
+        {/* Aerobic Section */}
+        {aerobicItems.length > 0 && (
+          <section>
+            <h2
+              className="text-2xl font-semibold mb-2 cursor-pointer select-none"
+              onClick={() => setOpen((o) => ({ ...o, aerobic: !o.aerobic }))}
+            >
+              Aerobic — {aerobicTotal.toFixed(1)} Kcal
+            </h2>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                open.aerobic
+                  ? "max-h-[1000px] opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              {aerobicItems.map((it, idx) => (
+                <div
+                  onClick={() => recordIdx(idx, "aerobic")}
+                  key={idx}
+                  className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={it.image}
+                      alt={it.name}
+                      className="w-12 h-12 rounded-full object-cover mr-4"
+                    />
+                    <p className="font-medium">{it.name}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm">
+                      Duration: {formatDuration(it.duration)}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      Kcal: {it.consumedKcal.toFixed(1)}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm">
-                    Duration: {formatDuration(it.duration)}
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    Kcal: {it.consumedKcal.toFixed(1)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )}
 
-      {/* Anaerobic Section */}
-      {anaerobicItems.length > 0 && (
-        <section>
-          <h2
-            className="text-2xl font-semibold mb-2 cursor-pointer select-none"
-            onClick={() => setOpen((o) => ({ ...o, anaerobic: !o.anaerobic }))}
-          >
-            Anaerobic — {anaerobicTotal.toFixed(1)} Kcal
-          </h2>
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              open.anaerobic
-                ? "max-h-[1000px] opacity-100"
-                : "max-h-0 opacity-0"
-            }`}
-          >
-            {anaerobicItems.map((it, idx) => (
-              <div
-                key={idx}
-                className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
-              >
-                <div className="flex items-center">
-                  <img
-                    src={it.image}
-                    alt={it.name}
-                    className="w-12 h-12 rounded-full object-cover mr-4"
-                  />
-                  <p className="font-medium">{it.name}</p>
+        {/* Anaerobic Section */}
+        {anaerobicItems.length > 0 && (
+          <section>
+            <h2
+              className="text-2xl font-semibold mb-2 cursor-pointer select-none"
+              onClick={() =>
+                setOpen((o) => ({ ...o, anaerobic: !o.anaerobic }))
+              }
+            >
+              Anaerobic — {anaerobicTotal.toFixed(1)} Kcal
+            </h2>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                open.anaerobic
+                  ? "max-h-[1000px] opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              {anaerobicItems.map((it, idx) => (
+                <div
+                  onClick={() => recordIdx(idx, "anaerobic")}
+                  key={idx}
+                  className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={it.image}
+                      alt={it.name}
+                      className="w-12 h-12 rounded-full object-cover mr-4"
+                    />
+                    <p className="font-medium">{it.name}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm">Volume: {it.volume} kg</p>
+                    <p className="text-xs text-gray-600">
+                      Kcal: {it.consumedKcal.toFixed(1)}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm">Volume: {it.volume} kg</p>
-                  <p className="text-xs text-gray-600">
-                    Kcal: {it.consumedKcal.toFixed(1)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </>
   );
 }
