@@ -98,7 +98,6 @@ export default function AerobicForm() {
           type: selectedExercise.type,
           duration: formState.inputs.duration.value,
           kcal,
-          // TODO: use uuid to create rid;
         },
       });
       updateInfo(responseData.updated);

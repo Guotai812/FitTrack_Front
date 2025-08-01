@@ -36,8 +36,13 @@ export default function ExerciseList() {
   }
 
   // done: change recordIdx to recordRId(rId: string, type: "")
-  function recordIdx(idx: number, rid: string, type: "aerobic" | "anaerobic") {
-    setItem({ rid, type, idx });
+  function recordIdx(
+    kcal: number,
+    idx: number,
+    rid: string,
+    type: "aerobic" | "anaerobic"
+  ) {
+    setItem({ rid, type, idx, kcal });
     modalDisplayHandler();
   }
 
@@ -65,7 +70,9 @@ export default function ExerciseList() {
               {aerobicItems.map((it, idx) => (
                 <div
                   // done: change recordIdx to recordRid(rId, "aerobic")
-                  onClick={() => recordIdx(idx, it.rid, "aerobic")}
+                  onClick={() =>
+                    recordIdx(it.consumedKcal, idx, it.rid, "aerobic")
+                  }
                   key={idx}
                   className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
                 >
@@ -112,7 +119,9 @@ export default function ExerciseList() {
               {anaerobicItems.map((it, idx) => (
                 <div
                   // done: change recordIdx to recordRid(rId, "aerobic")
-                  onClick={() => recordIdx(idx, it.rid, "anaerobic")}
+                  onClick={() =>
+                    recordIdx(it.consumedKcal, idx, it.rid, "anaerobic")
+                  }
                   key={idx}
                   className="bg-white shadow rounded-lg p-4 mb-3 flex justify-between items-center cursor-pointer transition duration-150 ease-in-out hover:bg-gray-100 hover:shadow-lg"
                 >

@@ -10,6 +10,7 @@ type ItemType = {
   rid: string;
   idx: number;
   type: "aerobic" | "anaerobic";
+  kcal: number;
 };
 
 type ItemContextType = {
@@ -28,6 +29,7 @@ export function ItemContextProvider({
     rid: "",
     idx: 0,
     type: "aerobic",
+    kcal: 0,
   });
   return (
     <ItemContext.Provider value={{ item, setItem }}>

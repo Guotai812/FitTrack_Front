@@ -21,7 +21,7 @@ export default function ExerciseEditForm({ onCancel }: ExerciseEditFormProps) {
     const userExercise = info.exercises.aerobic[item.idx];
     const selectedExercise = ePool[userExercise.eid];
     return (
-      <Modal onCancel={onCancel}>
+      <Modal onCancel={onCancel} min="300px">
         <AerobicEditForm
           onCancel={onCancel}
           userExercise={userExercise}

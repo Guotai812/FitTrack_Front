@@ -56,11 +56,10 @@ export default function AerobicEditForm({
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
         body: {
-          // TODO: change to rid
-          idx: item.idx,
+          rid: item.rid,
           type: item.type,
-          duration: userExercise.duration,
           eid: userExercise.eid,
+          kcal: item.kcal,
         },
       });
       updateInfo(responseData.updated);
