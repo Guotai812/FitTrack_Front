@@ -1,50 +1,26 @@
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { useAuth } from "../../context/AuthContext";
+import type { AerobicItem } from "../../context/UserContext/UserContextType";
 import { useDelete } from "../../context/diet/DeleteContext";
-import { useEdit } from "../../context/diet/EditContext";
-import { useUser } from "../../context/UserContext/UserContext";
-import useHttp from "../../hooks/useHttp";
 import { useModal } from "../../hooks/useModal";
-import { usePool } from "../../context/PoolConetext";
 
 import Button from "./Button";
 import ErrorModal from "./ErrorModal";
+import useDietDelete from "../../hooks/useDeleteHandler";
 
 type DeleteConfirmProps = {
   onCancel: () => void;
+  type: "diet" | "exercise";
+  eid?: string;
 };
 
-export default function DeleteConfirm({ onCancel }: DeleteConfirmProps) {
-  const { pool } = usePool();
-  const { info, updateInfo } = useUser();
-  const { edit } = useEdit();
-  const { user, token } = useAuth();
-  const { error, isLoading, sendRequest } = useHttp();
+export default function DeleteConfirm({
+  onCancel,
+  type,
+  eid = "",
+}: DeleteConfirmProps) {
   const { setIsDelete } = useDelete();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-
-  async function deleteHandler() {
-    const mealKey = edit?.meal ?? "breakfast";
-    const listKey = edit?.isMain ? "main" : "extra";
-    const found = info.diets[mealKey][listKey].find(
-      (item) => item.food === edit?.foodId
-    );
-    const weight = found?.weight ?? 0;
-    const kcalRaw = (pool[edit?.foodId ?? ""].kcal / 100) * weight;
-    const kcal = Math.round(kcalRaw * 10) / 10;
-    try {
-      const responseData = await sendRequest({
-        url: `${baseUrl}/basic/${user?.userId}/${edit?.foodId}/deleteDiet`,
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-        body: { meal: edit?.meal, isMain: edit?.isMain, kcal },
-      });
-      updateInfo(responseData.updated);
-      onCancel();
-    } catch (err) {
-      modalDisplayHandler();
-    }
-  }
+  const { deleDietHandler, error, isLoading, deleteExerciseHandeler } =
+    useDietDelete(onCancel, modalDisplayHandler);
 
   if (show && error) {
     <ErrorModal
@@ -64,7 +40,15 @@ export default function DeleteConfirm({ onCancel }: DeleteConfirmProps) {
         <Button kind="gray" onClick={() => setIsDelete(false)}>
           Cancel
         </Button>
-        <Button kind="cancel" onClick={deleteHandler} disabled={isLoading}>
+        <Button
+          kind="cancel"
+          onClick={
+            type === "diet"
+              ? deleDietHandler
+              : () => deleteExerciseHandeler(eid)
+          }
+          disabled={isLoading}
+        >
           Delete
         </Button>
       </div>

@@ -1,4 +1,3 @@
-import { ItemContextProvider } from "../../../context/exercise/ItemContext";
 import ExerciseList from "./ExerciseList";
 import ExerciseTopBar from "./ExerciseTopBar";
 
@@ -8,9 +7,7 @@ export default function ExerciseSection() {
       <div className="flex flex-col overflow-y-auto h-full">
         <ExerciseTopBar />
         {/* TODO: change this provider to RidProvide */}
-        <ItemContextProvider>
-          <ExerciseList />
-        </ItemContextProvider>
+        <ExerciseList />
       </div>
     </div>
   );

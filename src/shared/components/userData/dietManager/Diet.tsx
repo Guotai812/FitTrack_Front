@@ -5,7 +5,6 @@ import { useModal } from "../../../hooks/useModal";
 import DietForm from "./DietModal";
 import Button from "../../ui/Button";
 import { MealList } from "./MealList";
-import { EditContextProvider } from "../../../context/diet/EditContext";
 type FoodItem = { food: string; weight: number };
 type Meal = { main: FoodItem[]; extra: FoodItem[] };
 type Meals = Record<"breakfast" | "lunch" | "dinner", Meal> | {};
@@ -52,8 +51,7 @@ export default function DietSection() {
   }
 
   return (
-    <EditContextProvider>
-      {" "}
+    <>
       {show && <DietForm onCancel={modalCancelHandler} />}
       <div className="border p-4 flex flex-col overflow-y-auto h-full">
         <div className="flex justify-between mb-2">
@@ -71,6 +69,6 @@ export default function DietSection() {
         </div>
         <MealList />
       </div>
-    </EditContextProvider>
+    </>
   );
 }

@@ -15,7 +15,7 @@ export default function ModificationModal({
   return (
     <Modal onCancel={onCancel}>
       {isDelete ? (
-        <DeleteConfirm onCancel={onCancel} />
+        <DeleteConfirm onCancel={onCancel} type="diet" />
       ) : (
         <FoodEditForm onCancel={onCancel} />
       )}

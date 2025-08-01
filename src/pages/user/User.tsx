@@ -4,16 +4,22 @@ import CaloriesSection from "../../shared/components/userData/kcalBar/KcalIndica
 import ExerciseSection from "../../shared/components/userData/exercise/ExerciseSection";
 import DietSection from "../../shared/components/userData/dietManager/Diet";
 import { DietProvider } from "../../shared/context/diet/DietManageContext";
+import { ItemContextProvider } from "../../shared/context/exercise/ItemContext";
+import { EditContextProvider } from "../../shared/context/diet/EditContext";
 
 export default function UserHomePage() {
   return (
     <SideContent>
       <CaloriesSection />
       <BodyWeight />
-      <DietProvider>
-        <DietSection />
-      </DietProvider>
-      <ExerciseSection />
+      <EditContextProvider>
+        <ItemContextProvider>
+          <DietProvider>
+            <DietSection />
+          </DietProvider>
+          <ExerciseSection />
+        </ItemContextProvider>
+      </EditContextProvider>
     </SideContent>
   );
 }

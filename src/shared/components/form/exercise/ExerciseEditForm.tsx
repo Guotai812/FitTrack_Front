@@ -5,13 +5,15 @@ import { usePool } from "../../../context/PoolConetext";
 import { Modal } from "../../ui/Modal";
 import AnaerobicEditForm from "./AnaerobicEditForm";
 import AerobicEditForm from "./AerobicEditForm";
+import { useDelete } from "../../../context/diet/DeleteContext";
+import DeleteConfirm from "../../ui/DeleteConfirm";
 
 type ExerciseEditFormProps = {
   onCancel: () => void;
 };
 
 export default function ExerciseEditForm({ onCancel }: ExerciseEditFormProps) {
-  // TODO: change useIdx to useRId;
+  const { isDelete } = useDelete();
   const { item } = useItem();
   const { info } = useUser();
   const { ePool } = usePool();
@@ -22,11 +24,19 @@ export default function ExerciseEditForm({ onCancel }: ExerciseEditFormProps) {
     const selectedExercise = ePool[userExercise.eid];
     return (
       <Modal onCancel={onCancel} min="300px">
-        <AerobicEditForm
-          onCancel={onCancel}
-          userExercise={userExercise}
-          selectedExercise={selectedExercise}
-        />
+        {isDelete ? (
+          <DeleteConfirm
+            onCancel={onCancel}
+            type="exercise"
+            eid={userExercise.eid}
+          />
+        ) : (
+          <AerobicEditForm
+            onCancel={onCancel}
+            userExercise={userExercise}
+            selectedExercise={selectedExercise}
+          />
+        )}
       </Modal>
     );
   }
@@ -35,11 +45,19 @@ export default function ExerciseEditForm({ onCancel }: ExerciseEditFormProps) {
   const selectedExercise = ePool[userExercise.eid];
   return (
     <Modal onCancel={onCancel}>
-      <AnaerobicEditForm
-        onCancel={onCancel}
-        userExercise={userExercise}
-        selectedExercise={selectedExercise}
-      />
+      {isDelete ? (
+        <DeleteConfirm
+          onCancel={onCancel}
+          type="exercise"
+          eid={userExercise.eid}
+        />
+      ) : (
+        <AnaerobicEditForm
+          onCancel={onCancel}
+          userExercise={userExercise}
+          selectedExercise={selectedExercise}
+        />
+      )}
     </Modal>
   );
 }

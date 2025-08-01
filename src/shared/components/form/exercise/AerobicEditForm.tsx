@@ -1,22 +1,23 @@
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+// const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Exercise } from "../../../context/PoolConetext";
 import type {
   AerobicItem,
-  Info,
+  // Info,
 } from "../../../context/UserContext/UserContextType";
 import { useForm } from "../../../hooks/useForm/useForm";
 import useInput from "../../../hooks/useInput";
 import validator from "../../../util/validator";
-import useHttp from "../../../hooks/useHttp";
-import { useAuth } from "../../../context/AuthContext";
+// import useHttp from "../../../hooks/useHttp";
+// import { useAuth } from "../../../context/AuthContext";
 
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
-import { useItem } from "../../../context/exercise/ItemContext";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useModal } from "../../../hooks/useModal";
-import ErrorModal from "../../ui/ErrorModal";
+// import { useItem } from "../../../context/exercise/ItemContext";
+// import { useUser } from "../../../context/UserContext/UserContext";
+// import { useModal } from "../../../hooks/useModal";
+// import ErrorModal from "../../ui/ErrorModal";
+import { useDelete } from "../../../context/diet/DeleteContext";
 
 type AerobicEditFormProps = {
   onCancel: () => void;
@@ -29,19 +30,8 @@ export default function AerobicEditForm({
   userExercise,
   onCancel,
 }: AerobicEditFormProps) {
-  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-  const { updateInfo } = useUser();
-  // TODO: change to rid
-  const { item } = useItem();
-  const { user, token } = useAuth();
-  const {
-    error: deleteError,
-    isLoading: deleteIsLoading,
-    sendRequest: sendDelete,
-  } = useHttp<{
-    msg: string;
-    updated: Info;
-  }>();
+  const { setIsDelete } = useDelete();
+
   const { touched, blurHandler } = useInput();
   const { formState, inputHandler } = useForm(
     {
@@ -49,35 +39,9 @@ export default function AerobicEditForm({
     },
     true
   );
-  async function delteHandler() {
-    try {
-      const responseData = await sendDelete({
-        url: `${baseUrl}/basic/${user?.userId}/deleteExercise`,
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-        body: {
-          rid: item.rid,
-          type: item.type,
-          eid: userExercise.eid,
-          kcal: item.kcal,
-        },
-      });
-      updateInfo(responseData.updated);
-      onCancel();
-    } catch (err) {
-      modalDisplayHandler();
-    }
-  }
 
   return (
     <>
-      {show && deleteError && (
-        <ErrorModal
-          onCancel={modalCancelHandler}
-          title="Error!"
-          msg={deleteError}
-        />
-      )}
       <Form>
         <div>
           <div className="flex w-full h-full items-center justify-center">
@@ -117,8 +81,7 @@ export default function AerobicEditForm({
             <Button
               kind="cancel"
               type="button"
-              onClick={delteHandler}
-              disabled={deleteIsLoading}
+              onClick={() => setIsDelete(true)}
             >
               Delete
             </Button>

@@ -14,6 +14,7 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import ErrorModal from "../../ui/ErrorModal";
 import { useUser } from "../../../context/UserContext/UserContext";
+import { useDelete } from "../../../context/diet/DeleteContext";
 
 type Response = {
   msg: string;

@@ -3,6 +3,7 @@ import useConsumed from "../../../hooks/useConsumed";
 import { useModal } from "../../../hooks/useModal";
 import { useItem } from "../../../context/exercise/ItemContext";
 import ExerciseEditForm from "../../form/exercise/ExerciseEditForm";
+import { DeleteContextProvider } from "../../../context/diet/DeleteContext";
 
 type SectionKey = "aerobic" | "anaerobic";
 
@@ -49,7 +50,11 @@ export default function ExerciseList() {
   // 7) Render
   return (
     <>
-      {show && <ExerciseEditForm onCancel={modalCancelHandler} />}
+      {show && (
+        <DeleteContextProvider>
+          <ExerciseEditForm onCancel={modalCancelHandler} />
+        </DeleteContextProvider>
+      )}
       <div className="space-y-8">
         {/* Aerobic Section */}
         {aerobicItems.length > 0 && (

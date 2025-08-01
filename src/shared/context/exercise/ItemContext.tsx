@@ -41,7 +41,7 @@ export function ItemContextProvider({
 export function useItem() {
   const context = useContext(ItemContext);
   if (!context) {
-    throw new Error("useRid should be used within RIdContextProvider");
+    throw new Error("useItem should be used within ItemContextProvider");
   }
   return context;
 }
