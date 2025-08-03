@@ -1,3 +1,4 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Exercise } from "../../../context/PoolConetext";
 import type { AnaerobicItem } from "../../../context/UserContext/UserContextType";
 import Form from "../../ui/Form";
@@ -44,7 +45,7 @@ export default function AnaerobicEditForm({
             >
               Delete
             </Button>
-            <Button kind="confirm">Edit</Button>
+            <Button kind="confirm">Update</Button>
           </div>
         </div>
       </Form>

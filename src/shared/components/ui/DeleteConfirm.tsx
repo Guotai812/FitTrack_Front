@@ -1,4 +1,3 @@
-import type { AerobicItem } from "../../context/UserContext/UserContextType";
 import { useDelete } from "../../context/diet/DeleteContext";
 import { useModal } from "../../hooks/useModal";
 
