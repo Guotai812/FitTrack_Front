@@ -7,6 +7,7 @@ import validator from "../../../util/validator";
 import { useDelete } from "../../../context/diet/DeleteContext";
 import { useAuth } from "../../../context/AuthContext";
 import type { Response } from "./AnaerobicForm";
+import { calculateKcal } from "../../../util/kcalCalculator";
 
 import type { Exercise } from "../../../context/PoolConetext";
 import type { AerobicItem } from "../../../context/UserContext/UserContextType";
@@ -38,11 +39,24 @@ export default function AerobicEditForm({
   );
   const { error, isLoading, sendRequest } = useHttp<Response>();
   const { user, token } = useAuth();
-  const { updateInfo } = useUser();
+  const { info, updateInfo } = useUser();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const currentKcal = calculateKcal(
+      selectedExercise,
+      info,
+      Number(formState.inputs.duration.value)
+    );
+    const originalKcal = calculateKcal(
+      selectedExercise,
+      info,
+      Number(userExercise.duration)
+    );
+    const kcalDifferenceRaw = currentKcal - originalKcal;
+    const kcalDifference = Math.round(kcalDifferenceRaw * 10) / 10;
+
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/updateExercise`,
@@ -52,6 +66,8 @@ export default function AerobicEditForm({
           type: selectedExercise.type,
           rid: userExercise.rid,
           updatedValue: formState.inputs.duration.value,
+          kcalDifference,
+          eid: selectedExercise._id,
         },
       });
       updateInfo(responseData.updated);
@@ -108,7 +124,14 @@ export default function AerobicEditForm({
             >
               Delete
             </Button>
-            <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+            <Button
+              kind="confirm"
+              disabled={
+                !formState.isValid ||
+                isLoading ||
+                userExercise.duration === formState.inputs.duration.value
+              }
+            >
               Update
             </Button>
           </div>

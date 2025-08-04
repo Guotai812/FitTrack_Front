@@ -57,7 +57,7 @@ const SemiCircleProgress: React.FC<SemiCircleProgressProps> = ({
         fontSize="16"
         fill="#333"
       >
-        {total - consumed} kcal left
+        {Math.round((total - consumed) * 10) / 10} kcal left
       </text>
     </svg>
   );

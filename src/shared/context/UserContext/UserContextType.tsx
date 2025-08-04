@@ -15,7 +15,7 @@ export interface AerobicItem {
   duration: number;
 }
 
-interface SetItem {
+export interface SetItem {
   weight: number;
   reps: number;
   sets: number;
