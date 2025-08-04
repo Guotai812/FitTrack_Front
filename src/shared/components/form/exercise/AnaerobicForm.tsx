@@ -224,7 +224,7 @@ export default function AerobicForm() {
                     <Button
                       type="button"
                       kind="cancel"
-                      disabled={idx === 0}
+                      disabled={formState.sets.length === 1}
                       onClick={() => removeSetHandler(idx)}
                     >
                       Remove

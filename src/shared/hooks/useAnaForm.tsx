@@ -4,7 +4,7 @@ type Value = {
   isValid: boolean;
 };
 
-type SetType = {
+export type SetType = {
   weight: Value;
   reps: Value;
   sets: Value;
