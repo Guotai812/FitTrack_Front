@@ -24,8 +24,7 @@ export default function useDietDelete(
       (item) => item.food === edit?.foodId
     );
     const weight = found?.weight ?? 0;
-    const kcalRaw = (pool[edit?.foodId ?? ""].kcal / 100) * weight;
-    const kcal = Math.round(kcalRaw * 10) / 10;
+    const kcal = (pool[edit?.foodId ?? ""].kcal / 100) * weight;
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/${edit?.foodId}/deleteDiet`,

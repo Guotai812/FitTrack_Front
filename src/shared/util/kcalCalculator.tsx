@@ -22,13 +22,13 @@ export function calculateKcal(
       throw new Error("Anaerobic exercise expects an array of SetItem.");
     }
 
-    const rawKcal = value.reduce((sum, { weight, reps, sets: setCount }) => {
+    const kcal = value.reduce((sum, { weight, reps, sets: setCount }) => {
       return (
         sum +
         weight * reps * setCount * (ex.defaultRom ?? 0.5) * ex.kcalPerKgMeter
       );
     }, 0);
 
-    return Math.round(rawKcal * 10) / 10;
+    return kcal;
   }
 }

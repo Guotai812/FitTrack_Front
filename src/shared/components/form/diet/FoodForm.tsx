@@ -55,7 +55,7 @@ export default function FoodForm() {
         body: {
           name: foodId,
           weight: formState.inputs.weight.value,
-          kcal: Math.round(weight * Number(clickedFood?.kcal)),
+          kcal: weight * Number(clickedFood?.kcal),
           meal,
           isMain: formState.inputs.meal.value === "main",
         },
@@ -89,13 +89,15 @@ export default function FoodForm() {
 
           <div className="text-center">
             <p className="text-xl text-gray-600">
-              {`Kcal ${Math.round(
-                weight * Number(clickedFood?.kcal)
-              )}kj • C ${Math.round(
-                weight * Number(clickedFood?.carbon)
-              )}g • P ${Math.round(
-                weight * Number(clickedFood?.protein)
-              )} • F ${Math.round(weight * Number(clickedFood?.fat))}g`}
+              {`Kcal ${
+                Math.round(weight * Number(clickedFood?.kcal) * 10) / 10
+              }kj • C ${
+                Math.round(weight * Number(clickedFood?.carbon) * 10) / 10
+              }g • P ${
+                Math.round(weight * Number(clickedFood?.protein) * 10) / 10
+              } • F ${
+                Math.round(weight * Number(clickedFood?.fat) * 10) / 10
+              }g`}
             </p>
           </div>
 

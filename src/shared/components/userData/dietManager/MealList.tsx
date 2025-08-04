@@ -171,9 +171,18 @@ export const MealList: React.FC = () => {
                         {calc(item, "kcal").toFixed(1)} kcal
                       </p>
                       <p className="text-xs text-gray-600">
-                        C{calc(item, "carbon").toFixed(1)} g • P
-                        {calc(item, "protein").toFixed(1)} g • F
-                        {calc(item, "fat").toFixed(1)} g
+                        C
+                        {Math.round(
+                          Number(calc(item, "carbon").toFixed(1)) * 10
+                        ) / 10}
+                        g • P
+                        {Math.round(
+                          Number(calc(item, "protein").toFixed(1)) * 10
+                        ) / 10}{" "}
+                        g • F
+                        {Math.round(Number(calc(item, "fat").toFixed(1)) * 10) /
+                          10}{" "}
+                        g
                       </p>
                     </div>
                   </div>

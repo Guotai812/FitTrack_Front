@@ -15,7 +15,7 @@ import { useUser } from "../../../context/UserContext/UserContext";
 import { useModal } from "../../../hooks/useModal";
 import ErrorModal from "../../ui/ErrorModal";
 
-type Response = {
+export type Response = {
   msg: string;
   updated: Info;
 };
@@ -77,14 +77,13 @@ export default function AerobicForm() {
   const duration = Number(formState.inputs.duration.value) || 0;
 
   // make sure the nullish coalescing happens *before* the multiplications:
-  const kcalRaw =
+  const kcal =
     (((ePool[id].met ?? 0) * // ← default MET to 0
       3.5 * // oxygen uptake constant
       info.weight) / // your weight in kg
       200) * // factor to convert to kcal/min
     duration; // minutes
 
-  const kcal = Math.round(kcalRaw * 10) / 10; // one decimal place
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
     try {

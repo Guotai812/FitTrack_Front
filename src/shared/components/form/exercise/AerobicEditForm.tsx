@@ -71,6 +71,7 @@ export default function AerobicEditForm({
         },
       });
       updateInfo(responseData.updated);
+      onCancel();
     } catch (err) {
       modalDisplayHandler();
     }

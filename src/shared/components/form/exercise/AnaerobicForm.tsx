@@ -105,8 +105,7 @@ export default function AerobicForm() {
       0
     );
     const kgMeter = volume * (selectedExercise.defaultRom ?? 0.5);
-    const kaclRaw = kgMeter * selectedExercise.kcalPerKgMeter;
-    const kcal = Math.round(kaclRaw * 10) / 10;
+    const kcal = kgMeter * selectedExercise.kcalPerKgMeter;
     const sets = formState.sets.map((s) => ({
       weight: s.weight.value,
       reps: s.reps.value,

@@ -1,19 +1,26 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useAnaForm, type SetType } from "../../../hooks/useAnaForm";
-
+import useHttp from "../../../hooks/useHttp";
 import type { Exercise } from "../../../context/PoolConetext";
 import type {
   AnaerobicItem,
   SetItem,
 } from "../../../context/UserContext/UserContextType";
+import validator from "../../../util/validator";
+import useAnaInput from "../../../hooks/useAnaInput";
+import { useDelete } from "../../../context/diet/DeleteContext";
+import type React from "react";
+import type { Response } from "./AnaerobicForm";
+import { useAuth } from "../../../context/AuthContext";
+import { calculateKcal } from "../../../util/kcalCalculator";
+
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import validator from "../../../util/validator";
-import useAnaInput from "../../../hooks/useAnaInput";
+import { useUser } from "../../../context/UserContext/UserContext";
+import { useModal } from "../../../hooks/useModal";
+import ErrorModal from "../../ui/ErrorModal";
 
-import { useDelete } from "../../../context/diet/DeleteContext";
-import type React from "react";
 type AnaerobicEditFormProps = {
   userExercise: AnaerobicItem;
   selectedExercise: Exercise;
@@ -36,6 +43,10 @@ export default function AnaerobicEditForm({
       true
     );
   const { touched, blurHandler } = useAnaInput(formState.sets);
+  const { error, isLoading, sendRequest } = useHttp<Response>();
+  const { user, token } = useAuth();
+  const { info, updateInfo } = useUser();
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
 
   function isChanged(original: SetItem[], current: SetType[]): boolean {
     const oL = original.length;
@@ -52,12 +63,40 @@ export default function AnaerobicEditForm({
     return false;
   }
 
-  // TODO: add submit handler to send request to update data
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const updatedValue = formState.sets.map(({ weight, reps, sets }) => ({
+      weight: weight.value,
+      reps: reps.value,
+      sets: sets.value,
+    }));
+    const current = calculateKcal(selectedExercise, info, updatedValue);
+    const original = calculateKcal(selectedExercise, info, userExercise.sets);
+    const kcalDifference = Math.round((current - original) * 10) / 10;
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/basic/${user?.userId}/updateExercise`,
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+        body: {
+          type: selectedExercise.type,
+          rid: userExercise.rid,
+          updatedValue,
+          kcalDifference,
+          eid: selectedExercise._id,
+        },
+      });
+      updateInfo(responseData.updated);
+      onCancel();
+    } catch (err) {
+      modalDisplayHandler();
+    }
   }
   return (
     <>
+      {show && error && (
+        <ErrorModal onCancel={modalCancelHandler} title="Error!" msg={error} />
+      )}
       <Form onSubmit={submitHandler}>
         <div>
           <div className="flex w-full h-full items-center justify-center">
@@ -180,7 +219,7 @@ export default function AnaerobicEditForm({
               kind="confirm"
               disabled={
                 !formState.isValid ||
-                !isChanged(userExercise.sets, formState.sets)
+                !isChanged(userExercise.sets, formState.sets || isLoading)
               }
             >
               Update
