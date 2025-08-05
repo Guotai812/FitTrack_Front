@@ -12,7 +12,6 @@ import { useDelete } from "../../../context/diet/DeleteContext";
 import type React from "react";
 import type { Response } from "./AnaerobicForm";
 import { useAuth } from "../../../context/AuthContext";
-import { calculateKcal } from "../../../util/kcalCalculator";
 
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
@@ -45,7 +44,7 @@ export default function AnaerobicEditForm({
   const { touched, blurHandler } = useAnaInput(formState.sets);
   const { error, isLoading, sendRequest } = useHttp<Response>();
   const { user, token } = useAuth();
-  const { info, updateInfo } = useUser();
+  const { updateInfo } = useUser();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
 
   function isChanged(original: SetItem[], current: SetType[]): boolean {
@@ -70,9 +69,6 @@ export default function AnaerobicEditForm({
       reps: reps.value,
       sets: sets.value,
     }));
-    const current = calculateKcal(selectedExercise, info, updatedValue);
-    const original = calculateKcal(selectedExercise, info, userExercise.sets);
-    const kcalDifference = Math.round((current - original) * 10) / 10;
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/updateExercise`,
@@ -82,7 +78,6 @@ export default function AnaerobicEditForm({
           type: selectedExercise.type,
           rid: userExercise.rid,
           updatedValue,
-          kcalDifference,
           eid: selectedExercise._id,
         },
       });

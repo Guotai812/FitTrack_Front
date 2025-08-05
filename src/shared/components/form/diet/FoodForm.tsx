@@ -55,7 +55,7 @@ export default function FoodForm() {
         body: {
           name: foodId,
           weight: formState.inputs.weight.value,
-          kcal: weight * Number(clickedFood?.kcal),
+          kcal: weight * (clickedFood?.kcal ?? 0),
           meal,
           isMain: formState.inputs.meal.value === "main",
         },

@@ -100,12 +100,6 @@ export default function AerobicForm() {
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const volume = (formState.sets ?? []).reduce(
-      (sum, set) => sum + set.weight.value * set.reps.value * set.sets.value,
-      0
-    );
-    const kgMeter = volume * (selectedExercise.defaultRom ?? 0.5);
-    const kcal = kgMeter * selectedExercise.kcalPerKgMeter;
     const sets = formState.sets.map((s) => ({
       weight: s.weight.value,
       reps: s.reps.value,
@@ -119,7 +113,7 @@ export default function AerobicForm() {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         // TODO: use uuid to create rid;
-        body: { type: selectedExercise.type, kcal, sets },
+        body: { type: selectedExercise.type, sets },
       });
       updateInfo(responseData.updated);
       setId("");

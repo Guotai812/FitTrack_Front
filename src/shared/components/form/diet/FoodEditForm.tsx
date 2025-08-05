@@ -61,7 +61,6 @@ export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
           isMain: edit?.isMain,
           food: edit?.foodId,
           weight: formState.inputs.weight.value,
-          originalWeight: weight,
         },
       });
       updateInfo(responseData.updated);
