@@ -12,12 +12,13 @@ import { useDelete } from "../../../context/diet/DeleteContext";
 import type React from "react";
 import type { Response } from "./AnaerobicForm";
 import { useAuth } from "../../../context/AuthContext";
+import { useUser } from "../../../context/UserContext/UserContext";
+import { useModal } from "../../../hooks/useModal";
 
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useModal } from "../../../hooks/useModal";
+
 import ErrorModal from "../../ui/ErrorModal";
 
 type AnaerobicEditFormProps = {

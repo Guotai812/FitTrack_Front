@@ -7,14 +7,15 @@ import validator from "../../../util/validator";
 import { useDelete } from "../../../context/diet/DeleteContext";
 import { useAuth } from "../../../context/AuthContext";
 import type { Response } from "./AnaerobicForm";
-
+import { useUser } from "../../../context/UserContext/UserContext";
+import { useModal } from "../../../hooks/useModal";
 import type { Exercise } from "../../../context/PoolConetext";
 import type { AerobicItem } from "../../../context/UserContext/UserContextType";
+
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useModal } from "../../../hooks/useModal";
+
 import ErrorModal from "../../ui/ErrorModal";
 
 type AerobicEditFormProps = {

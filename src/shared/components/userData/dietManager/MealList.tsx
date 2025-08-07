@@ -175,7 +175,7 @@ export const MealList: React.FC = () => {
                         {Math.round(
                           Number(calc(item, "carbon").toFixed(1)) * 10
                         ) / 10}
-                        g • P
+                        g • P{" "}
                         {Math.round(
                           Number(calc(item, "protein").toFixed(1)) * 10
                         ) / 10}{" "}
