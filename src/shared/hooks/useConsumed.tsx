@@ -19,7 +19,7 @@ type AnaerobicDisplay = {
   volume: number; // total weight × reps × sets
   consumedKcal: number;
 };
-
+// TODO: make info info as parameter
 export default function useConsumed() {
   const { info, isLoading } = useUser();
   const { ePool } = usePool();

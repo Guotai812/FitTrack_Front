@@ -10,6 +10,7 @@ export default function SideNavigation() {
     navigate("/");
   }
 
+  // TODO: Add a calendar modal
   return (
     <aside className="h-screen w-1/7 bg-green-300 text-black flex flex-col justify-between p-4 shadow-lg">
       <div>
@@ -20,17 +21,17 @@ export default function SideNavigation() {
           >
             {`Hello, ${auth.user?.name}`}
           </Link>
-          <Link to={`/${auth.user?.userId}`} className="hover:text-white">
-            Weight
+          <Link
+            to={`/${auth.user?.userId}/history`}
+            className="hover:text-white"
+          >
+            History
           </Link>
           <Link to={`/${auth.user?.userId}`} className="hover:text-white">
-            Dimension
+            Customize Exercise
           </Link>
           <Link to={`/${auth.user?.userId}`} className="hover:text-white">
-            Diet
-          </Link>
-          <Link to={`/${auth.user?.userId}`} className="hover:text-white">
-            Exercise
+            Customize Food
           </Link>
         </nav>
       </div>

@@ -6,7 +6,6 @@ export default function ExerciseSection() {
     <div className="bg-white border border-gray-400 p-4">
       <div className="flex flex-col overflow-y-auto h-full">
         <ExerciseTopBar />
-        {/* TODO: change this provider to RidProvide */}
         <ExerciseList />
       </div>
     </div>

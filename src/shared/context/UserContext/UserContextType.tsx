@@ -28,14 +28,14 @@ export interface AnaerobicItem {
   sets: SetItem[];
 }
 
-interface Exercises {
+export interface Exercises {
   aerobic: AerobicItem[] | null;
   anaerobic: AnaerobicItem[] | null;
 }
 
 type MealKey = "breakfast" | "lunch" | "dinner";
 
-type Meals = Record<MealKey, Meal>;
+export type Meals = Record<MealKey, Meal>;
 
 export type Info = {
   kcal: number;

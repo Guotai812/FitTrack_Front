@@ -5,19 +5,7 @@ import { useModal } from "../../../hooks/useModal";
 import DietForm from "./DietModal";
 import Button from "../../ui/Button";
 import { MealList } from "./MealList";
-type FoodItem = { food: string; weight: number };
-type Meal = { main: FoodItem[]; extra: FoodItem[] };
-type Meals = Record<"breakfast" | "lunch" | "dinner", Meal> | {};
-function getTotalsPerFood(diets: Meals): Record<string, number> {
-  return Object.values(diets) // Meal[]
-    .flatMap(({ main, extra }) => [...main, ...extra]) // FoodItem[]
-    .filter(({ food, weight }) => food && weight > 0)
-    .reduce<Record<string, number>>((acc, { food, weight }) => {
-      acc[food] = (acc[food] || 0) + weight;
-      return acc;
-    }, {});
-}
-
+import getTotalsPerFood from "../../../util/getTotalsPerFood";
 export default function DietSection() {
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const diet = useDiet();

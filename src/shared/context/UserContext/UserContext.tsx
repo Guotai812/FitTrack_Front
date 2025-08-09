@@ -67,8 +67,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (!user?.userId || !user.isCompleted) return;
     const fetchInfo = async () => {
       try {
+        const date = new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Australia/Sydney",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(new Date());
         const fetched = await sendRequest({
-          url: `${baseUrl}/basic/${user.userId}/getDailyBasic`,
+          url: `${baseUrl}/basic/${
+            user.userId
+          }/getDailyBasic?date=${encodeURIComponent(date)}`,
           headers: { Authorization: `Bearer ${token}` },
         });
         setInfo(fetched);

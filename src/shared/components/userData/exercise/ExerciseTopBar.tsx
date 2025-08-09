@@ -5,7 +5,7 @@ import useConsumed from "../../../hooks/useConsumed";
 
 import Button from "../../ui/Button";
 import ExercisePool from "./ExercisePool";
-
+// TODO: pass info as parameter to useConsumed
 export default function ExerciseTopBar() {
   const { aerobicTotal, anaerobicTotal } = useConsumed();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();

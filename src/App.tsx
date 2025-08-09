@@ -13,7 +13,9 @@ import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
 import { UserProvider } from "./shared/context/UserContext/UserContext";
 import { PoolProvider } from "./shared/context/PoolConetext";
 import WeightHistoryPage from "./pages/user/WeightHistory";
+import HistoryPage from "./pages/user/HistoryPage";
 import ErrorPage from "./pages/general/Error";
+import { DateContextProvider } from "./shared/context/DateContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -40,6 +42,14 @@ function App() {
       children: [
         { index: true, element: <UserHomePage /> },
         { path: "weightHistory", element: <WeightHistoryPage /> },
+        {
+          path: "history",
+          element: (
+            <DateContextProvider>
+              <HistoryPage />
+            </DateContextProvider>
+          ),
+        },
       ],
     },
 
