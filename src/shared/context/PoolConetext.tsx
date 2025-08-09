@@ -42,7 +42,7 @@ interface PoolResponse {
 }
 
 type Pool = Record<string, Food>;
-type Epool = Record<string, Exercise>;
+export type Epool = Record<string, Exercise>;
 
 type ContextType = {
   pool: Pool;

@@ -10,7 +10,6 @@ export default function SideNavigation() {
     navigate("/");
   }
 
-  // TODO: Add a calendar modal
   return (
     <aside className="h-screen w-1/7 bg-green-300 text-black flex flex-col justify-between p-4 shadow-lg">
       <div>

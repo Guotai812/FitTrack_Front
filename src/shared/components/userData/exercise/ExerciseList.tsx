@@ -4,6 +4,8 @@ import { useModal } from "../../../hooks/useModal";
 import { useItem } from "../../../context/exercise/ItemContext";
 import ExerciseEditForm from "../../form/exercise/ExerciseEditForm";
 import { DeleteContextProvider } from "../../../context/diet/DeleteContext";
+import { useUser } from "../../../context/UserContext/UserContext";
+import { usePool } from "../../../context/PoolConetext";
 
 type SectionKey = "aerobic" | "anaerobic";
 
@@ -17,8 +19,10 @@ function formatDuration(totalMinutes: number): string {
 export default function ExerciseList() {
   const { setItem } = useItem();
   const { show, modalDisplayHandler, modalCancelHandler } = useModal();
+  const { info, isLoading } = useUser();
+  const { ePool } = usePool();
   const { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal } =
-    useConsumed();
+    useConsumed(isLoading, info, ePool);
 
   // 6) Collapse state
   const [open, setOpen] = useState<Record<SectionKey, boolean>>({

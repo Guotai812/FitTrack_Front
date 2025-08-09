@@ -24,7 +24,6 @@ export default function BodyWeight() {
       ? "Obesity Class II"
       : "Obesity Class III";
 
-  // TODO: add a fied in basic record named isWeightUpdated to record if user updated weight
   return (
     <>
       {show && <WeightForm onCancel={modalCancelHandler} />}

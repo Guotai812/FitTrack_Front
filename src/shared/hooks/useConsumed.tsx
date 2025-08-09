@@ -1,5 +1,5 @@
-import { useUser } from "../context/UserContext/UserContext";
-import { usePool } from "../context/PoolConetext";
+import { type Epool } from "../context/PoolConetext";
+import type { Info } from "../context/UserContext/UserContextType";
 
 // ——— Display object shapes
 type AerobicDisplay = {
@@ -19,11 +19,12 @@ type AnaerobicDisplay = {
   volume: number; // total weight × reps × sets
   consumedKcal: number;
 };
-// TODO: make info info as parameter
-export default function useConsumed() {
-  const { info, isLoading } = useUser();
-  const { ePool } = usePool();
 
+export default function useConsumed(
+  isLoading: boolean,
+  info: Info,
+  ePool: Epool
+) {
   // 1) Loading guard
   if (isLoading || !info.exercises) {
     return {
@@ -59,7 +60,6 @@ export default function useConsumed() {
       const consumedKcal = Math.round(entry.duration * kcalPerMin * 10) / 10;
       return {
         rid: entry.rid,
-        // done
         eid: entry.eid,
         name: ex.name,
         image: ex.image,
