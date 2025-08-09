@@ -1,4 +1,5 @@
-import React from "react";
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
+import React, { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -10,6 +11,7 @@ import {
 import Button from "../../ui/Button";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import useHttp from "../../../hooks/useHttp";
 
 /** Public data shape */
 export type WeightTuple = [dateISO: string, weightKg: number];
@@ -82,7 +84,6 @@ const RANGE_PRESETS = [
 
 /* ---------------- Component ---------------- */
 export default React.memo(function WeightChartWithFiltersStable({
-  data = DUMMY_DATA,
   height = 320, // keep a fixed pixel height to avoid measurement loops
   mode = "smooth", // "smooth" | "step"
 }: {
@@ -90,7 +91,23 @@ export default React.memo(function WeightChartWithFiltersStable({
   height?: number;
   mode?: Mode;
 }) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const [data, setData] = useState<WeightTuple[]>([]);
+  const { sendRequest } = useHttp<{ msg: string; data: WeightTuple[] }>();
+  useEffect(() => {
+    if (!token || !user?.userId) return;
+    async function getHis() {
+      try {
+        const responseData = await sendRequest({
+          url: `${baseUrl}/basic/${user?.userId}/getWeightHis`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setData(responseData.data);
+      } catch (err) {}
+    }
+    getHis();
+  }, [token, user]);
+
   // Sort once
   const sorted = React.useMemo(
     () =>

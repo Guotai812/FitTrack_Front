@@ -42,6 +42,7 @@ export default function WeightForm({ onCancel }: WeightFormProps) {
         body: { weight: formState.inputs.weight.value },
       });
       updateInfo(responseData.updated);
+      onCancel();
     } catch (err) {
       modalDisplayHandler();
     }
