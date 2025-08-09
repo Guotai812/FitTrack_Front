@@ -11,7 +11,7 @@ export default function SideNavigation() {
   }
 
   return (
-    <aside className="h-screen w-64 bg-green-300 text-black flex flex-col justify-between p-4 shadow-lg">
+    <aside className="h-screen w-1/7 bg-green-300 text-black flex flex-col justify-between p-4 shadow-lg">
       <div>
         <nav className="text-center flex flex-col gap-4 text-xl">
           <Link

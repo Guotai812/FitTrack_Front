@@ -37,9 +37,11 @@ export default function SideLayout() {
           <BasicInfo onCancel={modalCancelHandler} />
         </Modal>
       )}
-      <div className="flex justify-end">
+      <div className="flex justify-between">
         <SideNavigation />
-        <Outlet />
+        <div className="w-6/7">
+          <Outlet />
+        </div>
       </div>
     </>
   );

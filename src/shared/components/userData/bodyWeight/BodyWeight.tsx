@@ -1,16 +1,15 @@
-import { Link } from "react-router-dom";
 import { useUser } from "../../../context/UserContext/UserContext";
-import { useAuth } from "../../../context/AuthContext";
 import { useModal } from "../../../hooks/useModal";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 import WeightForm from "../../form/WeightForm";
 
 export default function BodyWeight() {
-  const auth = useAuth();
-  const user = useUser();
+  const { user } = useAuth();
+  const { info } = useUser();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-  const bmi =
-    (user.info.weight / (user.info.height * user.info.height)) * 10000;
+  const bmi = (info.weight / (info.height * info.height)) * 10000;
   const BMI = Number(bmi.toFixed(1));
   const indicator =
     BMI < 18.5
@@ -25,13 +24,17 @@ export default function BodyWeight() {
       ? "Obesity Class II"
       : "Obesity Class III";
 
+  // TODO: add a fied in basic record named isWeightUpdated to record if user updated weight
   return (
     <>
       {show && <WeightForm onCancel={modalCancelHandler} />}
       <div className="border border-gray-400 p-5">
         <div className="flex justify-between">
           <p className="text-xl">Your current weight:</p>
-          <Link to={`/${auth.user?.userId}`} className="hover:underline text-m">
+          <Link
+            to={`/${user?.userId}/weightHistory`}
+            className="hover:underline text-m"
+          >
             History
           </Link>
         </div>
@@ -41,7 +44,7 @@ export default function BodyWeight() {
             onClick={modalDisplayHandler}
             className="bg-green-300 w-[30%] aspect-square rounded-full flex items-center justify-center text-center hover:shadow-2xl"
           >
-            <p className="text-5xl">{user.info.weight}kg</p>
+            <p className="text-5xl">{info.weight}kg</p>
           </div>
           <div className="flex flex-col items-center">
             <p>BMI: {BMI}</p>

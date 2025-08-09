@@ -12,6 +12,7 @@ import { AuthProvider } from "./shared/context/AuthContext";
 import ProtectionRoute from "./shared/components/routes/ProtectionRoute";
 import { UserProvider } from "./shared/context/UserContext/UserContext";
 import { PoolProvider } from "./shared/context/PoolConetext";
+import WeightHistoryPage from "./pages/user/WeightHistory";
 import ErrorPage from "./pages/general/Error";
 
 function App() {
@@ -36,7 +37,10 @@ function App() {
           <SideLayout />
         </ProtectionRoute>
       ),
-      children: [{ index: true, element: <UserHomePage /> }],
+      children: [
+        { index: true, element: <UserHomePage /> },
+        { path: "weightHistory", element: <WeightHistoryPage /> },
+      ],
     },
 
     {
