@@ -1,20 +1,20 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { usePool } from "../../../context/PoolConetext";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useEdit } from "../../../context/diet/EditContext";
-import useInput from "../../../hooks/useInput";
-import { useForm } from "../../../hooks/useForm/useForm";
-import validator from "../../../util/validator";
-import { useAuth } from "../../../context/AuthContext";
-import { useDelete } from "../../../context/diet/DeleteContext";
+import { usePool } from "../../../../context/PoolConetext";
+import { useEdit } from "../../../../context/diet/EditContext";
+import useInput from "../../../../hooks/useInput";
+import { useForm } from "../../../../hooks/useForm/useForm";
+import validator from "../../../../util/validator";
+import { useAuth } from "../../../../context/AuthContext";
+import { useDelete } from "../../../../context/diet/DeleteContext";
 import React, { useEffect, useState } from "react";
-import { useModal } from "../../../hooks/useModal";
+import { useModal } from "../../../../hooks/useModal";
 
-import Form from "../../ui/Form";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
-import useHttp from "../../../hooks/useHttp";
-import ErrorModal from "../../ui/ErrorModal";
+import Form from "../../../ui/Form";
+import Button from "../../../ui/Button";
+import Input from "../../../ui/Input";
+import useHttp from "../../../../hooks/useHttp";
+import ErrorModal from "../../../ui/ErrorModal";
+import { useHisInfo } from "../../../../context/useHisInfo";
 
 type FoodEditFormProps = {
   onCancel: () => void;
@@ -27,9 +27,9 @@ export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
   const { error, isLoading, sendRequest } = useHttp();
   const [hasChanged, setHasChanged] = useState<boolean>(false);
   const { touched, blurHandler } = useInput();
-  const { info, updateInfo } = useUser();
   const { edit } = useEdit();
   const { pool } = usePool();
+  const { info, updateInfo } = useHisInfo();
   const image = pool[edit?.foodId ?? ""]?.image;
   const name = pool[edit?.foodId ?? ""]?.name;
   const weight = info.diets[edit?.meal ?? "breakfast"][

@@ -9,12 +9,19 @@ type DeleteConfirmProps = {
   onCancel: () => void;
   type: "diet" | "exercise";
   eid?: string;
+  date?: string;
 };
 
 export default function DeleteConfirm({
   onCancel,
   type,
   eid = "",
+  date = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Australia/Sydney",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date()),
 }: DeleteConfirmProps) {
   const { setIsDelete } = useDelete();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
@@ -43,7 +50,7 @@ export default function DeleteConfirm({
           kind="cancel"
           onClick={
             type === "diet"
-              ? deleDietHandler
+              ? () => deleDietHandler(date)
               : () => deleteExerciseHandeler(eid)
           }
           disabled={isLoading}

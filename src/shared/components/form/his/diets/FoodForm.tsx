@@ -1,25 +1,25 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useDiet } from "../../../context/diet/DietManageContext";
-import { useFood } from "../../../context/diet/FoodContext";
-import { usePool } from "../../../context/PoolConetext";
-import { useForm } from "../../../hooks/useForm/useForm";
-import { useAuth } from "../../../context/AuthContext";
-import { useModal } from "../../../hooks/useModal";
-import { useMeal } from "../../../context/diet/MealContext";
-import useHttp from "../../../hooks/useHttp";
-import useInput from "../../../hooks/useInput";
-import validator from "../../../util/validator";
+import { useDiet } from "../../../../context/diet/DietManageContext";
+import { useFood } from "../../../../context/diet/FoodContext";
+import { usePool } from "../../../../context/PoolConetext";
+import { useForm } from "../../../../hooks/useForm/useForm";
+import { useAuth } from "../../../../context/AuthContext";
+import { useModal } from "../../../../hooks/useModal";
+import { useMeal } from "../../../../context/diet/MealContext";
+import useHttp from "../../../../hooks/useHttp";
+import useInput from "../../../../hooks/useInput";
+import validator from "../../../../util/validator";
 
-import Button from "../../ui/Button";
-import Form from "../../ui/Form";
-import Input from "../../ui/Input";
-import ErrorModal from "../../ui/ErrorModal";
-import Ratio from "../../ui/Ratio";
+import Button from "../../../ui/Button";
+import Form from "../../../ui/Form";
+import Input from "../../../ui/Input";
+import ErrorModal from "../../../ui/ErrorModal";
+import Ratio from "../../../ui/Ratio";
+import { useHisInfo } from "../../../../context/useHisInfo";
 
 export default function FoodForm() {
-  const { updateInfo } = useUser();
+  const { info, updateInfo } = useHisInfo();
   const { meal } = useMeal();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
@@ -48,13 +48,7 @@ export default function FoodForm() {
   async function submitHandler(e: React.FocusEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const today = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Australia/Sydney",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).format(new Date());
-      const updated = await sendRequest({
+      const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/addDiet`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -64,11 +58,11 @@ export default function FoodForm() {
           kcal: weight * (clickedFood?.kcal ?? 0),
           meal,
           isMain: formState.inputs.meal.value === "main",
-          date: today,
+          date: info.date,
         },
       });
-      updateInfo(updated);
       setState("pool");
+      updateInfo(responseData);
     } catch (err) {
       modalDisplayHandler();
     }

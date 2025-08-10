@@ -11,7 +11,7 @@ import getTotalsPerFood from "../../shared/util/getTotalsPerFood";
 import { usePool } from "../../shared/context/PoolConetext";
 import useConsumed from "../../shared/hooks/useConsumed";
 import { useModal } from "../../shared/hooks/useModal";
-import HisModal from "../../shared/components/ui/HisModal";
+import HisModal from "../../shared/components/ui/hisData/HisModal";
 
 type DataType = {
   date: string;

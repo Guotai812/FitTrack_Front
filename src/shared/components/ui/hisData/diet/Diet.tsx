@@ -1,0 +1,66 @@
+import { useDiet } from "../../../../context/diet/DietManageContext";
+import { usePool } from "../../../../context/PoolConetext";
+import { useModal } from "../../../../hooks/useModal";
+import { useHisInfo } from "../../../../context/useHisInfo";
+import DietForm from "./DietModal";
+import Button from "../../../ui/Button";
+import { MealList } from "./MealList";
+import getTotalsPerFood from "../../../../util/getTotalsPerFood";
+export default function DietSection() {
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const diet = useDiet();
+  const { info } = useHisInfo();
+  const { pool, isLoading } = usePool();
+  const totalsPerMeal: Record<string, number> = getTotalsPerFood(
+    info.diets || []
+  );
+
+  if (isLoading) {
+    return <div>isLoading..</div>;
+  }
+
+  let kcal = 0;
+  let carbon = 0;
+  let protein = 0;
+  let fat = 0;
+  for (const [mealName, totalWeight] of Object.entries(totalsPerMeal)) {
+    kcal =
+      Math.round((kcal + (pool[mealName].kcal * totalWeight) / 100) * 10) / 10;
+    carbon =
+      Math.round((carbon + (pool[mealName].carbon * totalWeight) / 100) * 10) /
+      10;
+    protein =
+      Math.round(
+        (protein + (pool[mealName].protein * totalWeight) / 100) * 10
+      ) / 10;
+    fat =
+      Math.round((fat + (pool[mealName].fat * totalWeight) / 100) * 10) / 10;
+  }
+
+  function openManageHanlder() {
+    modalDisplayHandler();
+    diet.setState("pool");
+  }
+
+  return (
+    <>
+      {show && <DietForm onCancel={modalCancelHandler} />}
+      <div className="border p-4 flex flex-col overflow-y-auto h-full">
+        <div className="flex justify-between mb-2">
+          {kcal !== 0 && (
+            <h2 className="text-lg font-semibold">
+              Total: {kcal}Kcal
+              <span className="text-xs text-gray-500">
+                ({`C ${carbon}g • P ${protein}g • F ${fat}g`})
+              </span>
+            </h2>
+          )}
+          <Button kind="confirm" onClick={openManageHanlder}>
+            Add
+          </Button>
+        </div>
+        <MealList />
+      </div>
+    </>
+  );
+}

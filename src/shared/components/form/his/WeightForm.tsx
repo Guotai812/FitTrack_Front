@@ -1,30 +1,31 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import type { Response } from "./exercise/AnaerobicForm";
-import { useForm } from "../../hooks/useForm/useForm";
-import { useUser } from "../../context/UserContext/UserContext";
-import validator from "../../util/validator";
-import useInput from "../../hooks/useInput";
-import useHttp from "../../hooks/useHttp";
-import { useAuth } from "../../context/AuthContext";
-import { useModal } from "../../hooks/useModal";
+import type { Response } from "../exercise/AnaerobicForm";
+import { useForm } from "../../../hooks/useForm/useForm";
+import validator from "../../../util/validator";
+import { useHisInfo } from "../../../context/useHisInfo";
+import useInput from "../../../hooks/useInput";
+import useHttp from "../../../hooks/useHttp";
+import { useAuth } from "../../../context/AuthContext";
+import { useModal } from "../../../hooks/useModal";
 
-import Form from "../ui/Form";
-import { Modal } from "../ui/Modal";
-import Input from "../ui/Input";
-import Button from "../ui/Button";
-import ErrorModal from "../ui/ErrorModal";
+import Form from "../../ui/Form";
+import { Modal } from "../../ui/Modal";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
+import ErrorModal from "../../ui/ErrorModal";
 
 type WeightFormProps = {
   onCancel: () => void;
 };
 
 export default function WeightForm({ onCancel }: WeightFormProps) {
+  const { date } = useHisInfo();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp<Response>();
   const { touched, blurHandler } = useInput();
-  const { info, updateInfo } = useUser();
+  const { info, updateInfo } = useHisInfo();
   const { formState, inputHandler } = useForm(
     {
       weight: { value: info.weight, isValid: true },
@@ -35,17 +36,11 @@ export default function WeightForm({ onCancel }: WeightFormProps) {
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const today = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Australia/Sydney",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).format(new Date());
       const responseData = await sendRequest({
         url: `${baseUrl}/users/${user?.userId}/updateWeight`,
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
-        body: { weight: formState.inputs.weight.value, date: today },
+        body: { weight: formState.inputs.weight.value, date },
       });
       updateInfo(responseData.updated);
       onCancel();
