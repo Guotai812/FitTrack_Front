@@ -1,5 +1,5 @@
 import { type Epool } from "../context/PoolConetext";
-import type { Info } from "../context/UserContext/UserContextType";
+import type { Exercises, Info } from "../context/UserContext/UserContextType";
 
 // ——— Display object shapes
 type AerobicDisplay = {
@@ -21,12 +21,13 @@ type AnaerobicDisplay = {
 };
 
 export default function useConsumed(
-  isLoading: boolean,
-  info: Info,
-  ePool: Epool
+  exercises: Exercises,
+  weight: number,
+  ePool: Epool,
+  isLoading: boolean = false
 ) {
   // 1) Loading guard
-  if (isLoading || !info.exercises) {
+  if (isLoading || !exercises) {
     return {
       isLoading: true,
       aerobicItems: [],
@@ -37,11 +38,11 @@ export default function useConsumed(
   }
 
   // 2) Raw entries
-  const aerobics = info.exercises.aerobic ?? [];
-  const anaerobics = info.exercises.anaerobic ?? [];
+  const aerobics = exercises.aerobic ?? [];
+  const anaerobics = exercises.anaerobic ?? [];
 
   // 3) No-data prompt
-  if (isLoading || !info.exercises) {
+  if (isLoading || !exercises) {
     return {
       isLoading: true,
       aerobicItems: [],
@@ -56,7 +57,7 @@ export default function useConsumed(
     .map((entry) => {
       const ex = ePool[entry.eid];
       if (!ex || ex.met == null) return null;
-      const kcalPerMin = (ex.met * 3.5 * info.weight) / 200;
+      const kcalPerMin = (ex.met * 3.5 * weight) / 200;
       const consumedKcal = Math.round(entry.duration * kcalPerMin * 10) / 10;
       return {
         rid: entry.rid,
@@ -115,5 +116,15 @@ export default function useConsumed(
   const aerobicTotal = Math.round(aerobicTotalRaw * 10) / 10;
   const anaerobicTotal = Math.round(anaerobicTotalRaw * 10) / 10;
 
-  return { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal };
+  const volume = 1900;
+  const duration = "1h20m";
+
+  return {
+    anaerobicItems,
+    aerobicItems,
+    anaerobicTotal,
+    aerobicTotal,
+    volume,
+    duration,
+  };
 }

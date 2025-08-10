@@ -5,15 +5,18 @@ import useHttp from "../../shared/hooks/useHttp";
 import { useAuth } from "../../shared/context/AuthContext";
 import type {
   Exercises,
+  Info,
   Meals,
 } from "../../shared/context/UserContext/UserContextType";
 import getTotalsPerFood from "../../shared/util/getTotalsPerFood";
 import { usePool } from "../../shared/context/PoolConetext";
+import useConsumed from "../../shared/hooks/useConsumed";
 
 type DataType = {
   date: string;
   exercises: Exercises;
   diets: Meals;
+  weight: number;
 };
 
 const MONTH_TABLE = [
@@ -32,8 +35,7 @@ const MONTH_TABLE = [
 ];
 
 export default function HistoryPage() {
-    // TODO: add useConsumed here.
-  const { pool } = usePool();
+  const { pool, ePool } = usePool();
   const { user, token } = useAuth();
   const { date } = useDate();
   const formattedDate = `${date.year}-${String(date.month).padStart(2, "0")}`;
@@ -48,7 +50,9 @@ export default function HistoryPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setData(responseData.data);
-      } catch (err) {}
+      } catch (err) {
+        // TODO: add error handleing
+      }
     }
     getHis();
   }, [date, token, user]);
@@ -90,7 +94,8 @@ export default function HistoryPage() {
                 ) / 10;
             }
 
-
+            const { aerobicTotal, anaerobicTotal, volume, duration } =
+              useConsumed(e.exercises, e.weight, ePool);
 
             return (
               <li key={idx}>
@@ -109,10 +114,10 @@ export default function HistoryPage() {
                   </div>
 
                   <div className="flex flex-col justify-center items-center">
-                    <p>Consumed Kcal: 290 Kcal</p>
+                    <p>Consumed Kcal: {aerobicTotal + anaerobicTotal} Kcal</p>
                     <p className="flex flex-col justify-center items-center text-gray-500">
-                      <span>Volume: 190kg</span>
-                      <span>Cartio Duration: 1h20m</span>
+                      <span>Volume: {volume}kg</span>
+                      <span>Cartio Duration: {duration}</span>
                     </p>
                   </div>
                 </div>

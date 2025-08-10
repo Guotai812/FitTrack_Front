@@ -22,7 +22,7 @@ export default function ExerciseList() {
   const { info, isLoading } = useUser();
   const { ePool } = usePool();
   const { anaerobicItems, aerobicItems, anaerobicTotal, aerobicTotal } =
-    useConsumed(isLoading, info, ePool);
+    useConsumed(info.exercises, info.weight, ePool, isLoading);
 
   // 6) Collapse state
   const [open, setOpen] = useState<Record<SectionKey, boolean>>({
