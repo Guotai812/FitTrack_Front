@@ -47,15 +47,20 @@ export type Epool = Record<string, Exercise>;
 type ContextType = {
   pool: Pool;
   ePool: Epool;
+  isLoading: boolean;
 };
 
-const PoolContext = createContext<ContextType>({ pool: {}, ePool: {} });
+const PoolContext = createContext<ContextType>({
+  pool: {},
+  ePool: {},
+  isLoading: true,
+});
 
 export function PoolProvider({ children }: { children: React.ReactNode }) {
   const [pool, setFoodData] = useState<Pool>({});
   const [ePool, setEPool] = useState<Epool>({});
   const { token, user } = useAuth();
-  const { sendRequest } = useHttp<PoolResponse>();
+  const { sendRequest, isLoading } = useHttp<PoolResponse>();
 
   useEffect(() => {
     if (!user?.userId || !token) return;
@@ -73,7 +78,7 @@ export function PoolProvider({ children }: { children: React.ReactNode }) {
   }, [user?.userId, token]);
 
   return (
-    <PoolContext.Provider value={{ pool, ePool }}>
+    <PoolContext.Provider value={{ pool, ePool, isLoading }}>
       {children}
     </PoolContext.Provider>
   );

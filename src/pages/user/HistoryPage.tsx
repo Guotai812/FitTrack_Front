@@ -11,6 +11,7 @@ import type {
 import getTotalsPerFood from "../../shared/util/getTotalsPerFood";
 import { usePool } from "../../shared/context/PoolConetext";
 import useConsumed from "../../shared/hooks/useConsumed";
+import { div } from "framer-motion/client";
 
 type DataType = {
   date: string;
@@ -35,11 +36,15 @@ const MONTH_TABLE = [
 ];
 
 export default function HistoryPage() {
-  const { pool, ePool } = usePool();
+  const { pool, ePool, isLoading: isPoolLoaing } = usePool();
+
   const { user, token } = useAuth();
   const { date } = useDate();
   const formattedDate = `${date.year}-${String(date.month).padStart(2, "0")}`;
-  const { sendRequest } = useHttp<{ msg: string; data: DataType[] }>();
+  const { isLoading, sendRequest } = useHttp<{
+    msg: string;
+    data: DataType[];
+  }>();
   const [data, setData] = useState<DataType[]>();
   useEffect(() => {
     async function getHis() {
@@ -56,6 +61,10 @@ export default function HistoryPage() {
     }
     getHis();
   }, [date, token, user]);
+
+  if (isLoading || isPoolLoaing) {
+    return <div>isLoading..</div>;
+  }
   return (
     <div className="p-6 h-full">
       <div className="mb-10">
@@ -73,6 +82,7 @@ export default function HistoryPage() {
             let carbon = 0;
             let protein = 0;
             let fat = 0;
+
             for (const [mealName, totalWeight] of Object.entries(
               totalsPerMeal
             )) {

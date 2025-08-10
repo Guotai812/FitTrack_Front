@@ -116,8 +116,18 @@ export default function useConsumed(
   const aerobicTotal = Math.round(aerobicTotalRaw * 10) / 10;
   const anaerobicTotal = Math.round(anaerobicTotalRaw * 10) / 10;
 
-  const volume = 1900;
-  const duration = "1h20m";
+  const volumeRaw = anaerobicItems.reduce((sum, it) => sum + it.volume, 0);
+  const durationRaw = aerobicItems.reduce((sum, it) => sum + it.duration, 0);
+  const volume = Math.round(volumeRaw * 10) / 10;
+  const hours = Math.floor(durationRaw / 60);
+  const minutes = durationRaw % 60;
+
+  let duration;
+  if (hours > 0) {
+    duration = `${hours}h${String(minutes).padStart(2, "0")}m`;
+  } else {
+    duration = `${minutes}m`;
+  }
 
   return {
     anaerobicItems,
