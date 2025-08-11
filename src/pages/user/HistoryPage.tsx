@@ -11,7 +11,7 @@ import getTotalsPerFood from "../../shared/util/getTotalsPerFood";
 import { usePool } from "../../shared/context/PoolConetext";
 import useConsumed from "../../shared/hooks/useConsumed";
 import { useModal } from "../../shared/hooks/useModal";
-import HisModal from "../../shared/components/ui/hisData/HisModal";
+import HisModal from "../../shared/components/hisData/HisModal";
 
 type DataType = {
   date: string;
@@ -132,7 +132,11 @@ export default function HistoryPage() {
                     </div>
 
                     <div className="flex flex-col justify-center items-center">
-                      <p>Consumed Kcal: {aerobicTotal + anaerobicTotal} Kcal</p>
+                      <p>
+                        Consumed Kcal:{" "}
+                        {Math.round((aerobicTotal + anaerobicTotal) * 10) / 10}{" "}
+                        Kcal
+                      </p>
                       <p className="flex flex-col justify-center items-center text-gray-500">
                         <span>Volume: {volume}kg</span>
                         <span>Cartio Duration: {duration}</span>

@@ -8,7 +8,7 @@ type ExerciseGalleryProps = {
 };
 
 export default function ExerciseGallery({ onCancel }: ExerciseGalleryProps) {
-  const { id, setId } = useExercise();
+  const { setId } = useExercise();
   const { category } = useCategory();
   const { ePool } = usePool();
 

@@ -1,20 +1,19 @@
-import type { Info } from "../../../context/UserContext/UserContextType";
-import { useExercise } from "../../../context/exercise/ExerciseContext";
-import { usePool } from "../../../context/PoolConetext";
-import { useAnaForm } from "../../../hooks/useAnaForm";
-import { useModal } from "../../../hooks/useModal";
-import validator from "../../../util/validator";
-import useHttp from "../../../hooks/useHttp";
+import type { Info } from "../../../../context/UserContext/UserContextType";
+import { useExercise } from "../../../../context/exercise/ExerciseContext";
+import { usePool } from "../../../../context/PoolConetext";
+import { useAnaForm } from "../../../../hooks/useAnaForm";
+import { useModal } from "../../../../hooks/useModal";
+import validator from "../../../../util/validator";
+import useHttp from "../../../../hooks/useHttp";
 import React, { useEffect, useRef } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import useAnaInput from "../../../hooks/useAnaInput";
+import { useAuth } from "../../../../context/AuthContext";
+import useAnaInput from "../../../../hooks/useAnaInput";
 
-import Form from "../../ui/Form";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
-import ErrorModal from "../../ui/ErrorModal";
-import { useUser } from "../../../context/UserContext/UserContext";
-
+import Form from "../../../ui/Form";
+import Button from "../../../ui/Button";
+import Input from "../../../ui/Input";
+import ErrorModal from "../../../ui/ErrorModal";
+import { useHisInfo } from "../../../../context/useHisInfo";
 export type Response = {
   msg: string;
   updated: Info;
@@ -33,8 +32,8 @@ type GetReponse = {
   data: Entry[];
 };
 
-export default function AerobicForm() {
-  const { updateInfo } = useUser();
+export default function AnaerobicForm() {
+  const { info, updateInfo } = useHisInfo();
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { error, isLoading, sendRequest } = useHttp<Response>();
@@ -112,16 +111,7 @@ export default function AerobicForm() {
         }/${id}/addExercise`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: {
-          type: selectedExercise.type,
-          sets,
-          date: Intl.DateTimeFormat("en-CA", {
-            timeZone: "Australia/Sydney",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(new Date()),
-        },
+        body: { type: selectedExercise.type, sets, date: info.date },
       });
       updateInfo(responseData.updated);
       setId("");

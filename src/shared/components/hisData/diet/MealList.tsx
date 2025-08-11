@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useHisInfo } from "../../../../context/useHisInfo";
-import { usePool } from "../../../../context/PoolConetext";
-import { useModal } from "../../../../hooks/useModal";
-import { useEdit } from "../../../../context/diet/EditContext";
-import { DeleteContextProvider } from "../../../../context/diet/DeleteContext";
+import { useHisInfo } from "../../../context/useHisInfo";
+import { usePool } from "../../../context/PoolConetext";
+import { useModal } from "../../../hooks/useModal";
+import { useEdit } from "../../../context/diet/EditContext";
+import { DeleteContextProvider } from "../../../context/diet/DeleteContext";
 
 import ModificationModal from "./ModificationModal";
 // —— Types ——

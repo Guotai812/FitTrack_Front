@@ -1,11 +1,11 @@
-import { useDiet } from "../../../../context/diet/DietManageContext";
-import { usePool } from "../../../../context/PoolConetext";
-import { useModal } from "../../../../hooks/useModal";
-import { useHisInfo } from "../../../../context/useHisInfo";
+import { useDiet } from "../../../context/diet/DietManageContext";
+import { usePool } from "../../../context/PoolConetext";
+import { useModal } from "../../../hooks/useModal";
+import { useHisInfo } from "../../../context/useHisInfo";
 import DietForm from "./DietModal";
-import Button from "../../../ui/Button";
+import Button from "../../ui/Button";
 import { MealList } from "./MealList";
-import getTotalsPerFood from "../../../../util/getTotalsPerFood";
+import getTotalsPerFood from "../../../util/getTotalsPerFood";
 export default function DietSection() {
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const diet = useDiet();

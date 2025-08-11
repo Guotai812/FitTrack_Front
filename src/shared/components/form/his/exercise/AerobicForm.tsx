@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
-import { useExercise } from "../../../context/exercise/ExerciseContext";
-import { usePool } from "../../../context/PoolConetext";
-import { useForm } from "../../../hooks/useForm/useForm";
-import type { Info } from "../../../context/UserContext/UserContextType";
+import { useExercise } from "../../../../context/exercise/ExerciseContext";
+import { usePool } from "../../../../context/PoolConetext";
+import { useForm } from "../../../../hooks/useForm/useForm";
+import type { Info } from "../../../../context/UserContext/UserContextType";
 
-import Form from "../../ui/Form";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
-import useInput from "../../../hooks/useInput";
-import validator from "../../../util/validator";
-import useHttp from "../../../hooks/useHttp";
-import { useAuth } from "../../../context/AuthContext";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useModal } from "../../../hooks/useModal";
-import ErrorModal from "../../ui/ErrorModal";
+import Form from "../../../ui/Form";
+import Button from "../../../ui/Button";
+import Input from "../../../ui/Input";
+import useInput from "../../../../hooks/useInput";
+import validator from "../../../../util/validator";
+import useHttp from "../../../../hooks/useHttp";
+import { useAuth } from "../../../../context/AuthContext";
+import { useModal } from "../../../../hooks/useModal";
+import { useHisInfo } from "../../../../context/useHisInfo";
+import ErrorModal from "../../../ui/ErrorModal";
 
 export type Response = {
   msg: string;
@@ -30,7 +30,7 @@ type ResponseG = {
 
 export default function AerobicForm() {
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-  const { updateInfo } = useUser();
+  const { info, updateInfo } = useHisInfo();
   const { user, token } = useAuth();
   const { error, isLoading, sendRequest } = useHttp<Response>();
   const {
@@ -75,6 +75,7 @@ export default function AerobicForm() {
 
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
+    console.log(info.date);
     try {
       const responseData = await sendRequest({
         url: `${import.meta.env.VITE_BACKEND_URL}/basic/${
@@ -85,12 +86,7 @@ export default function AerobicForm() {
         body: {
           type: selectedExercise.type,
           duration: formState.inputs.duration.value,
-          date: Intl.DateTimeFormat("en-CA", {
-            timeZone: "Australia/Sydney",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(new Date()),
+          date: info.date,
         },
       });
       updateInfo(responseData.updated);

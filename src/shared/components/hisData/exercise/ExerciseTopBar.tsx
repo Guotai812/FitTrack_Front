@@ -1,13 +1,12 @@
 import ExerciseContextProvider from "../../../context/exercise/ExerciseContext";
-import { useUser } from "../../../context/UserContext/UserContext";
 import { usePool } from "../../../context/PoolConetext";
 import { useModal } from "../../../hooks/useModal";
 import useConsumed from "../../../hooks/useConsumed";
-
+import { useHisInfo } from "../../../context/useHisInfo";
 import Button from "../../ui/Button";
 import ExercisePool from "./ExercisePool";
 export default function ExerciseTopBar() {
-  const { info, isLoading } = useUser();
+  const { info, isLoading } = useHisInfo();
   const { ePool } = usePool();
   const { aerobicTotal, anaerobicTotal } = useConsumed(
     info.exercises,
@@ -17,7 +16,7 @@ export default function ExerciseTopBar() {
   );
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
 
-  const totalKcal = aerobicTotal + anaerobicTotal;
+  const totalKcal = Math.round((aerobicTotal + anaerobicTotal) * 10) / 10;
 
   return (
     <>

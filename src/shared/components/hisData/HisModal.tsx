@@ -1,13 +1,14 @@
-import { useDate } from "../../../context/DateContext";
-import { DietProvider } from "../../../context/diet/DietManageContext";
-import { EditContextProvider } from "../../../context/diet/EditContext";
-import { ItemContextProvider } from "../../../context/exercise/ItemContext";
-import { HisInfoProvider } from "../../../context/useHisInfo";
-import KcalSection from "../../../components/ui/hisData/kcal/KcalIndicator";
-import { Modal } from "../Modal";
-import SideContent from "../SideContent";
+import { useDate } from "../../context/DateContext";
+import { DietProvider } from "../../context/diet/DietManageContext";
+import { EditContextProvider } from "../../context/diet/EditContext";
+import { ItemContextProvider } from "../../context/exercise/ItemContext";
+import { HisInfoProvider } from "../../context/useHisInfo";
+import KcalSection from "./kcal/KcalIndicator";
+import { Modal } from "../ui/Modal";
+import SideContent from "../ui/SideContent";
 import BodyWeight from "./bodyWeight/BodyWeight";
 import DietSection from "./diet/Diet";
+import ExerciseSection from "./exercise/ExerciseSection";
 
 type HisModalProps = {
   onCancel: () => void;
@@ -33,6 +34,12 @@ export default function HisModal({ onCancel, day }: HisModalProps) {
               </EditContextProvider>
             </DietProvider>
           </ItemContextProvider>
+
+          <EditContextProvider>
+            <ItemContextProvider>
+              <ExerciseSection />
+            </ItemContextProvider>
+          </EditContextProvider>
         </SideContent>
       </Modal>
     </HisInfoProvider>

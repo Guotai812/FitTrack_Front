@@ -51,7 +51,7 @@ export default function DeleteConfirm({
           onClick={
             type === "diet"
               ? () => deleDietHandler(date)
-              : () => deleteExerciseHandeler(eid)
+              : () => deleteExerciseHandeler(eid, date)
           }
           disabled={isLoading}
         >

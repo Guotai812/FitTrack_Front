@@ -1,4 +1,4 @@
-import { useHisInfo } from "../../../../context/useHisInfo";
+import { useHisInfo } from "../../../context/useHisInfo";
 import SemiCircleProgress from "./KcalBar";
 
 export default function KcalSection() {

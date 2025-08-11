@@ -1,22 +1,22 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type React from "react";
-import useHttp from "../../../hooks/useHttp";
-import { useForm } from "../../../hooks/useForm/useForm";
-import useInput from "../../../hooks/useInput";
-import validator from "../../../util/validator";
-import { useDelete } from "../../../context/diet/DeleteContext";
-import { useAuth } from "../../../context/AuthContext";
+import useHttp from "../../../../hooks/useHttp";
+import { useForm } from "../../../../hooks/useForm/useForm";
+import useInput from "../../../../hooks/useInput";
+import validator from "../../../../util/validator";
+import { useDelete } from "../../../../context/diet/DeleteContext";
+import { useAuth } from "../../../../context/AuthContext";
 import type { Response } from "./AnaerobicForm";
-import { useUser } from "../../../context/UserContext/UserContext";
-import { useModal } from "../../../hooks/useModal";
-import type { Exercise } from "../../../context/PoolConetext";
-import type { AerobicItem } from "../../../context/UserContext/UserContextType";
+import { useModal } from "../../../../hooks/useModal";
+import { useHisInfo } from "../../../../context/useHisInfo";
+import type { Exercise } from "../../../../context/PoolConetext";
+import type { AerobicItem } from "../../../../context/UserContext/UserContextType";
 
-import Button from "../../ui/Button";
-import Form from "../../ui/Form";
-import Input from "../../ui/Input";
+import Button from "../../../ui/Button";
+import Form from "../../../ui/Form";
+import Input from "../../../ui/Input";
 
-import ErrorModal from "../../ui/ErrorModal";
+import ErrorModal from "../../../ui/ErrorModal";
 
 type AerobicEditFormProps = {
   onCancel: () => void;
@@ -39,7 +39,7 @@ export default function AerobicEditForm({
   );
   const { error, isLoading, sendRequest } = useHttp<Response>();
   const { user, token } = useAuth();
-  const { updateInfo } = useUser();
+  const { info, updateInfo } = useHisInfo();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
@@ -55,12 +55,7 @@ export default function AerobicEditForm({
           rid: userExercise.rid,
           updatedValue: formState.inputs.duration.value,
           eid: selectedExercise._id,
-          date: Intl.DateTimeFormat("en-CA", {
-            timeZone: "Australia/Sydney",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(new Date()),
+          date: info.date,
         },
       });
       updateInfo(responseData.updated);

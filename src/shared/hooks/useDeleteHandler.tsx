@@ -39,7 +39,7 @@ export default function useDietDelete(
     }
   }
 
-  async function deleteExerciseHandeler(eid: string) {
+  async function deleteExerciseHandeler(eid: string, date: string) {
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/basic/${user?.userId}/deleteExercise`,
@@ -50,6 +50,7 @@ export default function useDietDelete(
           type: item.type,
           eid: eid,
           kcal: item.kcal,
+          date,
         },
       });
       updateInfo(responseData.updated);

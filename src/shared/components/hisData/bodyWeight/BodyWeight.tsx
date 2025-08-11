@@ -1,6 +1,6 @@
-import WeightForm from "../../../form/his/WeightForm";
-import { useModal } from "../../../../hooks/useModal";
-import { useHisInfo } from "../../../../context/useHisInfo";
+import WeightForm from "../../form/his/WeightForm";
+import { useModal } from "../../../hooks/useModal";
+import { useHisInfo } from "../../../context/useHisInfo";
 
 export default function BodyWeight() {
   const { info } = useHisInfo();
