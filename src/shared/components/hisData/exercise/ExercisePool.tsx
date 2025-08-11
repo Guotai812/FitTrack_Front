@@ -3,7 +3,7 @@ import { CategoryContextProvider } from "../../../context/exercise/CategoryConte
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 
 import { Modal } from "../../ui/Modal";
-import SideNavigation from "../../navigation/SideNavigation";
+import SideNavigation from "../../userData/exercise/SideNavigation";
 import ExerciseGallery from "../../userData/exercise/ExerciseGallery";
 import ExerciseForm from "../../form/his/exercise/ExerciseForm";
 

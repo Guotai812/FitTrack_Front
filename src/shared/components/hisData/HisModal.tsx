@@ -23,7 +23,7 @@ export default function HisModal({ onCancel, day }: HisModalProps) {
   )}-${String(day).padStart(2, "0")}`;
   return (
     <HisInfoProvider date={formattedDate}>
-      <Modal onCancel={onCancel} size="w-[50%]" pad={0}>
+      <Modal onCancel={onCancel} size="w-[50%]" pad={0} isRefresh={true}>
         <SideContent>
           <KcalSection />
           <BodyWeight />
@@ -34,7 +34,6 @@ export default function HisModal({ onCancel, day }: HisModalProps) {
               </EditContextProvider>
             </DietProvider>
           </ItemContextProvider>
-
           <EditContextProvider>
             <ItemContextProvider>
               <ExerciseSection />
