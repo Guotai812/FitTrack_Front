@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../ui/Button";
 import { useCategory } from "../../../context/exercise/CategoryContext";
 import { useExercise } from "../../../context/exercise/ExerciseContext";
-import { s } from "framer-motion/client";
 
 type TopCategory = "all" | "aerobic" | "anaerobic";
 type SubCategory = "chest" | "back" | "leg" | "other";

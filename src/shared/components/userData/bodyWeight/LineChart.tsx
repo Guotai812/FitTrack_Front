@@ -17,14 +17,6 @@ import useHttp from "../../../hooks/useHttp";
 export type WeightTuple = [dateISO: string, weightKg: number];
 type Mode = "smooth" | "step";
 
-/* ---------------- Demo data (deterministic, built once) ---------------- */
-const DUMMY_DATA: WeightTuple[] = [
-  ["2025-07-10", 100],
-  ["2025-07-20", 60],
-  ["2025-07-30", 50],
-  ["2025-07-31", 80],
-];
-
 /* ---------------- Utilities ---------------- */
 function toISO(d: Date) {
   const y = d.getFullYear();
