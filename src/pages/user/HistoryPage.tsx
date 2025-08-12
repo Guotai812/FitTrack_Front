@@ -20,10 +20,10 @@ export default function HistoryPage() {
         </div>
         <div className="flex justify-center items-center gap-4">
           <Button onClick={backward} kind="confirm">
-            b
+            &lt;
           </Button>
           <Button onClick={forward} kind="confirm">
-            f
+            &gt;
           </Button>
         </div>
       </div>
