@@ -17,10 +17,9 @@ type HisModalProps = {
 
 export default function HisModal({ onCancel, day }: HisModalProps) {
   const { date } = useDate();
-  const formattedDate = `${date.year}-${String(date.month).padStart(
-    2,
-    "0"
-  )}-${String(day).padStart(2, "0")}`;
+  const formattedDate = `${date.selected.year}-${String(
+    date.selected.month
+  ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   return (
     <HisInfoProvider date={formattedDate}>
       <Modal onCancel={onCancel} size="w-[50%]" pad={0} isRefresh={true}>

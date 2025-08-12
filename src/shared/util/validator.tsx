@@ -40,6 +40,8 @@ export default function validator(
     case "duration":
     case "reps":
     case "sets":
+    case "year":
+    case "month":
       // 1) it must be a string (we need the raw text to detect leading zeros)
       if (typeof value !== "string") {
         return false;
