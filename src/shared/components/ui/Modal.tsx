@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 type ModalProps = {
   children: React.ReactNode;
   pad?: number;
@@ -5,6 +7,8 @@ type ModalProps = {
   min?: string;
   onCancel: () => void;
   isRefresh?: boolean;
+  setState?: Dispatch<SetStateAction<"ex" | "food" | undefined>>;
+  state?: "food" | "ex" | undefined;
 };
 
 export function Modal({
@@ -14,16 +18,23 @@ export function Modal({
   size = "w-[20%]",
   min = "400px",
   isRefresh = false,
+  setState,
+  state,
 }: ModalProps) {
   let clickHandler;
   if (isRefresh) {
     clickHandler = () => {
       onCancel();
       window.location.reload();
+      if (setState) setState(state);
     };
   } else {
-    clickHandler = onCancel;
+    clickHandler = () => {
+      onCancel();
+      if (setState) setState(state);
+    };
   }
+
   return (
     <div
       className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 "
