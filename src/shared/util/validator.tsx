@@ -2,7 +2,7 @@ export type ValidatorType = string;
 
 export default function validator(
   type: ValidatorType,
-  value: string | number | string[],
+  value: string | number | string[] | File | null,
   compareValue?: string | number
 ): boolean {
   switch (type) {
@@ -42,6 +42,7 @@ export default function validator(
     case "sets":
     case "year":
     case "month":
+    case "kcal":
       // 1) it must be a string (we need the raw text to detect leading zeros)
       if (typeof value !== "string") {
         return false;
@@ -61,6 +62,27 @@ export default function validator(
       // 3) finally coerce and check that it’s > 0
       const num = parseFloat(raw);
       return num > 0;
+    case "carbon":
+    case "protein":
+    case "fat":
+      if (typeof value !== "string") {
+        return false;
+      }
+
+      const raws = value.trim();
+
+      // 2) reject bad formats and ANY leading-zero integer
+      //    - (?!0\d) disallows "02", "0123", "001.5"
+      //    - \d+         matches "1", "42", "1234"
+      //    - \d*\.\d+    matches ".5", "0.75", "1.23"
+      const res = /^(?!0\d)(?:\d+|\d*\.\d+)$/;
+      if (!res.test(raws)) {
+        return false;
+      }
+
+      // 3) finally coerce and check that it’s > 0
+      const nums = parseFloat(raws);
+      return nums >= 0;
 
     // ── FALLBACK ───────────────────────────────────────────────────────────
     default:

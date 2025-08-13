@@ -4,7 +4,7 @@ import { Modal } from "../ui/Modal";
 
 type UpLoadExFormProps = {
   onCancel: () => void;
-  setState: Dispatch<SetStateAction<"ex" | "food" |  undefined>>;
+  setState: Dispatch<SetStateAction<"ex" | "food" | undefined>>;
 };
 
 export default function UpLoadExForm({
@@ -12,7 +12,7 @@ export default function UpLoadExForm({
   setState,
 }: UpLoadExFormProps) {
   return (
-    <Modal onCancel={onCancel} setState={setState} >
+    <Modal onCancel={onCancel} setState={setState}>
       <Form>as</Form>
     </Modal>
   );
