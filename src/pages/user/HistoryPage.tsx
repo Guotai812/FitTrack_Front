@@ -14,10 +14,11 @@ export default function HistoryPage() {
     <>
       {show && <HisModal onCancel={modalCancelHandler} day={day} />}
       <div className="p-6 h-full flex flex-col justify-between">
-        <div>
+        <div className="h-[95%]">
           <HisPageTop />
           <HisList modalDisplay={modalDisplayHandler} setDay={setDay} />
         </div>
+
         <div className="flex justify-center items-center gap-4">
           <Button onClick={backward} kind="confirm">
             &lt;

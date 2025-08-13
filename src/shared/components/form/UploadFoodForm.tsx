@@ -1,4 +1,6 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import Form from "../ui/Form";
 import { Modal } from "../ui/Modal";
 import Input from "../ui/Input";
@@ -7,6 +9,10 @@ import { useForm } from "../../hooks/useForm/useForm";
 import useInput from "../../hooks/useInput";
 import validator from "../../util/validator";
 import ImageUpload from "../ui/ImageUpload";
+import type React from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../hooks/useModal";
+import ErrorModal from "../ui/ErrorModal";
 
 type UpLoadFoodFormProps = {
   onCancel: () => void;
@@ -33,10 +39,49 @@ export default function UpLoadFoodForm({
     onCancel();
     setState(undefined);
   }
+  const { user, token } = useAuth();
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const form = new FormData();
+      form.append("name", String(formState.inputs.name.value));
+      const file = formState.inputs.image.value;
+      if (file instanceof File) {
+        form.append("image", file);
+      }
+      form.append("kcal", String(formState.inputs.kcal.value));
+      form.append("carbon", String(formState.inputs.carbon.value));
+      form.append("protein", String(formState.inputs.protein.value));
+      form.append("fat", String(formState.inputs.fat.value));
+      const res = await fetch(`${baseUrl}/pool/${user?.userId}/uploadFood`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+    } catch (err) {
+      setError(String(err));
+      modalDisplayHandler();
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
+  if (show) {
+    return (
+      <ErrorModal onCancel={modalCancelHandler} title="Error" msg={error} />
+    );
+  }
   return (
     <Modal onCancel={onCancel} setState={setState} size="w-[30%]">
-      <Form title="Upload Customized Food">
+      <Form title="Upload Customized Food" onSubmit={submitHandler}>
         <div className="flex justify-between gap-6">
           <Input
             type="text"
@@ -151,7 +196,7 @@ export default function UpLoadFoodForm({
           <Button type="button" onClick={clickCancelHandler} kind="cancel">
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!formState.isValid}>
+          <Button kind="confirm" disabled={!formState.isValid || isLoading}>
             Confirm
           </Button>
         </div>

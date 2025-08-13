@@ -64,7 +64,7 @@ export default function HisList({ modalDisplay, setDay }: HisListProps) {
   }
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-y-auto h-[55%]">
       <ol>
         {data?.map((e, idx) => {
           const totalsPerMeal: Record<string, number> = getTotalsPerFood(
