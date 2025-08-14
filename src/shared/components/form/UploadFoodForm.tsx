@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
 import Form from "../ui/Form";
+import useHttp from "../../hooks/useHttp";
 import { Modal } from "../ui/Modal";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
@@ -40,37 +40,59 @@ export default function UpLoadFoodForm({
     setState(undefined);
   }
   const { user, token } = useAuth();
-  const [error, setError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const { error, isLoading, sendRequest } = useHttp();
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    let preSign;
     try {
-      setIsLoading(true);
-      const form = new FormData();
-      form.append("name", String(formState.inputs.name.value));
+      preSign = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/food/preSign?contentType=${
+          formState.inputs.image.value instanceof File
+            ? formState.inputs.image.value.type
+            : ""
+        }`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      modalDisplayHandler();
+      return;
+    }
+
+    try {
       const file = formState.inputs.image.value;
-      if (file instanceof File) {
-        form.append("image", file);
+      if (!(file instanceof File)) throw new Error("No image selected");
+
+      // PUT raw bytes to S3 using the presigned URL
+      const putRes = await fetch(preSign!.uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type || "application/octet-stream" },
+      });
+      if (!putRes.ok) {
+        const txt = await putRes.text().catch(() => "");
+        throw new Error(`S3 upload failed (${putRes.status}): ${txt}`);
       }
-      form.append("kcal", String(formState.inputs.kcal.value));
-      form.append("carbon", String(formState.inputs.carbon.value));
-      form.append("protein", String(formState.inputs.protein.value));
-      form.append("fat", String(formState.inputs.fat.value));
-      const res = await fetch(`${baseUrl}/pool/${user?.userId}/uploadFood`, {
+
+      // Save your form fields + S3 key to your backend (JSON only)
+      await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/uploadFood`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: form,
+        body: {
+          name: formState.inputs.name.value,
+          kcal: Number(formState.inputs.kcal.value),
+          carbon: Number(formState.inputs.carbon.value),
+          protein: Number(formState.inputs.protein.value),
+          fat: Number(formState.inputs.fat.value),
+          // imageKey: preSign!.key, // store the S3 key (recommended)
+          // If your backend wants a full URL instead of the key, you can also send imageUrl
+          imageUrl: preSign.fileUrl,
+        },
       });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message);
-      }
+      onCancel();
     } catch (err) {
-      setError(String(err));
       modalDisplayHandler();
-    } finally {
-      setIsLoading(false);
     }
   }
 
