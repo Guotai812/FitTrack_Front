@@ -13,11 +13,22 @@ import type React from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
+import Select from "../ui/Select";
 
 type UpLoadFoodFormProps = {
   onCancel: () => void;
   setState: Dispatch<SetStateAction<"ex" | "food" | undefined>>;
 };
+
+const SelectItem = [
+  "staple",
+  "dairy",
+  "protein",
+  "vege",
+  "oil",
+  "nut",
+  "other",
+];
 
 export default function UpLoadFoodForm({
   onCancel,
@@ -31,6 +42,7 @@ export default function UpLoadFoodForm({
       carbon: { value: "", isValid: false },
       protein: { value: "", isValid: false },
       fat: { value: "", isValid: false },
+      type: { value: "", isValid: false },
     },
     false
   );
@@ -85,12 +97,12 @@ export default function UpLoadFoodForm({
           carbon: Number(formState.inputs.carbon.value),
           protein: Number(formState.inputs.protein.value),
           fat: Number(formState.inputs.fat.value),
-          // imageKey: preSign!.key, // store the S3 key (recommended)
-          // If your backend wants a full URL instead of the key, you can also send imageUrl
+          type: formState.inputs.type.value,
           imageUrl: preSign.fileUrl,
         },
       });
       onCancel();
+      setState(undefined);
     } catch (err) {
       modalDisplayHandler();
     }
@@ -123,9 +135,24 @@ export default function UpLoadFoodForm({
             errMsg="Invalid Value"
           />
 
-          <ImageUpload id="image" onInput={inputHandler} />
+          <ImageUpload id="image" squareSizePx={150} onInput={inputHandler} />
         </div>
 
+        <Select
+          name="type"
+          label="Type"
+          items={SelectItem}
+          isTouched={touched["type"]}
+          onBlur={() => blurHandler("type")}
+          isValid={formState.inputs.type.isValid}
+          onChange={(e) =>
+            inputHandler(
+              "type",
+              e.target.value,
+              validator("type", e.target.value)
+            )
+          }
+        />
         <Input
           type="number"
           name="kcal"
@@ -214,13 +241,20 @@ export default function UpLoadFoodForm({
           isValid={formState.inputs.fat.isValid}
           errMsg="Invalid Value"
         />
+
         <div className="flex justify-end gap-4">
           <Button type="button" onClick={clickCancelHandler} kind="cancel">
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!formState.isValid || isLoading}>
-            Confirm
-          </Button>
+          {isLoading ? (
+            <Button kind="confirm" disabled>
+              Loading...
+            </Button>
+          ) : (
+            <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+              Confirm
+            </Button>
+          )}
         </div>
       </Form>
     </Modal>
