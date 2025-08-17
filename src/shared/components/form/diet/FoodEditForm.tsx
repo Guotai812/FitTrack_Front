@@ -92,7 +92,7 @@ export default function FoodEditForm({ onCancel }: FoodEditFormProps) {
           type="number"
           name="weight"
           label="Weight"
-          value={formState.inputs.weight.value}
+          value={Number(formState.inputs.weight.value)}
           onChange={(e) =>
             inputHandler(
               "weight",

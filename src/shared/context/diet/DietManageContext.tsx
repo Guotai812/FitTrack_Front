@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import type { SetStateAction, Dispatch } from "react";
 
-type State = "manage" | "edit" | "delete" | "pool" | "add";
+type State = "manage" | "edit" | "delete" | "pool" | "add" | "upload";
 
 type DietManageContextType = {
   state: State;
@@ -9,12 +9,12 @@ type DietManageContextType = {
 };
 
 const DietManageContext = createContext<DietManageContextType>({
-  state: "manage",
+  state: "pool",
   setState: () => {},
 });
 
 export function DietProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<State>("manage");
+  const [state, setState] = useState<State>("pool");
 
   return (
     <DietManageContext.Provider value={{ state, setState }}>

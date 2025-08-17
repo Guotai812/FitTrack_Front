@@ -7,6 +7,7 @@ type Category =
   | "dairy"
   | "protein"
   | "vege"
+  | "fruit"
   | "nut"
   | "oil"
   | "others";

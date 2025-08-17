@@ -3,9 +3,11 @@ import { useAuth } from "../../context/AuthContext";
 import Button from "../ui/Button";
 import { useModal } from "../../hooks/useModal";
 import { useState } from "react";
+import DietModal from "../ui/cFood/DietModal";
 
 import UpLoadExForm from "../form/UploadExForm";
 import UpLoadFoodForm from "../form/UploadFoodForm";
+import { DietProvider } from "../../context/diet/DietManageContext";
 
 export default function SideNavigation() {
   const [state, setState] = useState<"ex" | "food" | undefined>(undefined);
@@ -27,7 +29,9 @@ export default function SideNavigation() {
         (state === "ex" ? (
           <UpLoadExForm onCancel={modalCancelHandler} setState={setState} />
         ) : (
-          <UpLoadFoodForm onCancel={modalCancelHandler} setState={setState} />
+          <DietProvider>
+            <DietModal onCancel={modalCancelHandler} setState={setState} />
+          </DietProvider>
         ))}
       <aside className="h-screen w-1/7 bg-green-300 text-black flex flex-col justify-between p-4 shadow-lg">
         <div>
@@ -63,7 +67,7 @@ export default function SideNavigation() {
                 state === "ex" ? "text-white" : ""
               }`}
             >
-              Upload Exercise
+              Customized Exercise
             </Button>
             <Button
               onClick={() => clickHandler("food")}
@@ -71,7 +75,7 @@ export default function SideNavigation() {
                 state === "food" ? "text-white" : ""
               }`}
             >
-              Upload Food
+              Customized Food
             </Button>
           </nav>
         </div>

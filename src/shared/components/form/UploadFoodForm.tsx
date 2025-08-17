@@ -14,6 +14,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 import Select from "../ui/Select";
+import { useDiet } from "../../context/diet/DietManageContext";
 
 type UpLoadFoodFormProps = {
   onCancel: () => void;
@@ -34,6 +35,7 @@ export default function UpLoadFoodForm({
   onCancel,
   setState,
 }: UpLoadFoodFormProps) {
+  const { setState: setDiet } = useDiet();
   const { formState, inputHandler } = useForm(
     {
       name: { value: "", isValid: false },
@@ -48,8 +50,7 @@ export default function UpLoadFoodForm({
   );
   const { touched, blurHandler } = useInput();
   function clickCancelHandler() {
-    onCancel();
-    setState(undefined);
+    setDiet("pool");
   }
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
@@ -101,8 +102,7 @@ export default function UpLoadFoodForm({
           imageUrl: preSign.fileUrl,
         },
       });
-      onCancel();
-      setState(undefined);
+      setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
     }
