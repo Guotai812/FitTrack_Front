@@ -1,16 +1,49 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
+import type { Pool } from "../../../context/PoolConetext";
+import { useEffect, useState } from "react";
 import { useCategory } from "../../../context/diet/CategoryContext";
 import { useDiet } from "../../../context/diet/DietManageContext";
 import { useFood } from "../../../context/diet/FoodContext";
-import { usePool } from "../../../context/PoolConetext";
+import useHttp from "../../../hooks/useHttp";
 import Button from "../../ui/Button";
+import { useAuth } from "../../../context/AuthContext";
+import ErrorModal from "../ErrorModal";
+import { useModal } from "../../../hooks/useModal";
 
 export default function FoodGallery() {
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const { user, token } = useAuth();
   const { setFoodId } = useFood();
   const { setState } = useDiet();
   const { category } = useCategory();
-  const { pool } = usePool();
+  const [pool, setPool] = useState<Pool>();
+  const { sendRequest, isLoading, error } = useHttp<{ foods: Pool }>();
+  useEffect(() => {
+    async function fetchCustomizedFoodItems() {
+      try {
+        if (!user?.userId || !token) return;
+        const responseData = await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/getCustomizedFood`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPool(responseData.foods);
+      } catch (err) {
+        modalDisplayHandler();
+      }
+    }
+    fetchCustomizedFoodItems();
+  }, [token, user?.userId]);
 
-  if (!pool || Object.keys(pool).length === 0) {
+  if (show) {
+    return (
+      <ErrorModal title="Failed!" msg={error} onCancel={modalCancelHandler} />
+    );
+  }
+
+  if (isLoading) {
+    return <p className="p-4 text-center text-gray-500">Loading...</p>;
+  }
+  if (!pool || Object.keys(pool).length === 0 || show) {
     return <p className="p-4 text-center text-gray-500">No items available.</p>;
   }
 
@@ -45,6 +78,7 @@ export default function FoodGallery() {
     setFoodId(id);
     setState("add");
   }
+
   return (
     <>
       <div className="h-full overflow-y-auto">

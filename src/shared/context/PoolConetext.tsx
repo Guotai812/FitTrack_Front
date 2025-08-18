@@ -41,7 +41,7 @@ interface PoolResponse {
   exercises: Epool;
 }
 
-type Pool = Record<string, Food>;
+export type Pool = Record<string, Food>;
 export type Epool = Record<string, Exercise>;
 
 type ContextType = {
