@@ -149,6 +149,21 @@ export default function EditCusFoodForm({
     );
   }
 
+  function isChanged() {
+    if (!pool || !foodId || !pool[foodId]) return false;
+    const food = pool[foodId];
+    return (
+      food.name !== formState.inputs.name.value ||
+      food.kcal !== Number(formState.inputs.kcal.value) ||
+      food.carbon !== Number(formState.inputs.carbon.value) ||
+      food.protein !== Number(formState.inputs.protein.value) ||
+      food.fat !== Number(formState.inputs.fat.value) ||
+      food.type !== formState.inputs.type.value ||
+      (formState.inputs.image.value instanceof File &&
+        formState.inputs.image.value.name !== food.image)
+    );
+  }
+  
   return (
     <Modal onCancel={onCancel} setState={setState} size="w-[30%]">
       <Form
@@ -304,7 +319,10 @@ export default function EditCusFoodForm({
               Loading...
             </Button>
           ) : (
-            <Button kind="confirm" disabled={!formState.isValid || isLoading}>
+            <Button
+              kind="confirm"
+              disabled={!formState.isValid || isLoading || !isChanged()}
+            >
               Confirm
             </Button>
           )}
