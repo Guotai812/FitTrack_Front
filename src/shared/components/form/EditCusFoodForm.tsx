@@ -95,8 +95,8 @@ export default function EditCusFoodForm({
       }
 
       // Save your form fields + S3 key to your backend (JSON only)
-      await sendRequest({
-        url: `${baseUrl}/pool/${user?.userId}/uploadFood`,
+      const responseData = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/${foodId}/updateFood`,
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: {
@@ -109,6 +109,7 @@ export default function EditCusFoodForm({
           imageUrl: preSign.fileUrl,
         },
       });
+      updateFoodPool(responseData.updated);
       setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
@@ -116,6 +117,7 @@ export default function EditCusFoodForm({
   }
 
   async function submitNonImageHandler(e: React.FocusEvent<HTMLFormElement>) {
+    e.preventDefault();
     try {
       const responseData = await sendRequest({
         url: `${baseUrl}/pool/${user?.userId}/${foodId}/updateFood`,
@@ -131,6 +133,7 @@ export default function EditCusFoodForm({
         },
       });
       updateFoodPool(responseData.updated);
+      setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
     }
