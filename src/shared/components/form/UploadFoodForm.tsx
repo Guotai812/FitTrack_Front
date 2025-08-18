@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import type { Dispatch, SetStateAction } from "react";
+import { useContext, type Dispatch, type SetStateAction } from "react";
 import Form from "../ui/Form";
 import useHttp from "../../hooks/useHttp";
 import { Modal } from "../ui/Modal";
@@ -15,6 +15,8 @@ import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 import Select from "../ui/Select";
 import { useDiet } from "../../context/diet/DietManageContext";
+import { cFoodContext } from "../../context/CustomizedFoodContext";
+import { FoodContext } from "../../context/diet/FoodContext";
 
 type UpLoadFoodFormProps = {
   onCancel: () => void;
@@ -35,16 +37,51 @@ export default function UpLoadFoodForm({
   onCancel,
   setState,
 }: UpLoadFoodFormProps) {
+  const cContext = useContext(cFoodContext);
+  const fContext = useContext(FoodContext);
+  let name;
+  let image;
+  let kcal;
+  let carbon;
+  let fat;
+  let protein;
+  let type;
+  if (cContext && fContext) {
+    const { pool } = cContext;
+    const { foodId } = fContext;
+    if (pool && foodId) {
+      name = pool[foodId]?.name || "";
+      image = pool[foodId]?.image || "";
+      kcal = pool[foodId]?.kcal || "";
+      carbon = pool[foodId]?.carbon || "";
+      fat = pool[foodId]?.fat || "";
+      protein = pool[foodId]?.protein || "";
+      type = pool[foodId]?.type || "";
+    }
+  }
+
   const { setState: setDiet } = useDiet();
   const { formState, inputHandler } = useForm(
     {
-      name: { value: "", isValid: false },
-      image: { value: "", isValid: false },
-      kcal: { value: "", isValid: false },
-      carbon: { value: "", isValid: false },
-      protein: { value: "", isValid: false },
-      fat: { value: "", isValid: false },
-      type: { value: "", isValid: false },
+      name: { value: name ? name : "", isValid: name ? true : false },
+      image: { value: image ? image : "", isValid: image ? true : false },
+      kcal: {
+        value: Number(kcal) === 0 ? Number(kcal) : Number(kcal) || "",
+        isValid: kcal ? true : false,
+      },
+      carbon: {
+        value: Number(carbon) === 0 ? Number(carbon) : Number(carbon) || "",
+        isValid: carbon ? true : false,
+      },
+      protein: {
+        value: Number(protein) === 0 ? Number(protein) : Number(protein) || "",
+        isValid: protein ? true : false,
+      },
+      fat: {
+        value: Number(fat) === 0 ? Number(fat) : Number(fat) || "",
+        isValid: fat ? true : false,
+      },
+      type: { value: type ? type : "", isValid: type ? true : false },
     },
     false
   );
@@ -145,6 +182,11 @@ export default function UpLoadFoodForm({
           isTouched={touched["type"]}
           onBlur={() => blurHandler("type")}
           isValid={formState.inputs.type.isValid}
+          value={
+            typeof formState.inputs.type.value === "string"
+              ? formState.inputs.type.value
+              : ""
+          }
           onChange={(e) =>
             inputHandler(
               "type",

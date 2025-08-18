@@ -10,7 +10,7 @@ type FoodContextType = {
   setFoodId: Dispatch<SetStateAction<string | null>>;
 };
 
-const FoodContext = createContext<FoodContextType | undefined>(undefined);
+export const FoodContext = createContext<FoodContextType | undefined>(undefined);
 
 export function FoodContextProvider({ children }: ProviderProps) {
   const [foodId, setFoodId] = useState<string | null>(null);

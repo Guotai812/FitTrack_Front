@@ -9,15 +9,17 @@ import Button from "../../ui/Button";
 import { useAuth } from "../../../context/AuthContext";
 import ErrorModal from "../ErrorModal";
 import { useModal } from "../../../hooks/useModal";
+import { useCustomizedFood } from "../../../context/CustomizedFoodContext";
 
 export default function FoodGallery() {
+  const { pool, setPool } = useCustomizedFood();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { user, token } = useAuth();
   const { setFoodId } = useFood();
   const { setState } = useDiet();
   const { category } = useCategory();
-  const [pool, setPool] = useState<Pool>();
   const { sendRequest, isLoading, error } = useHttp<{ foods: Pool }>();
+
   useEffect(() => {
     async function fetchCustomizedFoodItems() {
       try {
@@ -39,7 +41,6 @@ export default function FoodGallery() {
       <ErrorModal title="Failed!" msg={error} onCancel={modalCancelHandler} />
     );
   }
-
   if (isLoading) {
     return <p className="p-4 text-center text-gray-500">Loading...</p>;
   }
@@ -76,7 +77,7 @@ export default function FoodGallery() {
 
   function recordFoodIdHandler(id: string) {
     setFoodId(id);
-    setState("add");
+    setState("upload");
   }
 
   return (
