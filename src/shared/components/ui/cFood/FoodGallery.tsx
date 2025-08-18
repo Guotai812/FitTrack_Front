@@ -77,7 +77,7 @@ export default function FoodGallery() {
 
   function recordFoodIdHandler(id: string) {
     setFoodId(id);
-    setState("upload");
+    setState("edit");
   }
 
   return (

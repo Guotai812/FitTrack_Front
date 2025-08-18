@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import Form from "../ui/Form";
 import useHttp from "../../hooks/useHttp";
 import { Modal } from "../ui/Modal";
@@ -15,10 +15,10 @@ import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 import Select from "../ui/Select";
 import { useDiet } from "../../context/diet/DietManageContext";
-import { cFoodContext } from "../../context/CustomizedFoodContext";
-import { FoodContext } from "../../context/diet/FoodContext";
+import { useCustomizedFood } from "../../context/CustomizedFoodContext";
+import { useFood } from "../../context/diet/FoodContext";
 
-type UpLoadFoodFormProps = {
+type EditCusFoodForm = {
   onCancel: () => void;
   setState: Dispatch<SetStateAction<"ex" | "food" | undefined>>;
 };
@@ -33,20 +33,25 @@ const SelectItem = [
   "other",
 ];
 
-export default function UpLoadFoodForm({
+export default function EditCusFoodForm({
   onCancel,
   setState,
-}: UpLoadFoodFormProps) {
+}: EditCusFoodForm) {
+  const { foodId } = useFood();
+  const { pool, updateFoodPool } = useCustomizedFood();
+  if (!pool || !foodId || !pool[foodId]) {
+    return <p className="p-4 text-center text-gray-500">No food selected.</p>;
+  }
   const { setState: setDiet } = useDiet();
   const { formState, inputHandler } = useForm(
     {
-      name: { value: "", isValid: false },
-      image: { value: "", isValid: false },
-      kcal: { value: "", isValid: false },
-      carbon: { value: "", isValid: false },
-      protein: { value: "", isValid: false },
-      fat: { value: "", isValid: false },
-      type: { value: "", isValid: false },
+      name: { value: pool[foodId].name, isValid: true },
+      image: { value: "", isValid: true },
+      kcal: { value: pool[foodId].kcal, isValid: true },
+      carbon: { value: pool[foodId].carbon, isValid: true },
+      protein: { value: pool[foodId].protein, isValid: true },
+      fat: { value: pool[foodId].fat, isValid: true },
+      type: { value: pool[foodId].type, isValid: true },
     },
     false
   );
@@ -57,7 +62,7 @@ export default function UpLoadFoodForm({
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
   const { error, isLoading, sendRequest } = useHttp();
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function submitImageHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let preSign;
     try {
@@ -110,14 +115,43 @@ export default function UpLoadFoodForm({
     }
   }
 
+  async function submitNonImageHandler(e: React.FocusEvent<HTMLFormElement>) {
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/${foodId}/updateFood`,
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: {
+          name: formState.inputs.name.value,
+          kcal: Number(formState.inputs.kcal.value),
+          carbon: Number(formState.inputs.carbon.value),
+          protein: Number(formState.inputs.protein.value),
+          fat: Number(formState.inputs.fat.value),
+          type: formState.inputs.type.value,
+        },
+      });
+      updateFoodPool(responseData.updated);
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+
   if (show) {
     return (
       <ErrorModal onCancel={modalCancelHandler} title="Error" msg={error} />
     );
   }
+
   return (
     <Modal onCancel={onCancel} setState={setState} size="w-[30%]">
-      <Form title="Upload Customized Food" onSubmit={submitHandler}>
+      <Form
+        title="Upload Customized Food"
+        onSubmit={
+          formState.inputs.image.value instanceof File
+            ? submitImageHandler
+            : submitNonImageHandler
+        }
+      >
         <div className="flex justify-between gap-6">
           <Input
             type="text"
@@ -137,7 +171,12 @@ export default function UpLoadFoodForm({
             errMsg="Invalid Value"
           />
 
-          <ImageUpload id="image" squareSizePx={150} onInput={inputHandler} />
+          <ImageUpload
+            id="image"
+            squareSizePx={150}
+            onInput={inputHandler}
+            image={pool[foodId].image}
+          />
         </div>
 
         <Select

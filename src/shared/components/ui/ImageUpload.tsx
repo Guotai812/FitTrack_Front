@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 
 type ImageUploadProps = {
+  image?: string; // Optional initial image URL
   id: string;
   onInput: (
     id: string,
@@ -24,16 +25,18 @@ export default function ImageUpload({
   maxMB = 5,
   accept = "image/png,image/jpeg",
   squareSizePx = 200,
+  image = "",
 }: ImageUploadProps) {
   const [file, setFile] = useState<File>();
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string>(image || "");
+  console.log(previewUrl);
   const [isValid, setIsValid] = useState<boolean>(true);
 
   const filePickerRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!file) {
-      setPreviewUrl("");
+      setPreviewUrl(image || "");
       return;
     }
     const objectUrl = URL.createObjectURL(file);
@@ -112,10 +115,10 @@ export default function ImageUpload({
               type="button"
               onClick={() => {
                 setFile(undefined);
-                setIsValid(false);
-                setPreviewUrl("");
+                setIsValid(image ? true : false);
+                setPreviewUrl(image || "");
                 if (filePickerRef.current) filePickerRef.current.value = "";
-                onInput(id, null, false);
+                onInput(id, null, image ? true : false);
               }}
               className="text-xs text-gray-600 hover:text-gray-900 underline self-start"
             >

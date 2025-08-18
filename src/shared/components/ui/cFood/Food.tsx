@@ -5,6 +5,7 @@ import FoodList from "./FoodList";
 import { FoodContextProvider } from "../../../context/diet/FoodContext";
 import UpLoadFoodForm from "../../form/UploadFoodForm";
 import { CustomizedFoodContextProvider } from "../../../context/CustomizedFoodContext";
+import EditCusFoodForm from "../../form/EditCusFoodForm";
 
 export default function FoodLibrary({
   onCancel,
@@ -21,6 +22,8 @@ export default function FoodLibrary({
           <LibraryNavigation />
           {state === "upload" ? (
             <UpLoadFoodForm onCancel={onCancel} setState={setState} />
+          ) : state === "edit" ? (
+            <EditCusFoodForm onCancel={onCancel} setState={setState} />
           ) : (
             <FoodList onCancel={onCancel} setNavState={setState} />
           )}

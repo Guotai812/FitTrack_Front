@@ -10,6 +10,7 @@ import type { Pool } from "./PoolConetext";
 type cFoodContextType = {
   pool: Pool | undefined;
   setPool: Dispatch<SetStateAction<Pool | undefined>>;
+  updateFoodPool: (newPool: Pool) => void;
 };
 
 export const cFoodContext = createContext<cFoodContextType | undefined>(
@@ -21,8 +22,15 @@ export const CustomizedFoodContextProvider: React.FC<{
 }> = ({ children }) => {
   const [pool, setPool] = useState<Pool | undefined>(undefined);
 
+  function updateFoodPool(newPool: Pool) {
+    setPool((prevPool) => {
+      if (!prevPool) return newPool;
+      return { ...prevPool, ...newPool };
+    });
+  }
+
   return (
-    <cFoodContext.Provider value={{ pool, setPool }}>
+    <cFoodContext.Provider value={{ pool, setPool, updateFoodPool }}>
       {children}
     </cFoodContext.Provider>
   );

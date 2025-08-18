@@ -1,4 +1,5 @@
 import { CategoryContextProvider } from "../../../context/diet/CategoryContext";
+import EditCusFoodForm from "../../form/EditCusFoodForm";
 import { useDiet } from "../../../context/diet/DietManageContext";
 import { Modal } from "../../ui/Modal";
 import FoodLibrary from "./Food";
@@ -13,13 +14,10 @@ export default function DietModal({ onCancel, setState }: DietFormProps) {
   const diet = useDiet();
   let content;
   switch (diet.state) {
-    case "edit":
-      break;
-    case "delete":
-      break;
     case "pool":
     case "add":
     case "upload":
+    case "edit":
       content = (
         <CategoryContextProvider>
           <FoodLibrary onCancel={onCancel} setState={setState} />
