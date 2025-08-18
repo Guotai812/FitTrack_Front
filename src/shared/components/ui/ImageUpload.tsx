@@ -29,7 +29,6 @@ export default function ImageUpload({
 }: ImageUploadProps) {
   const [file, setFile] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState<string>(image || "");
-  console.log(previewUrl);
   const [isValid, setIsValid] = useState<boolean>(true);
 
   const filePickerRef = useRef<HTMLInputElement | null>(null);

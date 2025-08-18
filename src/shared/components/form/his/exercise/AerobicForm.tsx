@@ -75,7 +75,6 @@ export default function AerobicForm() {
 
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
-    console.log(info.date);
     try {
       const responseData = await sendRequest({
         url: `${import.meta.env.VITE_BACKEND_URL}/basic/${
@@ -127,7 +126,7 @@ export default function AerobicForm() {
                 label="Duration(minute)"
                 name="duration"
                 width="w-[30%]"
-                value={formState.inputs.duration.value}
+                value={Number(formState.inputs.duration.value)}
                 isValid={formState.inputs.duration.isValid}
                 isTouched={touched.duration}
                 onBlur={() => blurHandler("duration")}
