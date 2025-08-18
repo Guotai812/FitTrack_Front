@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Pool } from "../../../context/PoolConetext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCategory } from "../../../context/diet/CategoryContext";
 import { useDiet } from "../../../context/diet/DietManageContext";
 import { useFood } from "../../../context/diet/FoodContext";
