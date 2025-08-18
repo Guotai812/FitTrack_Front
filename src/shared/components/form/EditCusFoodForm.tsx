@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Form from "../ui/Form";
 import useHttp from "../../hooks/useHttp";
 import { Modal } from "../ui/Modal";
@@ -61,10 +61,12 @@ export default function EditCusFoodForm({
   }
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-  const { error, isLoading, sendRequest } = useHttp();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { error, sendRequest } = useHttp();
   async function submitImageHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let preSign;
+    setIsLoading(true);
     try {
       preSign = await sendRequest({
         url: `${baseUrl}/pool/${user?.userId}/food/preSign?contentType=${
@@ -113,6 +115,8 @@ export default function EditCusFoodForm({
       setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
+    } finally {
+      setIsLoading(false);
     }
   }
 
