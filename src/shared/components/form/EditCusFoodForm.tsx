@@ -143,6 +143,20 @@ export default function EditCusFoodForm({
     }
   }
 
+  async function clickDeleteHandler() {
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/${foodId}/deleteFood`,
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      updateFoodPool(responseData);
+      setDiet("pool");
+    } catch (err) {
+      modalDisplayHandler();
+    }
+  }
+
   if (show) {
     return (
       <ErrorModal onCancel={modalCancelHandler} title="Error" msg={error} />
@@ -163,7 +177,7 @@ export default function EditCusFoodForm({
         formState.inputs.image.value.name !== food.image)
     );
   }
-  
+
   return (
     <Modal onCancel={onCancel} setState={setState} size="w-[30%]">
       <Form
@@ -310,22 +324,30 @@ export default function EditCusFoodForm({
           errMsg="Invalid Value"
         />
 
-        <div className="flex justify-end gap-4">
-          <Button type="button" onClick={clickCancelHandler} kind="cancel">
-            Cancel
+        <div
+          className="flex justify-between items-center mt-4"
+          onClick={clickCancelHandler}
+        >
+          <Button type="button" kind="cancel">
+            Delete
           </Button>
-          {isLoading ? (
-            <Button kind="confirm" disabled>
-              Loading...
+          <div className="flex justify-end gap-4">
+            <Button type="button" onClick={clickDeleteHandler} kind="cancel">
+              Cancel
             </Button>
-          ) : (
-            <Button
-              kind="confirm"
-              disabled={!formState.isValid || isLoading || !isChanged()}
-            >
-              Confirm
-            </Button>
-          )}
+            {isLoading ? (
+              <Button kind="confirm" disabled>
+                Loading...
+              </Button>
+            ) : (
+              <Button
+                kind="confirm"
+                disabled={!formState.isValid || isLoading || isChanged()}
+              >
+                Confirm
+              </Button>
+            )}
+          </div>
         </div>
       </Form>
     </Modal>

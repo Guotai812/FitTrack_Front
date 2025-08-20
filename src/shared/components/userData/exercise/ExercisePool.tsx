@@ -11,6 +11,8 @@ type ExercisePoolProps = {
   onCancel: () => void;
 };
 
+// TODO: refactor it to use it in cExercise
+
 export default function ExercisePool({ onCancel }: ExercisePoolProps) {
   const { id } = useExercise();
   return (
