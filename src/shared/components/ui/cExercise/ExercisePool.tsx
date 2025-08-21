@@ -1,4 +1,5 @@
 import { CategoryContextProvider } from "../../../context/exercise/CategoryContext";
+import { useState } from "react";
 
 import { useExercise } from "../../../context/exercise/ExerciseContext";
 
@@ -7,6 +8,8 @@ import SideNavigation from "./SideNavigation";
 import ExerciseGallery from "./ExerciseGallery";
 import ExerciseForm from "../../form/exercise/ExerciseForm";
 import { CustomizedExContextProvider } from "../../../context/CustomizedExContext";
+import Button from "../../ui/Button";
+import UpLoadExForm from "../../form/UploadExForm";
 
 type ExercisePoolProps = {
   onCancel: () => void;
@@ -18,6 +21,11 @@ export default function ExercisePool({
   setState,
 }: ExercisePoolProps) {
   const { id } = useExercise();
+  const [isUpload, setIsUpload] = useState<boolean>(false);
+  function clickCancelHandler() {
+    onCancel();
+    setState(undefined);
+  }
   return (
     <CategoryContextProvider>
       <Modal
@@ -29,9 +37,25 @@ export default function ExercisePool({
       >
         <div className="flex justify-between h-full">
           <SideNavigation />
-          {id.trim() === "" ? (
+          {isUpload ? (
+            <UpLoadExForm
+              onCancel={onCancel}
+              setState={setState}
+              setIsUpload={setIsUpload}
+            />
+          ) : id.trim() === "" ? (
             <CustomizedExContextProvider>
-              <ExerciseGallery onCancel={onCancel} setState={setState} />
+              <div className="w-5/6 h-full p-6 flex flex-col justify-end">
+                <ExerciseGallery />
+                <div className="flex justify-end gap-4">
+                  <Button kind="cancel" onClick={clickCancelHandler}>
+                    Cancel
+                  </Button>
+                  <Button kind="confirm" onClick={() => setIsUpload(true)}>
+                    Upload
+                  </Button>
+                </div>
+              </div>
             </CustomizedExContextProvider>
           ) : (
             <ExerciseForm />

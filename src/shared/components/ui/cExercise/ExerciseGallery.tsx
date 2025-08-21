@@ -8,15 +8,7 @@ import type { Epool } from "../../../context/PoolConetext";
 import useHttp from "../../../hooks/useHttp";
 import { useAuth } from "../../../context/AuthContext";
 
-type ExerciseGalleryProps = {
-  onCancel: () => void;
-  setState: React.Dispatch<React.SetStateAction<"ex" | "food" | undefined>>; // Optional prop for state management
-};
-
-export default function ExerciseGallery({
-  onCancel,
-  setState,
-}: ExerciseGalleryProps) {
+export default function ExerciseGallery() {
   const { user, token } = useAuth();
   const { setId } = useExercise();
   const { category } = useCategory();
@@ -26,7 +18,7 @@ export default function ExerciseGallery({
     async function fetchEpool() {
       try {
         const responseData = await sendRequest({
-          url: `${baseUrl}/pool/${user?.userId}/getCusEpool`,
+          url: `${baseUrl}/pool/${user?.userId}/getCusExercise`,
           headers: { Authorization: `Bearer ${token}` },
         });
         updateEpool(responseData.data);
@@ -65,11 +57,6 @@ export default function ExerciseGallery({
       items = [];
   }
 
-  function clickCancelHandler() {
-    onCancel();
-    setState(undefined);
-  }
-
   return (
     <div className="w-5/6 h-full p-6 flex flex-col justify-end">
       <div className="h-full overflow-y-auto ">
@@ -92,12 +79,6 @@ export default function ExerciseGallery({
             </li>
           ))}
         </ul>
-      </div>
-      <div className="flex justify-end gap-4">
-        <Button kind="cancel" onClick={clickCancelHandler}>
-          Cancel
-        </Button>
-        <Button kind="confirm">Upload</Button>
       </div>
     </div>
   );
