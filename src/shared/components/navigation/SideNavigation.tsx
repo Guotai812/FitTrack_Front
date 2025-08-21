@@ -5,9 +5,9 @@ import { useModal } from "../../hooks/useModal";
 import { useState } from "react";
 import DietModal from "../ui/cFood/DietModal";
 
-import UpLoadExForm from "../form/UploadExForm";
-import UpLoadFoodForm from "../form/UploadFoodForm";
 import { DietProvider } from "../../context/diet/DietManageContext";
+import ExerciseContextProvider from "../../context/exercise/ExerciseContext";
+import ExercisePool from "../ui/cExercise/ExercisePool";
 
 export default function SideNavigation() {
   const [state, setState] = useState<"ex" | "food" | undefined>(undefined);
@@ -27,7 +27,9 @@ export default function SideNavigation() {
     <>
       {show &&
         (state === "ex" ? (
-          <UpLoadExForm onCancel={modalCancelHandler} setState={setState} />
+          <ExerciseContextProvider>
+            <ExercisePool onCancel={modalCancelHandler} setState={setState} />
+          </ExerciseContextProvider>
         ) : (
           <DietProvider>
             <DietModal onCancel={modalCancelHandler} setState={setState} />

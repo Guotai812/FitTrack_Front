@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
-import Form from "../ui/Form";
+
 import { Modal } from "../ui/Modal";
+import Form from "../ui/Form";
 
 type UpLoadExFormProps = {
   onCancel: () => void;
@@ -12,8 +13,10 @@ export default function UpLoadExForm({
   setState,
 }: UpLoadExFormProps) {
   return (
-    <Modal onCancel={onCancel} setState={setState}>
-      <Form>as</Form>
+    <Modal onCancel={onCancel} setState={setState} pad={0}>
+      <Form>
+        <div>asd</div>
+      </Form>
     </Modal>
   );
 }
