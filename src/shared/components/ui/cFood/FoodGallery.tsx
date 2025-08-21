@@ -85,7 +85,7 @@ export default function FoodGallery() {
       <div className="h-full overflow-y-auto">
         <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
-            <li key={item._id}>
+            <li key={String(item._id)}>
               <Button
                 onClick={() => {
                   recordFoodIdHandler(item._id);

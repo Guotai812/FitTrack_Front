@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Form from "../ui/Form";
 import useHttp from "../../hooks/useHttp";
 import { Modal } from "../ui/Modal";
@@ -15,8 +15,6 @@ import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
 import Select from "../ui/Select";
 import { useDiet } from "../../context/diet/DietManageContext";
-import { cFoodContext } from "../../context/CustomizedFoodContext";
-import { FoodContext } from "../../context/diet/FoodContext";
 
 type UpLoadFoodFormProps = {
   onCancel: () => void;
@@ -56,10 +54,12 @@ export default function UpLoadFoodForm({
   }
   const { user, token } = useAuth();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
-  const { error, isLoading, sendRequest } = useHttp();
+  const { error, sendRequest } = useHttp();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let preSign;
+    setIsLoading(true);
     try {
       preSign = await sendRequest({
         url: `${baseUrl}/pool/${user?.userId}/food/preSign?contentType=${
@@ -107,6 +107,8 @@ export default function UpLoadFoodForm({
       setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
+    } finally {
+      setIsLoading(false);
     }
   }
 

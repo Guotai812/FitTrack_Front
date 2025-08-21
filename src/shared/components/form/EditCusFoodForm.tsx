@@ -123,6 +123,7 @@ export default function EditCusFoodForm({
   async function submitNonImageHandler(e: React.FocusEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const responseData = await sendRequest({
         url: `${baseUrl}/pool/${user?.userId}/${foodId}/updateFood`,
         method: "POST",
@@ -140,6 +141,8 @@ export default function EditCusFoodForm({
       setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -150,7 +153,7 @@ export default function EditCusFoodForm({
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      updateFoodPool(responseData);
+      updateFoodPool(responseData.updated);
       setDiet("pool");
     } catch (err) {
       modalDisplayHandler();
@@ -324,15 +327,12 @@ export default function EditCusFoodForm({
           errMsg="Invalid Value"
         />
 
-        <div
-          className="flex justify-between items-center mt-4"
-          onClick={clickCancelHandler}
-        >
-          <Button type="button" kind="cancel">
+        <div className="flex justify-between items-center mt-4">
+          <Button type="button" kind="cancel" onClick={clickDeleteHandler}>
             Delete
           </Button>
           <div className="flex justify-end gap-4">
-            <Button type="button" onClick={clickDeleteHandler} kind="cancel">
+            <Button type="button" kind="cancel" onClick={clickCancelHandler}>
               Cancel
             </Button>
             {isLoading ? (
@@ -341,8 +341,9 @@ export default function EditCusFoodForm({
               </Button>
             ) : (
               <Button
+                type="submit"
                 kind="confirm"
-                disabled={!formState.isValid || isLoading || isChanged()}
+                disabled={!formState.isValid || isLoading || !isChanged()}
               >
                 Confirm
               </Button>
