@@ -85,7 +85,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         placeHolder="eg.Example@example.com"
         errMsg="Please enter valid email"
         required
-        value={formState.inputs.email.value}
+        value={String(formState.inputs.email.value)}
         isValid={formState.inputs.email.isValid}
         isTouched={touched["email"]}
         onBlur={() => {
@@ -106,7 +106,7 @@ export default function Login({ onCancelModal, setIsLogin }: loginProps) {
         errMsg="At leat 6 characters"
         isValid={formState.inputs.password.isValid}
         isTouched={touched["password"]}
-        value={formState.inputs.password.value}
+        value={String(formState.inputs.password.value)}
         onBlur={() => {
           blurHandler("password");
         }}

@@ -17,6 +17,7 @@ export default function validator(
       return value.length >= 6;
 
     case "userName":
+    case "name":
       if (typeof value !== "string") return false;
       // at least 2 non-whitespace chars
       return value.trim().length >= 2;
@@ -43,6 +44,11 @@ export default function validator(
     case "year":
     case "month":
     case "kcal":
+    case "met":
+    case "kcalPerHour":
+    case "rom":
+    case "efficency":
+    case "buffer":
       // 1) it must be a string (we need the raw text to detect leading zeros)
       if (typeof value !== "string") {
         return false;
