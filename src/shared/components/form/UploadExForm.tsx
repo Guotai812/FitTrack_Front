@@ -13,6 +13,7 @@ import useHttp from "../../hooks/useHttp";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../hooks/useModal";
 import ErrorModal from "../ui/ErrorModal";
+import Select from "../ui/Select";
 
 type UpLoadExFormProps = {
   onCancel: () => void;
@@ -42,20 +43,22 @@ export default function UpLoadExForm({
       image: { value: "", isValid: false },
       rom: { value: 0.5, isValid: true },
       efficency: { value: 0.2, isValid: true },
+      subtype: { value: "", isValid: false },
       buffer: { value: 1.15, isValid: true },
     },
     false
   );
   const { touched, blurHandler } = useInput();
   const { touched: anaTouched, blurHandler: anaBlurHanlder } = useInput();
-  const { sendRequest, error, isLoading } = useHttp();
+  const { sendRequest, error } = useHttp();
   const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    let preSign;
     if (isAerobic) {
-      e.preventDefault();
-      let preSign;
+      setIsLoading(true);
       try {
         preSign = await sendRequest({
           url: `${baseUrl}/pool/${user?.userId}/exercise/preSign?contentType=${
@@ -69,7 +72,6 @@ export default function UpLoadExForm({
         modalDisplayHandler();
         return;
       }
-
       try {
         const file = aerobicState.inputs.image.value;
         if (!(file instanceof File)) throw new Error("No image selected");
@@ -102,19 +104,62 @@ export default function UpLoadExForm({
         modalDisplayHandler();
       } finally {
         setIsUpload(false);
+        setIsLoading(false);
+        // location.reload();
       }
     } else {
-      sendRequest({
-        url: "/exercise/anaerobic",
-        method: "POST",
-        body: {
-          name: anaerobicState.inputs.name.value,
-          image: anaerobicState.inputs.image.value,
-          rom: Number(anaerobicState.inputs.rom.value),
-          efficency: Number(anaerobicState.inputs.efficency.value),
-          buffer: Number(anaerobicState.inputs.buffer.value),
-        },
-      });
+      setIsLoading(true);
+      try {
+        preSign = await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/exercise/preSign?contentType=${
+            anaerobicState.inputs.image.value instanceof File
+              ? anaerobicState.inputs.image.value.type
+              : ""
+          }`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+        return;
+      }
+
+      try {
+        const file = anaerobicState.inputs.image.value;
+        if (!(file instanceof File)) throw new Error("No image selected");
+
+        // PUT raw bytes to S3 using the presigned URL
+        const putRes = await fetch(preSign!.uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+        });
+        if (!putRes.ok) {
+          const txt = await putRes.text().catch(() => "");
+          throw new Error(`S3 upload failed (${putRes.status}): ${txt}`);
+        }
+
+        // Save your form fields + S3 key to your backend (JSON only)
+        await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/uploadAnaerobic`,
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: {
+            name: anaerobicState.inputs.name.value,
+            rom: Number(anaerobicState.inputs.rom.value),
+            efficency: Number(anaerobicState.inputs.efficency.value),
+            buffer: Number(anaerobicState.inputs.buffer.value),
+            type: "anaerobic",
+            subType: anaerobicState.inputs.subtype.value,
+            imageUrl: preSign.fileUrl,
+          },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+      } finally {
+        setIsUpload(false);
+        setIsLoading(false);
+        // location.reload();
+      }
     }
   }
 
@@ -194,6 +239,22 @@ export default function UpLoadExForm({
         errMsg="Please enter valid name"
       />
       <ImageUpload id="image" squareSizePx={150} onInput={anaerobicHandler} />
+      <Select
+        label="Target Muscle"
+        name="subtype"
+        items={["Leg", "Chest", "Back", "Other"]}
+        value={String(anaerobicState.inputs.subtype.value)}
+        isTouched={anaTouched["subtype"]}
+        onBlur={() => anaBlurHanlder("subtype")}
+        isValid={anaerobicState.inputs.subtype.isValid}
+        onChange={(e) =>
+          anaerobicHandler(
+            "subtype",
+            e.target.value,
+            validator("type", e.target.value)
+          )
+        }
+      />
       <Input
         type="number"
         label="Rom"
@@ -285,7 +346,14 @@ export default function UpLoadExForm({
           >
             Cancel
           </Button>
-          <Button kind="confirm" disabled={!aerobicState.isValid || isLoading}>
+          <Button
+            kind="confirm"
+            disabled={
+              isAerobic
+                ? !aerobicState.isValid
+                : !anaerobicState.isValid || isLoading
+            }
+          >
             Upload
           </Button>
         </div>
