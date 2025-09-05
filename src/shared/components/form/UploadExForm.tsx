@@ -1,3 +1,4 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { Modal } from "../ui/Modal";
@@ -8,6 +9,10 @@ import { useForm } from "../../hooks/useForm/useForm";
 import validator from "../../util/validator";
 import useInput from "../../hooks/useInput";
 import ImageUpload from "../ui/ImageUpload";
+import useHttp from "../../hooks/useHttp";
+import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../hooks/useModal";
+import ErrorModal from "../ui/ErrorModal";
 
 type UpLoadExFormProps = {
   onCancel: () => void;
@@ -21,7 +26,7 @@ export default function UpLoadExForm({
   setIsUpload,
 }: UpLoadExFormProps) {
   const [isAerobic, setIsAerobic] = useState<boolean>(true);
-
+  const { user, token } = useAuth();
   const { inputHandler: aerobicHandler, formState: aerobicState } = useForm(
     {
       name: { value: "", isValid: false },
@@ -43,6 +48,75 @@ export default function UpLoadExForm({
   );
   const { touched, blurHandler } = useInput();
   const { touched: anaTouched, blurHandler: anaBlurHanlder } = useInput();
+  const { sendRequest, error, isLoading } = useHttp();
+  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+
+  async function onSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isAerobic) {
+      e.preventDefault();
+      let preSign;
+      try {
+        preSign = await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/exercise/preSign?contentType=${
+            aerobicState.inputs.image.value instanceof File
+              ? aerobicState.inputs.image.value.type
+              : ""
+          }`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+        return;
+      }
+
+      try {
+        const file = aerobicState.inputs.image.value;
+        if (!(file instanceof File)) throw new Error("No image selected");
+
+        // PUT raw bytes to S3 using the presigned URL
+        const putRes = await fetch(preSign!.uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+        });
+        if (!putRes.ok) {
+          const txt = await putRes.text().catch(() => "");
+          throw new Error(`S3 upload failed (${putRes.status}): ${txt}`);
+        }
+
+        // Save your form fields + S3 key to your backend (JSON only)
+        await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/uploadAerobic`,
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: {
+            name: aerobicState.inputs.name.value,
+            met: Number(aerobicState.inputs.met.value),
+            kcalPerHour: Number(aerobicState.inputs.kcalPerHour.value),
+            type: "aerobic",
+            imageUrl: preSign.fileUrl,
+          },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+      } finally {
+        setIsUpload(false);
+      }
+    } else {
+      sendRequest({
+        url: "/exercise/anaerobic",
+        method: "POST",
+        body: {
+          name: anaerobicState.inputs.name.value,
+          image: anaerobicState.inputs.image.value,
+          rom: Number(anaerobicState.inputs.rom.value),
+          efficency: Number(anaerobicState.inputs.efficency.value),
+          buffer: Number(anaerobicState.inputs.buffer.value),
+        },
+      });
+    }
+  }
 
   const aerobicForm = (
     <>
@@ -154,7 +228,7 @@ export default function UpLoadExForm({
         isValid={anaerobicState.inputs.efficency.isValid}
         errMsg="Please enter valid efficency"
       />
-       <Input
+      <Input
         type="number"
         label="Buffer"
         name="buffer"
@@ -174,9 +248,14 @@ export default function UpLoadExForm({
     </>
   );
 
+  if (show && error) {
+    return (
+      <ErrorModal onCancel={modalCancelHandler} msg={error} title="Error" />
+    );
+  }
   return (
     <Modal onCancel={onCancel} setState={setState}>
-      <Form>
+      <Form onSubmit={onSubmitHandler}>
         <div className="flex justify-center gap-4 mb-4">
           <Button
             type="button"
@@ -198,6 +277,7 @@ export default function UpLoadExForm({
         {isAerobic ? aerobicForm : anaerobicForm}
         <div className="flex justify-end gap-4">
           <Button
+            type="button"
             kind="cancel"
             onClick={() => {
               setIsUpload(false);
@@ -205,7 +285,7 @@ export default function UpLoadExForm({
           >
             Cancel
           </Button>
-          <Button type="button" kind="confirm" disabled={!aerobicState.isValid}>
+          <Button kind="confirm" disabled={!aerobicState.isValid || isLoading}>
             Upload
           </Button>
         </div>
