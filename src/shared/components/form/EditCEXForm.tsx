@@ -22,22 +22,22 @@ export default function EditCEXForm() {
   const { inputHandler: aerobicHandler, formState: aerobicState } = useForm(
     {
       name: { value: String(exercise?.name), isValid: true },
-      image: { value: String(exercise?.image), isValid: false },
-      met: { value: Number(exercise?.met), isValid: false },
-      kcalPerHour: { value: Number(exercise?.kcalPerHour), isValid: false },
+      image: { value: String(exercise?.image), isValid: true },
+      met: { value: Number(exercise?.met), isValid: true },
+      kcalPerHour: { value: Number(exercise?.kcalPerHour), isValid: true },
     },
-    false
+    true
   );
   const { inputHandler: anaerobicHandler, formState: anaerobicState } = useForm(
     {
-      name: { value: String(exercise?.name), isValid: false },
-      image: { value: String(exercise?.name), isValid: false },
+      name: { value: String(exercise?.name), isValid: true },
+      image: { value: String(exercise?.name), isValid: true },
       rom: { value: Number(exercise?.defaultRom), isValid: true },
       efficency: { value: Number(exercise?.efficiency), isValid: true },
-      subType: { value: String(exercise?.subType), isValid: false },
+      subType: { value: String(exercise?.subType), isValid: true },
       buffer: { value: Number(exercise?.buffer), isValid: true },
     },
-    false
+    true
   );
   const { touched, blurHandler } = useInput();
   const { touched: anaTouched, blurHandler: anaBlurHanlder } = useInput();
@@ -202,6 +202,29 @@ export default function EditCEXForm() {
   function onCancel() {
     setId("");
   }
+  function isChanged() {
+    if (!ePool || !id || !ePool[id]) return false;
+    const ex = ePool[id];
+    if (type === "aerobic") {
+      return (
+        ex.name !== aerobicState.inputs.name.value ||
+        ex.met !== Number(aerobicState.inputs.met.value) ||
+        ex.kcalPerHour !== Number(aerobicState.inputs.kcalPerHour.value) ||
+        (aerobicState.inputs.image.value instanceof File &&
+          aerobicState.inputs.image.value.name !== ex.image)
+      );
+    } else {
+      return (
+        ex.name !== anaerobicState.inputs.name.value ||
+        ex.subType !== anaerobicState.inputs.subType.value ||
+        ex.defaultRom !== Number(anaerobicState.inputs.rom.value) ||
+        ex.efficiency !== Number(anaerobicState.inputs.efficency.value) ||
+        ex.buffer !== Number(anaerobicState.inputs.buffer.value) ||
+        (anaerobicState.inputs.image.value instanceof File &&
+          anaerobicState.inputs.image.value.name !== ex.image)
+      );
+    }
+  }
   return (
     <Modal onCancel={onCancel}>
       <Form>
@@ -219,9 +242,11 @@ export default function EditCEXForm() {
           <Button
             kind="confirm"
             disabled={
-              type === "aerobic"
+              (type === "aerobic"
                 ? !aerobicState.isValid
-                : !anaerobicState.isValid || isLoading
+                : !anaerobicState.isValid) ||
+              isLoading ||
+              !isChanged()
             }
           >
             Upload

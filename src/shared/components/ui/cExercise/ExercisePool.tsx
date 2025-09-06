@@ -10,7 +10,6 @@ import { CustomizedExContextProvider } from "../../../context/CustomizedExContex
 import Button from "../../ui/Button";
 import UpLoadExForm from "../../form/UploadExForm";
 import EditCEXForm from "../../form/EditCEXForm";
-import { useModal } from "../../../hooks/useModal";
 
 type ExercisePoolProps = {
   onCancel: () => void;
