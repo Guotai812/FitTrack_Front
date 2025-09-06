@@ -234,7 +234,112 @@ export default function EditCEXForm() {
     }
   }
 
-  async function submitImageHandler(e: React.FormEvent) {}
+  async function submitImageHandler(e: React.FormEvent) {
+    e.preventDefault();
+    let preSign;
+    if (type === "aerobic") {
+      setIsLoading(true);
+      try {
+        preSign = await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/exercise/preSign?contentType=${
+            aerobicState.inputs.image.value instanceof File
+              ? aerobicState.inputs.image.value.type
+              : ""
+          }`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+        return;
+      }
+      try {
+        const file = aerobicState.inputs.image.value;
+        if (!(file instanceof File)) throw new Error("No image selected");
+
+        // PUT raw bytes to S3 using the presigned URL
+        const putRes = await fetch(preSign!.uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+        });
+        if (!putRes.ok) {
+          const txt = await putRes.text().catch(() => "");
+          throw new Error(`S3 upload failed (${putRes.status}): ${txt}`);
+        }
+
+        // Save your form fields + S3 key to your backend (JSON only)
+        await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/updateCusExercise/${id}`,
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}` },
+          body: {
+            name: aerobicState.inputs.name.value,
+            met: Number(aerobicState.inputs.met.value),
+            kcalPerHour: Number(aerobicState.inputs.kcalPerHour.value),
+            type: "aerobic",
+            imageUrl: preSign.fileUrl,
+          },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+      } finally {
+        setIsLoading(false);
+        // location.reload();
+      }
+    } else {
+      setIsLoading(true);
+      try {
+        preSign = await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/exercise/preSign?contentType=${
+            anaerobicState.inputs.image.value instanceof File
+              ? anaerobicState.inputs.image.value.type
+              : ""
+          }`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+        return;
+      }
+
+      try {
+        const file = anaerobicState.inputs.image.value;
+        if (!(file instanceof File)) throw new Error("No image selected");
+
+        // PUT raw bytes to S3 using the presigned URL
+        const putRes = await fetch(preSign!.uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": file.type || "application/octet-stream" },
+        });
+        if (!putRes.ok) {
+          const txt = await putRes.text().catch(() => "");
+          throw new Error(`S3 upload failed (${putRes.status}): ${txt}`);
+        }
+
+        // Save your form fields + S3 key to your backend (JSON only)
+        await sendRequest({
+          url: `${baseUrl}/pool/${user?.userId}/updateCusExercise/${id}`,
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}` },
+          body: {
+            name: anaerobicState.inputs.name.value,
+            rom: Number(anaerobicState.inputs.rom.value),
+            efficency: Number(anaerobicState.inputs.efficency.value),
+            buffer: Number(anaerobicState.inputs.buffer.value),
+            type: "anaerobic",
+            subType: anaerobicState.inputs.subType.value,
+            imageUrl: preSign.fileUrl,
+          },
+        });
+      } catch (err) {
+        modalDisplayHandler();
+      } finally {
+        setIsLoading(false);
+        // location.reload();
+      }
+    }
+  }
 
   async function submitNonImageHandler(e: React.FormEvent) {
     e.preventDefault();
