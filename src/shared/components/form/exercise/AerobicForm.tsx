@@ -131,7 +131,7 @@ export default function AerobicForm() {
                 label="Duration(minute)"
                 name="duration"
                 width="w-[30%]"
-                value={formState.inputs.duration.value}
+                value={Number(formState.inputs.duration.value)}
                 isValid={formState.inputs.duration.isValid}
                 isTouched={touched.duration}
                 onBlur={() => blurHandler("duration")}

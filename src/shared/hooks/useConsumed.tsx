@@ -1,5 +1,5 @@
 import { type Epool } from "../context/PoolConetext";
-import type { Exercises, Info } from "../context/UserContext/UserContextType";
+import type { Exercises } from "../context/UserContext/UserContextType";
 
 // ——— Display object shapes
 type AerobicDisplay = {

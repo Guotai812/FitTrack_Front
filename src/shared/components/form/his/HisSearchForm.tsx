@@ -38,7 +38,7 @@ export default function HisSearchForm({ onCancel }: HisSearchFormProps) {
           type="number"
           name="year"
           label="Year"
-          value={formState.inputs.year.value}
+          value={Number(formState.inputs.year.value)}
           onChange={(e) =>
             inputHandler(
               "year",
@@ -55,7 +55,7 @@ export default function HisSearchForm({ onCancel }: HisSearchFormProps) {
           type="number"
           name="month"
           label="Month"
-          value={formState.inputs.month.value}
+          value={Number(formState.inputs.month.value)}
           onChange={(e) =>
             inputHandler(
               "month",

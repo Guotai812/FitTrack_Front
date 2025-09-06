@@ -134,7 +134,7 @@ export default function FoodForm() {
               width={"[50%]"}
               className=" border border-gray-300 rounded px-3 py-2"
               isValid={formState.inputs.weight.isValid}
-              value={formState.inputs.weight.value}
+              value={Number(formState.inputs.weight.value)}
               isTouched={touched["weight"]}
               onBlur={() => blurHandler("weight")}
               errMsg="Please enter valid number"

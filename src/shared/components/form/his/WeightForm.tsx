@@ -62,7 +62,7 @@ export default function WeightForm({ onCancel }: WeightFormProps) {
             name="weight"
             label="Weight"
             id="weight"
-            value={formState.inputs.weight.value}
+            value={Number(formState.inputs.weight.value)}
             onChange={(e) =>
               inputHandler(
                 "weight",
