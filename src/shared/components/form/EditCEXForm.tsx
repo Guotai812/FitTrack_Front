@@ -1,3 +1,4 @@
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 import { useCustomizedExContext } from "../../context/CustomizedExContext";
 import { useExercise } from "../../context/exercise/ExerciseContext";
 import { Modal } from "../ui/Modal";
@@ -10,6 +11,10 @@ import validator from "../../util/validator";
 import ImageUpload from "../ui/ImageUpload";
 import { useState } from "react";
 import Select from "../ui/Select";
+import useHttp from "../../hooks/useHttp";
+import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../hooks/useModal";
+import ErrorModal from "../ui/ErrorModal";
 
 export default function EditCEXForm() {
   const { id, setId } = useExercise();
@@ -42,6 +47,9 @@ export default function EditCEXForm() {
   const { touched, blurHandler } = useInput();
   const { touched: anaTouched, blurHandler: anaBlurHanlder } = useInput();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { sendRequest, error } = useHttp();
+  const { user, token } = useAuth();
+  const { show, modalDisplayHandler, modalCancelHandler } = useModal();
 
   const aerobicForm = (
     <>
@@ -225,9 +233,68 @@ export default function EditCEXForm() {
       );
     }
   }
+
+  async function submitImageHandler(e: React.FormEvent) {}
+
+  async function submitNonImageHandler(e: React.FormEvent) {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const body =
+        type === "aerobic"
+          ? {
+              name: aerobicState.inputs.name.value,
+              image:
+                aerobicState.inputs.image.value instanceof File
+                  ? aerobicState.inputs.image.value.name
+                  : aerobicState.inputs.image.value,
+              met: Number(aerobicState.inputs.met.value),
+              kcalPerHour: Number(aerobicState.inputs.kcalPerHour.value),
+            }
+          : {
+              name: anaerobicState.inputs.name.value,
+              image:
+                anaerobicState.inputs.image.value instanceof File
+                  ? anaerobicState.inputs.image.value.name
+                  : anaerobicState.inputs.image.value,
+              subType: anaerobicState.inputs.subType.value,
+              defaultRom: Number(anaerobicState.inputs.rom.value),
+              efficiency: Number(anaerobicState.inputs.efficency.value),
+              buffer: Number(anaerobicState.inputs.buffer.value),
+            };
+      const responseData = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/updateCusExercise/${id}`,
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+      updateEpool(responseData.data);
+      setId("");
+    } catch (err) {
+      console.log(err);
+      modalDisplayHandler();
+    }
+    setIsLoading(false);
+  }
+  if (error && show) {
+    return (
+      <ErrorModal title="Failed!" msg={error} onCancel={modalCancelHandler} />
+    );
+  }
+
   return (
     <Modal onCancel={onCancel}>
-      <Form>
+      <Form
+        onSubmit={
+          anaerobicState.inputs.image.value instanceof File ||
+          aerobicState.inputs.image.value instanceof File
+            ? submitImageHandler
+            : submitNonImageHandler
+        }
+      >
         {type === "aerobic" ? aerobicForm : anaerobicForm}
         <div className="flex justify-end gap-4">
           <Button

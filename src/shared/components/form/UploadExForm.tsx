@@ -349,9 +349,8 @@ export default function UpLoadExForm({
           <Button
             kind="confirm"
             disabled={
-              isAerobic
-                ? !aerobicState.isValid
-                : !anaerobicState.isValid || isLoading
+              (isAerobic ? !aerobicState.isValid : !anaerobicState.isValid) ||
+              isLoading
             }
           >
             Upload
