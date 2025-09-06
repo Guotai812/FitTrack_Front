@@ -9,13 +9,13 @@ import Signup from "../../shared/components/form/Signup";
 import { useState } from "react";
 
 export default function TopLayout() {
-  const { show, modalCancelHandler, modalDisplayHandler } = useModal();
+  const { show, modalCancelHandler } = useModal();
   const [isLogin, setIsLogin] = useState(false);
 
   return (
     <>
       {show && (
-        <Modal onCancel={modalCancelHandler} >
+        <Modal onCancel={modalCancelHandler}>
           {isLogin && (
             <Login onCancelModal={modalCancelHandler} setIsLogin={setIsLogin} />
           )}
@@ -27,10 +27,7 @@ export default function TopLayout() {
           )}
         </Modal>
       )}
-      <TopNavigation
-        onDisplayModal={modalDisplayHandler}
-        setIsLogin={setIsLogin}
-      />
+      <TopNavigation />
       <Outlet />
     </>
   );
