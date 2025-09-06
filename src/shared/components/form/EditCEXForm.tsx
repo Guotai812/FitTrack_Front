@@ -284,6 +284,7 @@ export default function EditCEXForm() {
         modalDisplayHandler();
       } finally {
         setIsLoading(false);
+        setId("");
         // location.reload();
       }
     } else {
@@ -336,6 +337,7 @@ export default function EditCEXForm() {
         modalDisplayHandler();
       } finally {
         setIsLoading(false);
+        setId("");
         // location.reload();
       }
     }
