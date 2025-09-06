@@ -43,7 +43,7 @@ export default function UpLoadExForm({
       image: { value: "", isValid: false },
       rom: { value: 0.5, isValid: true },
       efficency: { value: 0.2, isValid: true },
-      subtype: { value: "", isValid: false },
+      subType: { value: "", isValid: false },
       buffer: { value: 1.15, isValid: true },
     },
     false
@@ -149,7 +149,7 @@ export default function UpLoadExForm({
             efficency: Number(anaerobicState.inputs.efficency.value),
             buffer: Number(anaerobicState.inputs.buffer.value),
             type: "anaerobic",
-            subType: anaerobicState.inputs.subtype.value,
+            subType: anaerobicState.inputs.subType.value,
             imageUrl: preSign.fileUrl,
           },
         });
@@ -241,15 +241,15 @@ export default function UpLoadExForm({
       <ImageUpload id="image" squareSizePx={150} onInput={anaerobicHandler} />
       <Select
         label="Target Muscle"
-        name="subtype"
-        items={["Leg", "Chest", "Back", "Other"]}
-        value={String(anaerobicState.inputs.subtype.value)}
-        isTouched={anaTouched["subtype"]}
-        onBlur={() => anaBlurHanlder("subtype")}
-        isValid={anaerobicState.inputs.subtype.isValid}
+        name="subType"
+        items={["leg", "chest", "back", "other"]}
+        value={String(anaerobicState.inputs.subType.value)}
+        isTouched={anaTouched["subType"]}
+        onBlur={() => anaBlurHanlder("subType")}
+        isValid={anaerobicState.inputs.subType.isValid}
         onChange={(e) =>
           anaerobicHandler(
-            "subtype",
+            "subType",
             e.target.value,
             validator("type", e.target.value)
           )

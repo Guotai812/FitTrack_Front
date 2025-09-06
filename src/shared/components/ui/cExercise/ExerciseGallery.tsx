@@ -57,6 +57,8 @@ export default function ExerciseGallery() {
       items = [];
   }
 
+  
+
   return (
     <div className="w-5/6 h-full p-6 flex flex-col justify-end">
       <div className="h-full overflow-y-auto ">

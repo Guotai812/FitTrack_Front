@@ -6,10 +6,11 @@ import { useExercise } from "../../../context/exercise/ExerciseContext";
 import { Modal } from "../../ui/Modal";
 import SideNavigation from "./SideNavigation";
 import ExerciseGallery from "./ExerciseGallery";
-import ExerciseForm from "../../form/exercise/ExerciseForm";
 import { CustomizedExContextProvider } from "../../../context/CustomizedExContext";
 import Button from "../../ui/Button";
 import UpLoadExForm from "../../form/UploadExForm";
+import EditCEXForm from "../../form/EditCEXForm";
+import { useModal } from "../../../hooks/useModal";
 
 type ExercisePoolProps = {
   onCancel: () => void;
@@ -37,14 +38,14 @@ export default function ExercisePool({
       >
         <div className="flex justify-between h-full">
           <SideNavigation />
-          {isUpload ? (
-            <UpLoadExForm
-              onCancel={onCancel}
-              setState={setState}
-              setIsUpload={setIsUpload}
-            />
-          ) : id.trim() === "" ? (
-            <CustomizedExContextProvider>
+          <CustomizedExContextProvider>
+            {isUpload ? (
+              <UpLoadExForm
+                onCancel={onCancel}
+                setState={setState}
+                setIsUpload={setIsUpload}
+              />
+            ) : id.trim() === "" ? (
               <div className="w-5/6 h-full p-6 flex flex-col justify-end">
                 <ExerciseGallery />
                 <div className="flex justify-end gap-4">
@@ -56,10 +57,10 @@ export default function ExercisePool({
                   </Button>
                 </div>
               </div>
-            </CustomizedExContextProvider>
-          ) : (
-            <ExerciseForm />
-          )}
+            ) : (
+              <EditCEXForm />
+            )}
+          </CustomizedExContextProvider>
         </div>
       </Modal>
     </CategoryContextProvider>
