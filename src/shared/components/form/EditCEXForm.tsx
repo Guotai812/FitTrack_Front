@@ -386,6 +386,25 @@ export default function EditCEXForm() {
     }
     setIsLoading(false);
   }
+
+  async function deleteHandler() {
+    setIsLoading(true);
+    try {
+      const responseData = await sendRequest({
+        url: `${baseUrl}/pool/${user?.userId}/deleteCusExercise/${id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      updateEpool(responseData.data);
+      setId("");
+    } catch (err) {
+      console.log(err);
+      modalDisplayHandler();
+    }
+    setIsLoading(false);
+  }
   if (error && show) {
     return (
       <ErrorModal title="Failed!" msg={error} onCancel={modalCancelHandler} />
@@ -403,28 +422,33 @@ export default function EditCEXForm() {
         }
       >
         {type === "aerobic" ? aerobicForm : anaerobicForm}
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-between items-center mt-4">
           <Button
             type="button"
-            kind="cancel"
+            kind="gray"
             onClick={() => {
               setId("");
             }}
           >
             Cancel
           </Button>
-          <Button
-            kind="confirm"
-            disabled={
-              (type === "aerobic"
-                ? !aerobicState.isValid
-                : !anaerobicState.isValid) ||
-              isLoading ||
-              !isChanged()
-            }
-          >
-            Upload
-          </Button>
+          <div className="flex justify-end gap-4">
+            <Button type="button" kind="cancel" onClick={deleteHandler}>
+              Delete
+            </Button>
+            <Button
+              kind="confirm"
+              disabled={
+                (type === "aerobic"
+                  ? !aerobicState.isValid
+                  : !anaerobicState.isValid) ||
+                isLoading ||
+                !isChanged()
+              }
+            >
+              Upload
+            </Button>
+          </div>
         </div>
       </Form>
     </Modal>
