@@ -391,7 +391,7 @@ export default function EditCEXForm() {
     setIsLoading(true);
     try {
       const responseData = await sendRequest({
-        url: `${baseUrl}/pool/${user?.userId}/deleteCusExercise/${id}`,
+        url: `${baseUrl}/pool/${user?.userId}/${id}/deleteCusExercise/`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -399,6 +399,7 @@ export default function EditCEXForm() {
       });
       updateEpool(responseData.data);
       setId("");
+      location.reload();
     } catch (err) {
       console.log(err);
       modalDisplayHandler();
