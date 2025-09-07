@@ -1,6 +1,7 @@
 # FitTrack — Front End
 
 A modern, responsive fitness-tracking web app built with **React 19**, **TypeScript**, **Vite**, and **Tailwind CSS**. It lets users track workouts, meals, weight history, and overall health metrics with clean charts and smooth UI animations.
+🔗 **Live Demo:** [https://fit-track-front-flax.vercel.app/](https://fit-track-front-flax.vercel.app/)
 
 ![Dashboard](./screenshots/dashboard.png)
 
@@ -82,6 +83,7 @@ FitTrack_Front/
    │  └─ hooks/                      # useHttp, useForm, useInput, etc.
    └─ ...                            # utilities, types, etc.
 ```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variable to your `.env` file in the project root:
@@ -95,10 +97,12 @@ VITE_BACKEND_URL=https://your-backend-domain.tld/api
 Follow these steps to set up the project locally.
 
 ### Prerequisites
+
 - **Node.js ≥ 18** (LTS recommended)
 - **npm** (comes with Node.js)
 
 ### Installation
+
 Clone the repo and install dependencies:
 
 ```bash
@@ -108,30 +112,39 @@ npm install
 ```
 
 ### Install Dependency
+
 ```bash
 npm install
 ```
 
 ### Configure Enviroment Variables
+
 Create a .env file in the project root and add:
+
 ```bash
 VITE_BACKEND_URL=https://your-backend-domain.tld/api
 ```
 
 ### Start Development Server
+
 Run the Vite development server
+
 ```bash
 npm run dev
 ```
 
 ### Build for Production
+
 Generate an optimized production build:
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 Preview the production build locally:
+
 ```bash
 npm run preview
 ```
@@ -140,42 +153,48 @@ npm run preview
 
 The following npm scripts are available in this project:
 
-| Script            | Description                               |
-|-------------------|-------------------------------------------|
-| `npm run dev`     | Start the Vite development server          |
+| Script            | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `npm run dev`     | Start the Vite development server           |
 | `npm run build`   | Type-check and build the app for production |
-| `npm run preview` | Preview the production build locally       |
-| `npm run lint`    | Run ESLint to check for linting errors     |
+| `npm run preview` | Preview the production build locally        |
+| `npm run lint`    | Run ESLint to check for linting errors      |
 
 ## Conventions
 
 This project follows a few conventions for consistency and maintainability.
 
 ### Routing
+
 - All routes are declared in `App.tsx` using **React Router 7**.
 - Auth-protected sections are wrapped with `<ProtectionRoute>`, e.g., for `SideLayout`.
 
 ### Styling
+
 - Tailwind CSS v4 is used with the official Vite plugin.
 - `index.css` contains the entry point with `@import "tailwindcss";`.
 - Components are styled using Tailwind utility classes (no custom PostCSS setup required).
 
 ### State & Context
+
 - `AuthContext` — manages user sessions, JWTs, and login/logout logic.
 - `UserContext` — stores user profile and related state.
 - `PoolConetext` — manages exercise and food pools.
 
 ### HTTP & Forms
+
 - `useHttp` — centralized wrapper for API requests.
 - `useForm`, `useInput`, and `validator` — handle form state and validation across components.
 
 ## Common Issues
 
 ### CORS Errors
+
 If you see CORS errors when making API requests, make sure your backend is configured to allow your front-end origin. Typical headers:
+
 - Access-Control-Allow-Origin: https://your-frontend-domain
 - Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization
--	Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
+- Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
 
 ## License
 
@@ -191,6 +210,7 @@ You are free to use it for personal purposes, but redistribution, modification, 
 - [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html) — requires derivatives to also be open-source.
 
 To add a license:
+
 1. Create a file named `LICENSE` in the project root.
 2. Paste the text of your chosen license.
 3. Update this section to reflect it.
