@@ -86,7 +86,7 @@ export default function AerobicEditForm({
             type="number"
             name="duration"
             label="Duration"
-            value={formState.inputs.duration.value}
+            value={Number(formState.inputs.duration.value)}
             onChange={(e) =>
               inputHandler(
                 "duration",

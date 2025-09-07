@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import type { ReactNode, Dispatch, SetStateAction } from "react";
 
 type Meals = "breakfast" | "lunch" | "dinner";
